@@ -1,0 +1,36 @@
+---
+type Row = {
+  tool: string;
+  bestFor: string;
+  pricing: string;
+  standout: string;
+  caution: string;
+};
+
+const { rows } = Astro.props as { rows: Row[] };
+---
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Tool</th>
+        <th>Best for</th>
+        <th>Pricing note</th>
+        <th>Standout</th>
+        <th>Caution</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          <td>{row.tool}</td>
+          <td>{row.bestFor}</td>
+          <td>{row.pricing}</td>
+          <td>{row.standout}</td>
+          <td>{row.caution}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

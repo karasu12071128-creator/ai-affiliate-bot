@@ -1,0 +1,60 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const articles = (await getCollection("articles")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title="Newsletter SaaS Comparisons for Creators" description="A small editorial site comparing email marketing, newsletter, and audience growth tools for creators and solopreneurs.">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Creator Growth Tools</p>
+      <h1>Newsletter tools, compared without fake reviews.</h1>
+      <p class="dek">
+        Practical comparisons for creators, newsletter operators, coaches, freelancers, and small online businesses choosing email marketing software in 2026.
+      </p>
+      <p class="note-list">
+        <span>5-article MVP</span>
+        <span>Affiliate links pending approval</span>
+        <span>Last verified 2026-08-21</span>
+      </p>
+    </div>
+    <aside class="hero-panel">
+      <h2>Start Here</h2>
+      <p>For most creator businesses, begin with a simple comparison: Kit for creator funnels, beehiiv for newsletter growth, and ActiveCampaign for heavier automation.</p>
+      <a class="button" href="/best-email-marketing-tools-for-creators/">Read the main comparison</a>
+    </aside>
+  </section>
+
+  <section class="band">
+    <h2>Latest Articles</h2>
+    <div class="cards">
+      {articles.slice(0, 3).map((article) => (
+        <article class="card article-card">
+          <h3><a href={`/${article.slug}/`}>{article.data.title}</a></h3>
+          <p>{article.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="band">
+    <h2>Initial Affiliate Candidates</h2>
+    <div class="tool-grid">
+      <div class="card">
+        <h3>Kit</h3>
+        <p>Best initial fit for creators who sell digital products, courses, newsletters, and simple automated funnels.</p>
+      </div>
+      <div class="card">
+        <h3>beehiiv</h3>
+        <p>Best initial fit for newsletter operators who care about publication growth, recommendations, ads, and paid newsletter monetization.</p>
+      </div>
+      <div class="card">
+        <h3>ActiveCampaign</h3>
+        <p>Best initial fit for solopreneurs who need more advanced automation, segmentation, CRM, and multi-step customer journeys.</p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

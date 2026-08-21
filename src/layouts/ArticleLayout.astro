@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import AffiliateDisclosure from "../components/AffiliateDisclosure.astro";
+import CTA from "../components/CTA.astro";
+import { affiliateTargets } from "../lib/affiliateLinks";
+import { site } from "../site";
+
+type Props = {
+  article: CollectionEntry<"articles">;
+};
+
+const { article } = Astro.props;
+const canonicalPath = `/${article.slug}/`;
+const primary = article.data.primaryProduct ?? article.data.products[0];
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: article.data.title,
+  description: article.data.description,
+  datePublished: article.data.pubDate.toISOString(),
+  dateModified: article.data.updatedDate.toISOString(),
+  mainEntityOfPage: new URL(canonicalPath, site.url).toString(),
+  publisher: {
+    "@type": "Organization",
+    name: site.name
+  }
+};
+---
+
+<BaseLayout title={article.data.title} description={article.data.description} canonicalPath={canonicalPath}>
+  <article class="article">
+    <header class="article-header">
+      <p class="eyebrow">Newsletter and email marketing tools</p>
+      <h1>{article.data.title}</h1>
+      <p class="dek">{article.data.description}</p>
+      <div class="article-meta">
+        <span>Published {article.data.pubDate.toISOString().slice(0, 10)}</span>
+        <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
+        <span>Last verified {article.data.lastVerifiedDate}</span>
+      </div>
+    </header>
+
+    {article.data.commercial && <AffiliateDisclosure compact />}
+    {primary && (
+      <CTA
+        product={primary}
+        article={article.slug}
+        placement="top_cta"
+        note={`Affiliate status: ${affiliateTargets[primary].status.replace("_", " ")}. Links currently use the official site until approval.`}
+      />
+    )}
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    {primary && (
+      <CTA
+        product={primary}
+        article={article.slug}
+        placement="bottom_cta"
+        note="Check current pricing and plan details before buying."
+      />
+    )}
+  </article>
+  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
+</BaseLayout>

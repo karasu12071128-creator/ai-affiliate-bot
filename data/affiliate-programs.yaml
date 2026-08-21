@@ -1,0 +1,57 @@
+last_updated: "2026-08-21"
+verification_note: "Affiliate and pricing information changes. Re-check official sources before publishing or applying."
+programs:
+  - product: "Kit"
+    affiliate_program_url: "https://kit.com/affiliate"
+    commission: "50% commission for the first 12 months; 10-20% recurring beyond 12 months only after Bronze/Silver/Gold status."
+    commission_duration: "12 months for base commission; recurring continuation depends on status."
+    cookie_period: "VERIFY_BEFORE_PUBLISH"
+    current_pricing: "Newsletter plan free up to 10,000 subscribers per Kit help page; Creator and Pro pricing vary by subscribers. Pricing page showed Creator/Pro annual pricing examples for 1,000 subscribers during verification."
+    approval_status: "not_applied"
+    affiliate_link: null
+    tracking_id: null
+    evidence_checked_date: "2026-08-21"
+    evidence_urls:
+      - "https://kit.com/affiliate"
+      - "https://kit.com/pricing"
+      - "https://help.kit.com/en/articles/9053602-the-kit-newsletter-plan"
+  - product: "beehiiv"
+    affiliate_program_url: "https://www.beehiiv.com/partners/affiliate"
+    commission: "Up to 60% of referral payments for 12 months on the public affiliate page; help article also describes 50% for 12 months, so verify tier details before publication."
+    commission_duration: "Up to 12 months"
+    cookie_period: "60 days per beehiiv partner help article"
+    current_pricing: "Launch $0/month up to 2,500 subscribers; Scale $43/month billed annually; Max $96/month billed annually; Enterprise custom pricing."
+    approval_status: "not_applied"
+    affiliate_link: null
+    tracking_id: null
+    evidence_checked_date: "2026-08-21"
+    evidence_urls:
+      - "https://www.beehiiv.com/partners/affiliate"
+      - "https://www.beehiiv.com/support/article/23352219299095-getting-started-with-the-beehiiv-partner-program"
+      - "https://www.beehiiv.com/pricing"
+  - product: "ActiveCampaign"
+    affiliate_program_url: "https://www.activecampaign.com/partners/affiliate"
+    commission: "30% recurring commission for each new eligible referral"
+    commission_duration: "Up to 12 months per referred account"
+    cookie_period: "90 days per ActiveCampaign Help Center"
+    current_pricing: "Official pricing uses contact/currency selectors. Starter was shown from $15/month in official pricing crawl; verify live pricing for target contact tier before publication."
+    approval_status: "not_applied"
+    affiliate_link: null
+    tracking_id: null
+    evidence_checked_date: "2026-08-21"
+    evidence_urls:
+      - "https://www.activecampaign.com/partners/affiliate"
+      - "https://help.activecampaign.com/hc/en-us/articles/115000065864-Affiliate-program"
+      - "https://www.activecampaign.com/pricing"
+  - product: "HubSpot"
+    affiliate_program_url: "https://www.hubspot.com/partners/affiliates"
+    commission: "Phase 2 candidate. VERIFY_BEFORE_PUBLISH."
+    commission_duration: "VERIFY_BEFORE_PUBLISH"
+    cookie_period: "VERIFY_BEFORE_PUBLISH"
+    current_pricing: "VERIFY_BEFORE_PUBLISH"
+    approval_status: "phase_2_not_applied"
+    affiliate_link: null
+    tracking_id: null
+    evidence_checked_date: "2026-08-21"
+    evidence_urls:
+      - "https://www.hubspot.com/partners/affiliates"

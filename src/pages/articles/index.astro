@@ -1,0 +1,28 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const articles = (await getCollection("articles")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout title="Articles" description="All Creator Growth Tools articles about newsletter, email marketing, and audience growth SaaS.">
+  <section class="page">
+    <p class="eyebrow">Articles</p>
+    <h1>Newsletter and email marketing comparisons</h1>
+    <p class="dek">A focused MVP library for creators choosing audience growth software.</p>
+    <div class="article-list">
+      {articles.map((article) => (
+        <article class="card article-card">
+          <h2><a href={`/${article.slug}/`}>{article.data.title}</a></h2>
+          <p>{article.data.description}</p>
+          <p class="article-meta">
+            <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
+            <span>Last verified {article.data.lastVerifiedDate}</span>
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

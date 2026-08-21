@@ -1,0 +1,32 @@
+---
+import { getAffiliateHref, getAffiliateLabel, type ProductKey } from "../lib/affiliateLinks";
+
+type Props = {
+  product: ProductKey;
+  article: string;
+  placement: string;
+  note?: string;
+};
+
+const { product, article, placement, note } = Astro.props;
+const href = getAffiliateHref(product);
+---
+
+<div class="cta">
+  <div>
+    <strong>{getAffiliateLabel(product)}</strong>
+    {note && <p>{note}</p>}
+  </div>
+  <a
+    class="button"
+    href={href}
+    rel="sponsored nofollow noopener"
+    target="_blank"
+    data-event="affiliate_click"
+    data-product={product}
+    data-article={article}
+    data-placement={placement}
+  >
+    Open site
+  </a>
+</div>

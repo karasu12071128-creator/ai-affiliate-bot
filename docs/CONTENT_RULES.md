@@ -28,3 +28,7 @@
 ## Verification
 
 Use official product, pricing, help, and affiliate pages when possible. If a fact is unclear, mark it `VERIFY_BEFORE_PUBLISH` and avoid presenting it as confirmed.
+
+Future review/comparison articles synthesize official facts + verified public review consensus + recent community feedback, without pretending to have used products when no actual hands-on test occurred.
+
+For the complete operating model, see `docs/EDITORIAL_PLAYBOOK.md`.

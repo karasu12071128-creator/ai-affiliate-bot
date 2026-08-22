@@ -1,0 +1,207 @@
+{
+  "schema_version": "1.0",
+  "site": "Creator Growth Tools",
+  "records": [
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-22-001",
+      "slug": "best-email-marketing-tools-for-creators",
+      "title": "7 Best Email Marketing Tools for Creators in 2026",
+      "article_type": "roundup_comparison",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "best email marketing tools for creators",
+      "primary_product": "kit",
+      "version": "2.0",
+      "status": "published",
+      "first_published_at": "2026-08-21",
+      "updated_at": "2026-08-22",
+      "last_verified_at": "2026-08-22",
+      "editorial_hypothesis": "A research-backed creator-tool roundup that combines official facts, review consensus, and use-case fit will earn more qualified SaaS clicks than a generic best-tools list.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "G2", "products": ["Kit", "beehiiv", "ActiveCampaign", "MailerLite"], "observed_at": "2026-08-22" },
+        { "source": "Capterra", "products": ["Kit", "ActiveCampaign", "MailerLite", "Flodesk"], "observed_at": "2026-08-22" },
+        { "source": "Official vendor pricing/help pages", "products": ["Kit", "beehiiv", "ActiveCampaign"], "observed_at": "2026-08-22" }
+      ],
+      "affiliate_status": "PENDING_OR_CENTRALLY_MANAGED",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-20",
+      "revision_notes": [
+        "Replaced generic MVP article with review-consensus editorial model.",
+        "Added current pricing examples and explicit evidence hierarchy.",
+        "Kept affiliate links centralized and pending approval."
+      ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-22-002",
+      "slug": "kit-vs-beehiiv",
+      "title": "Kit vs beehiiv: Which Newsletter Platform Is Better for Creators in 2026?",
+      "article_type": "versus_comparison",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "kit vs beehiiv",
+      "primary_product": "kit",
+      "version": "2.0",
+      "status": "published",
+      "first_published_at": "2026-08-21",
+      "updated_at": "2026-08-22",
+      "last_verified_at": "2026-08-22",
+      "editorial_hypothesis": "A use-case-first Kit vs beehiiv comparison will better qualify readers by business model before they click to a vendor.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "G2", "products": ["Kit", "beehiiv"], "observed_at": "2026-08-22" },
+        { "source": "Capterra", "products": ["Kit"], "observed_at": "2026-08-22" },
+        { "source": "Official vendor pricing/help pages", "products": ["Kit", "beehiiv"], "observed_at": "2026-08-22" }
+      ],
+      "affiliate_status": "PENDING_OR_CENTRALLY_MANAGED",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-20",
+      "revision_notes": [
+        "Reframed the comparison around creator funnel versus newsletter publication intent.",
+        "Added review-consensus evidence and current pricing snapshot.",
+        "Clarified that no hands-on claim is made."
+      ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-22-003",
+      "slug": "best-email-marketing-for-solopreneurs",
+      "title": "Best Email Marketing Software for Solopreneurs: 5 Tools Compared",
+      "article_type": "roundup_comparison",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "best email marketing software for solopreneurs",
+      "primary_product": "kit",
+      "version": "2.0",
+      "status": "published",
+      "first_published_at": "2026-08-21",
+      "updated_at": "2026-08-22",
+      "last_verified_at": "2026-08-22",
+      "editorial_hypothesis": "A solopreneur-specific comparison that avoids overbuying advice will produce more qualified clicks than a broad email marketing roundup.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "G2", "products": ["Kit", "ActiveCampaign", "MailerLite"], "observed_at": "2026-08-22" },
+        { "source": "Capterra", "products": ["Kit", "ActiveCampaign", "MailerLite", "Flodesk"], "observed_at": "2026-08-22" },
+        { "source": "Official vendor pricing/help pages", "products": ["Kit", "beehiiv", "ActiveCampaign"], "observed_at": "2026-08-22" }
+      ],
+      "affiliate_status": "PENDING_OR_CENTRALLY_MANAGED",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-20",
+      "revision_notes": [
+        "Replaced generic solopreneur article with review-consensus version.",
+        "Adjusted ActiveCampaign pricing language after official pricing page spot-check showed selector-dependent price display.",
+        "Preserved the five-tool MVP scope."
+      ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-22-004",
+      "slug": "kit-review",
+      "title": "Kit Review 2026: What Users Like, What They Don’t, and Who It’s Best For",
+      "article_type": "review_consensus",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "Kit review 2026",
+      "primary_product": "kit",
+      "version": "2.0",
+      "status": "published",
+      "first_published_at": "2026-08-21",
+      "updated_at": "2026-08-22",
+      "last_verified_at": "2026-08-22",
+      "editorial_hypothesis": "A transparent multi-source review-consensus article will be more useful and credible than a generic AI summary or fake hands-on review.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "G2", "rating": 4.4, "review_count": 236, "observed_at": "2026-08-22" },
+        { "source": "Capterra", "rating": 4.6, "review_count": 243, "observed_at": "2026-08-22" },
+        { "source": "Official Kit pricing/help pages", "observed_at": "2026-08-22" }
+      ],
+      "affiliate_status": "PENDING_OR_CENTRALLY_MANAGED",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-20",
+      "revision_notes": [
+        "Changed from pseudo hands-on framing to review-consensus format.",
+        "Added public rating/review-count snapshot.",
+        "Added recurring pros/cons and concrete creator workflows.",
+        "Reduced repetitive AI-template phrasing."
+      ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-22-005",
+      "slug": "beehiiv-alternatives",
+      "title": "Best beehiiv Alternatives in 2026: Pick Based on What You Actually Need",
+      "article_type": "alternatives_comparison",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "beehiiv alternatives",
+      "primary_product": "beehiiv",
+      "version": "2.0",
+      "status": "published",
+      "first_published_at": "2026-08-21",
+      "updated_at": "2026-08-22",
+      "last_verified_at": "2026-08-22",
+      "editorial_hypothesis": "An alternatives article organized by switching reason will capture higher-intent readers than a simple list of beehiiv competitors.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "G2", "products": ["beehiiv", "Kit", "ActiveCampaign", "MailerLite"], "observed_at": "2026-08-22" },
+        { "source": "Capterra", "products": ["Kit", "ActiveCampaign", "MailerLite", "Flodesk"], "observed_at": "2026-08-22" },
+        { "source": "Official vendor pricing/help pages", "products": ["beehiiv", "Kit", "ActiveCampaign"], "observed_at": "2026-08-22" }
+      ],
+      "affiliate_status": "PENDING_OR_CENTRALLY_MANAGED",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-20",
+      "revision_notes": [
+        "Reframed alternatives around switching reason instead of generic ranking.",
+        "Preserved Kit and ActiveCampaign as central alternatives.",
+        "Kept public review and community evidence separated."
+      ]
+    }
+  ]
+}

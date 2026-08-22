@@ -172,6 +172,12 @@ h3 {
   margin: 26px 0 14px;
 }
 
+.methodology-note {
+  color: var(--muted);
+  font-size: 0.94rem;
+  margin: 0 0 20px;
+}
+
 .cta {
   display: flex;
   justify-content: space-between;
@@ -219,6 +225,9 @@ h3 {
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+.table-wrap table {
   min-width: 720px;
 }
 
@@ -231,7 +240,9 @@ table {
 
 .prose p,
 .prose li,
-.affiliate-disclosure {
+.affiliate-disclosure,
+.dek,
+.methodology-note {
   overflow-wrap: anywhere;
 }
 

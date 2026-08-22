@@ -41,7 +41,14 @@ const articleJsonLd = {
       </div>
     </header>
 
-    {article.data.commercial && <AffiliateDisclosure compact />}
+    {article.data.commercial && (
+      <>
+        <AffiliateDisclosure compact />
+        <p class="methodology-note">
+          Research approach: official sources, verified public review consensus, and community feedback are separated in our <a href="/editorial-methodology/">Editorial Methodology</a>.
+        </p>
+      </>
+    )}
     {primary && (
       <CTA
         product={primary}

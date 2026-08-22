@@ -3,7 +3,7 @@ import { site } from "../site";
 
 export async function GET() {
   const articles = await getCollection("articles");
-  const staticPaths = ["/", "/articles/", "/about/", "/affiliate-disclosure/", "/privacy-policy/"];
+  const staticPaths = ["/", "/articles/", "/about/", "/affiliate-disclosure/", "/editorial-methodology/", "/privacy-policy/"];
   const articlePaths = articles.map((article) => `/${article.slug}/`);
   const urls = [...staticPaths, ...articlePaths]
     .map((path) => `<url><loc>${new URL(path, site.url).toString()}</loc></url>`)

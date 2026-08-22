@@ -1,4 +1,4 @@
-last_updated: "2026-08-21"
+last_updated: "2026-08-22"
 verification_note: "Affiliate and pricing information changes. Re-check official sources before publishing or applying."
 programs:
   - product: "Kit"
@@ -10,7 +10,7 @@ programs:
     approval_status: "not_applied"
     affiliate_link: null
     tracking_id: null
-    evidence_checked_date: "2026-08-21"
+    evidence_checked_date: "2026-08-22"
     evidence_urls:
       - "https://kit.com/affiliate"
       - "https://kit.com/pricing"
@@ -24,7 +24,7 @@ programs:
     approval_status: "not_applied"
     affiliate_link: null
     tracking_id: null
-    evidence_checked_date: "2026-08-21"
+    evidence_checked_date: "2026-08-22"
     evidence_urls:
       - "https://www.beehiiv.com/partners/affiliate"
       - "https://www.beehiiv.com/support/article/23352219299095-getting-started-with-the-beehiiv-partner-program"
@@ -34,11 +34,11 @@ programs:
     commission: "30% recurring commission for each new eligible referral"
     commission_duration: "Up to 12 months per referred account"
     cookie_period: "90 days per ActiveCampaign Help Center"
-    current_pricing: "Official pricing uses contact/currency selectors. Starter was shown from $15/month in official pricing crawl; verify live pricing for target contact tier before publication."
+    current_pricing: "Official pricing page verified plan names Starter, Plus, Pro, and Enterprise. Price display depends on contact count, currency, and configuration selectors; verify live pricing for the target contact tier before publication."
     approval_status: "not_applied"
     affiliate_link: null
     tracking_id: null
-    evidence_checked_date: "2026-08-21"
+    evidence_checked_date: "2026-08-22"
     evidence_urls:
       - "https://www.activecampaign.com/partners/affiliate"
       - "https://help.activecampaign.com/hc/en-us/articles/115000065864-Affiliate-program"
@@ -52,6 +52,6 @@ programs:
     approval_status: "phase_2_not_applied"
     affiliate_link: null
     tracking_id: null
-    evidence_checked_date: "2026-08-21"
+    evidence_checked_date: "2026-08-22"
     evidence_urls:
       - "https://www.hubspot.com/partners/affiliates"

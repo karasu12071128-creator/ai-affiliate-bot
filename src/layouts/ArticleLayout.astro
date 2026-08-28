@@ -3,7 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import AffiliateDisclosure from "../components/AffiliateDisclosure.astro";
 import CTA from "../components/CTA.astro";
-import { affiliateTargets } from "../lib/affiliateLinks";
+import { getAffiliateStatusNote } from "../lib/affiliateLinks";
 import { site } from "../site";
 
 type Props = {
@@ -54,7 +54,7 @@ const articleJsonLd = {
         product={primary}
         article={article.slug}
         placement="top_cta"
-        note={`Affiliate status: ${affiliateTargets[primary].status.replace("_", " ")}. Links currently use the official site until approval.`}
+        note={getAffiliateStatusNote(primary)}
       />
     )}
 

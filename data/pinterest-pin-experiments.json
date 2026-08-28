@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-08-28",
+  "site": "Creator Growth Tools",
+  "destination_origin": "https://ai-affiliate-bot.pages.dev",
+  "rollout": {
+    "initial_pool_size": 25,
+    "initial_batch_size": 10,
+    "target_publishing_pace": "approximately_one_pin_per_day",
+    "next_batch_requires_analytics_review": true
+  },
+  "article_publication_log_integration": {
+    "join_key": "article_slug -> data/article-publication-log.json records[].slug",
+    "on_publish": "Append the published pin_id to the matching record's pinterest_assets array after destination verification.",
+    "draft_behavior": "Do not add draft or unpublished pin IDs to article-publication-log.json."
+  },
+  "pins": [
+    {
+      "pin_id": "pin001",
+      "experiment_id": "CGT-PIN-2026-001",
+      "article_slug": "kit-vs-beehiiv",
+      "primary_keyword": "kit vs beehiiv",
+      "secondary_keywords": ["newsletter platform comparison", "best newsletter platform for creators"],
+      "hook": "Kit vs beehiiv: Which Is Better?",
+      "title": "Kit vs beehiiv: Which Is Better for Creators?",
+      "description": "Compare Kit and beehiiv for creator funnels, newsletter growth, automation, and monetization before choosing a platform. This article may contain affiliate links.",
+      "board": "Newsletter Platforms",
+      "board_id": "board-newsletter-platforms",
+      "image_asset": null,
+      "destination_url": "https://ai-affiliate-bot.pages.dev/kit-vs-beehiiv/",
+      "utm_url": "https://ai-affiliate-bot.pages.dev/kit-vs-beehiiv/?utm_source=pinterest&utm_medium=organic_pin&utm_campaign=kit-vs-beehiiv&utm_content=pin001",
+      "publish_status": "draft",
+      "scheduled_at": null,
+      "published_at": null,
+      "article_log_sync_status": "not_published",
+      "metrics": {
+        "impressions": null,
+        "saves": null,
+        "save_rate": null,
+        "pin_clicks": null,
+        "outbound_clicks": null,
+        "outbound_click_rate": null,
+        "affiliate_clicks": null,
+        "signup_or_trial": null,
+        "sales": null,
+        "commission": null
+      }
+    }
+  ]
+}

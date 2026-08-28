@@ -1,5 +1,7 @@
 # Pinterest MVP
 
+> Historical creative ideation only. `docs/PINTEREST_STRATEGY_2026.md` is the operating-policy SSOT, and `data/pinterest-pin-experiments.json` is the experiment registry. Do not publish these 25 ideas as a batch.
+
 All pins should send users to the relevant site article first, not directly to an affiliate URL. Add a short commercial disclosure where the target article contains or may later contain affiliate links.
 
 ## 1. 7 Best Email Marketing Tools for Creators in 2026

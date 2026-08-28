@@ -1,4 +1,4 @@
-last_updated: "2026-08-22"
+last_updated: "2026-08-28"
 verification_note: "Affiliate and pricing information changes. Re-check official sources before publishing or applying."
 programs:
   - product: "Kit"
@@ -7,10 +7,13 @@ programs:
     commission_duration: "12 months for base commission; recurring continuation depends on status."
     cookie_period: "VERIFY_BEFORE_PUBLISH"
     current_pricing: "Newsletter plan free up to 10,000 subscribers per Kit help page; Creator and Pro pricing vary by subscribers. Pricing page showed Creator/Pro annual pricing examples for 1,000 subscribers during verification."
-    approval_status: "not_applied"
+    approval_status: "rejected_reapply_later"
     affiliate_link: null
     tracking_id: null
-    evidence_checked_date: "2026-08-22"
+    application_result_date: "2026-08-22"
+    status_note: "Application was declined. The response identified audience fit, promotional method, website/content depth, and application detail as possible areas to strengthen. Reapplication is allowed."
+    reapply_strategy: "Reapply after Pinterest publishing history and site traffic/content evidence are established."
+    evidence_checked_date: "2026-08-28"
     evidence_urls:
       - "https://kit.com/affiliate"
       - "https://kit.com/pricing"
@@ -21,10 +24,11 @@ programs:
     commission_duration: "Up to 12 months"
     cookie_period: "60 days per beehiiv partner help article"
     current_pricing: "Launch $0/month up to 2,500 subscribers; Scale $43/month billed annually; Max $96/month billed annually; Enterprise custom pricing."
-    approval_status: "not_applied"
-    affiliate_link: null
-    tracking_id: null
-    evidence_checked_date: "2026-08-22"
+    approval_status: "approved"
+    affiliate_link: "https://www.beehiiv.com/?via=5v0uGdI"
+    tracking_id: "5v0uGdI"
+    status_note: "Partner Program access confirmed. Use this URL only through the central affiliate link registry."
+    evidence_checked_date: "2026-08-28"
     evidence_urls:
       - "https://www.beehiiv.com/partners/affiliate"
       - "https://www.beehiiv.com/support/article/23352219299095-getting-started-with-the-beehiiv-partner-program"
@@ -35,10 +39,12 @@ programs:
     commission_duration: "Up to 12 months per referred account"
     cookie_period: "90 days per ActiveCampaign Help Center"
     current_pricing: "Official pricing page verified plan names Starter, Plus, Pro, and Enterprise. Price display depends on contact count, currency, and configuration selectors; verify live pricing for the target contact tier before publication."
-    approval_status: "not_applied"
+    approval_status: "pending_review"
     affiliate_link: null
     tracking_id: null
-    evidence_checked_date: "2026-08-22"
+    application_submitted_date: "2026-08-21"
+    status_note: "Application receipt confirmed. No later approval or rejection email was found as of 2026-08-28."
+    evidence_checked_date: "2026-08-28"
     evidence_urls:
       - "https://www.activecampaign.com/partners/affiliate"
       - "https://help.activecampaign.com/hc/en-us/articles/115000065864-Affiliate-program"

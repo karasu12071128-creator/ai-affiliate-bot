@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "last_updated": "2026-08-28",
+  "id_scope": "Internal SSOT identifiers; not Pinterest platform IDs.",
+  "boards": [
+    {
+      "id": "board-email-marketing-tools",
+      "name": "Email Marketing Tools",
+      "primary_keyword": "email marketing tools",
+      "description": "Practical comparisons and guides to email marketing tools for creators, freelancers, coaches, and small online businesses.",
+      "target_article_types": ["roundup_comparison", "versus_comparison", "review_consensus"],
+      "status": "active_human_created"
+    },
+    {
+      "id": "board-newsletter-platforms",
+      "name": "Newsletter Platforms",
+      "primary_keyword": "newsletter platforms",
+      "description": "Clear newsletter platform comparisons for creators choosing publishing, audience growth, automation, and monetization tools.",
+      "target_article_types": ["versus_comparison", "alternatives_comparison", "review_consensus"],
+      "status": "active_human_created"
+    },
+    {
+      "id": "board-email-marketing-for-creators",
+      "name": "Email Marketing for Creators",
+      "primary_keyword": "email marketing for creators",
+      "description": "Useful email marketing strategies and software guides for creators building an audience, newsletter, product, or service business.",
+      "target_article_types": ["roundup_comparison", "versus_comparison", "review_consensus"],
+      "status": "active_human_created"
+    },
+    {
+      "id": "board-creator-tools-for-solopreneurs",
+      "name": "Creator Tools for Solopreneurs",
+      "primary_keyword": "creator tools for solopreneurs",
+      "description": "Focused software comparisons for solopreneurs who need practical creator, email, automation, and audience growth tools.",
+      "target_article_types": ["roundup_comparison", "alternatives_comparison", "review_consensus"],
+      "status": "active_human_created"
+    },
+    {
+      "id": "board-newsletter-growth-tips",
+      "name": "Newsletter Growth Tips",
+      "primary_keyword": "newsletter growth tips",
+      "description": "Actionable newsletter growth ideas covering platform choice, audience building, creator workflows, and sustainable monetization.",
+      "target_article_types": ["versus_comparison", "alternatives_comparison", "roundup_comparison"],
+      "status": "active_human_created"
+    }
+  ]
+}

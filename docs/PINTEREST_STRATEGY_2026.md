@@ -1,6 +1,6 @@
 # Pinterest Strategy 2026
 
-Last updated: 2026-08-28
+Last updated: 2026-08-30
 
 ## SSOT Scope
 
@@ -46,6 +46,8 @@ The site currently has five published articles. Create five distinct search-inte
 ```
 
 Do not publish 25 Pins in bulk. Publish about one Pin per day, stop after the first 10 Pins, review Pinterest Analytics, then decide whether and how to produce the remaining 15. `docs/PINTEREST_MVP.md` is an existing idea bank, not permission to publish or the operational experiment record.
+
+The first 10 local assets use the five existing articles with two comparable creative types per article: `comparison` and `checklist`. They are rendered from one deterministic `cgt-pin-v1` template. Local asset availability does not authorize deployment or publication; OWNER posts the initial batch manually one item at a time.
 
 ## Pinterest Policy
 

@@ -8,6 +8,7 @@ const registry = JSON.parse(await readFile("data/pinterest-pin-experiments.json"
 function approvedPin() {
   const pin = structuredClone(registry.pins[0]);
   pin.approval.status = "approved";
+  pin.delivery.mode = "buffer_draft_authorized";
   return pin;
 }
 
@@ -64,6 +65,7 @@ test("duplicate receipt blocks a second call", async () => {
     pin,
     request,
     externalWriteAuthorized: true,
+    registryExternalWriteAuthorized: true,
     liveConfirmation: "OWNER_APPROVED_BUFFER_DRAFT",
     priorReceipts: new Set([request.idempotency_key]),
     provider: { async createDraft() { throw new Error("must not run"); } }
@@ -79,6 +81,7 @@ test("ambiguous external failure is recorded once without retry", async () => {
     pin,
     request: requestFor(pin),
     externalWriteAuthorized: true,
+    registryExternalWriteAuthorized: true,
     liveConfirmation: "OWNER_APPROVED_BUFFER_DRAFT",
     provider: { async createDraft() { calls += 1; throw new Error("timeout"); } }
   });
@@ -86,4 +89,35 @@ test("ambiguous external failure is recorded once without retry", async () => {
   assert.equal(result.provider_calls, 1);
   assert.equal(result.automatic_retry, false);
   assert.equal(calls, 1);
+});
+
+test("registry authorization is required even when caller and owner flags are true", async () => {
+  const pin = approvedPin();
+  let calls = 0;
+  const result = await executeBufferPlan({
+    pin,
+    request: requestFor(pin),
+    externalWriteAuthorized: true,
+    liveConfirmation: "OWNER_APPROVED_BUFFER_DRAFT",
+    provider: { async createDraft() { calls += 1; } }
+  });
+  assert.equal(result.status, "DRY_RUN_OK");
+  assert.equal(calls, 0);
+});
+
+test("request from another Pin is blocked before provider access", async () => {
+  const pin = approvedPin();
+  const request = requestFor(pin);
+  request.pin_id = "pin999";
+  let calls = 0;
+  const result = await executeBufferPlan({
+    pin,
+    request,
+    externalWriteAuthorized: true,
+    registryExternalWriteAuthorized: true,
+    liveConfirmation: "OWNER_APPROVED_BUFFER_DRAFT",
+    provider: { async createDraft() { calls += 1; } }
+  });
+  assert.equal(result.status, "BLOCKED_REQUEST_MISMATCH");
+  assert.equal(calls, 0);
 });

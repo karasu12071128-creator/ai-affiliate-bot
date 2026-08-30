@@ -48,6 +48,7 @@ export function buildBufferDraftRequest({ pin, channelId, boardServiceId, public
   const body = { query: CREATE_POST_MUTATION, variables };
   const hash = payloadHash(body);
   return {
+    pin_id: pin.pin_id,
     endpoint: "https://api.buffer.com",
     method: "POST",
     secret_name: "BUFFER_API_KEY",
@@ -62,6 +63,7 @@ export async function executeBufferPlan({
   pin,
   request,
   externalWriteAuthorized = false,
+  registryExternalWriteAuthorized = false,
   liveConfirmation = "NOT_AUTHORIZED",
   priorReceipts = new Set(),
   provider
@@ -69,10 +71,22 @@ export async function executeBufferPlan({
   if (pin.approval?.status !== "approved") {
     return { status: "BLOCKED_NOT_AUTHORIZED", provider_calls: 0, automatic_retry: false };
   }
+  if (
+    request?.pin_id !== pin.pin_id ||
+    request?.body?.variables?.input?.metadata?.pinterest?.url !== pin.utm_url ||
+    request?.body?.variables?.input?.metadata?.pinterest?.title !== pin.title
+  ) {
+    return { status: "BLOCKED_REQUEST_MISMATCH", provider_calls: 0, automatic_retry: false };
+  }
   if (priorReceipts.has(request.idempotency_key)) {
     return { status: "BLOCKED_DUPLICATE", provider_calls: 0, automatic_retry: false };
   }
-  if (!externalWriteAuthorized || liveConfirmation !== "OWNER_APPROVED_BUFFER_DRAFT") {
+  if (
+    !externalWriteAuthorized ||
+    !registryExternalWriteAuthorized ||
+    pin.delivery?.mode !== "buffer_draft_authorized" ||
+    liveConfirmation !== "OWNER_APPROVED_BUFFER_DRAFT"
+  ) {
     return {
       status: "DRY_RUN_OK",
       provider_calls: 0,

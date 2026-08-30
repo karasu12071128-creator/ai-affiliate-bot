@@ -12,11 +12,72 @@ function clone(value) {
 }
 
 test("current registry validates and keeps external delivery disabled", () => {
-  assert.deepEqual(validateRegistry(source), { valid: true, pin_count: 1 });
+  assert.deepEqual(validateRegistry(source), { valid: true, pin_count: 10 });
   assert.deepEqual(validateReferences(source, publicationLog, boardRegistry), { valid: true, article_count: 5, board_count: 5 });
   assert.equal(source.delivery_contract.external_write_authorized, false);
   assert.equal(source.delivery_contract.automatic_retry, false);
   assert.equal(source.pins[0].approval.status, "not_authorized");
+});
+
+test("UTM URL cannot redirect away from the clean destination", () => {
+  const registry = clone(source);
+  registry.pins[0].utm_url = registry.pins[0].utm_url.replace("/kit-vs-beehiiv/", "/kit-review/");
+  assert.throws(() => validateRegistry(registry), /preserve destination/);
+});
+
+test("destination cannot leave the registry origin", () => {
+  const registry = clone(source);
+  registry.pins[0].destination_url = registry.pins[0].destination_url.replace("ai-affiliate-bot.pages.dev", "example.invalid");
+  registry.pins[0].utm_url = registry.pins[0].utm_url.replace("ai-affiliate-bot.pages.dev", "example.invalid");
+  assert.throws(() => validateRegistry(registry), /destination origin must match registry/);
+});
+
+test("malformed and negative metrics fail closed while null remains unknown", () => {
+  const registry = clone(source);
+  registry.pins[0].metrics.impressions = -1;
+  assert.throws(() => validateRegistry(registry), /invalid metric impressions/);
+  registry.pins[0].metrics.impressions = null;
+  registry.pins[0].metrics.outbound_click_rate = 1.2;
+  assert.throws(() => validateRegistry(registry), /between 0 and 1/);
+});
+
+test("impossible count and rate combinations fail closed", () => {
+  const registry = clone(source);
+  const metrics = registry.pins[0].metrics;
+  metrics.impressions = 0;
+  metrics.outbound_clicks = 1;
+  assert.throws(() => validateRegistry(registry), /cannot exceed impressions/);
+
+  metrics.impressions = 100;
+  metrics.outbound_clicks = 5;
+  metrics.outbound_click_rate = 0.2;
+  assert.throws(() => validateRegistry(registry), /does not match observed counts/);
+});
+
+test("snapshot chronology uses actual instants rather than timestamp text order", () => {
+  const registry = clone(source);
+  registry.pins[0].analytics_snapshots = [
+    { checkpoint_day: 1, observed_at: "2026-09-01T09:00:00+09:00", source: "manual", window: "cumulative", pinterest: { impressions: 1, saves: 0, pin_clicks: 0, outbound_clicks: 0 }, site: null, affiliate: null },
+    { checkpoint_day: 1, observed_at: "2026-09-01T01:00:00Z", source: "manual", window: "cumulative", pinterest: { impressions: 1, saves: 0, pin_clicks: 0, outbound_clicks: 0 }, site: null, affiliate: null }
+  ];
+  assert.doesNotThrow(() => validateRegistry(registry));
+  registry.pins[0].analytics_snapshots[1].observed_at = "2026-09-01T00:00:00Z";
+  assert.throws(() => validateRegistry(registry), /chronological/);
+});
+
+test("published Pin requires both platform evidence and article-log sync", () => {
+  const registry = clone(source);
+  const log = clone(publicationLog);
+  const pin = registry.pins[0];
+  pin.publish_status = "published";
+  pin.platform_identity = {
+    pinterest_pin_id: "fixture-pin-id",
+    pin_url: "https://www.pinterest.com/pin/fixture-pin-id/",
+    verified_at: "2026-09-01T09:00:00+09:00"
+  };
+  assert.throws(() => validateReferences(registry, log, boardRegistry), /must be synced/);
+  log.records.find((record) => record.slug === pin.article_slug).pinterest_assets.push(pin.pin_id);
+  assert.doesNotThrow(() => validateReferences(registry, log, boardRegistry));
 });
 
 test("unpublished Pins cannot appear in article publication assets", () => {
@@ -65,8 +126,11 @@ test("duplicate Pin IDs and duplicate delivery keys fail closed", () => {
   registry.pins.push(clone(registry.pins[0]));
   assert.throws(() => validateRegistry(registry), /duplicate pin_id/);
 
-  registry.pins[1].pin_id = "pin002";
-  registry.pins[1].utm_url = registry.pins[1].utm_url.replace("pin001", "pin002");
+  const duplicateKeyPin = registry.pins.at(-1);
+  duplicateKeyPin.pin_id = "pin999";
+  duplicateKeyPin.experiment_id = "CGT-PIN-FIXTURE-999";
+  duplicateKeyPin.image_asset = "/pinterest/pins/pin999.png";
+  duplicateKeyPin.utm_url = duplicateKeyPin.utm_url.replaceAll("pin001", "pin999");
   assert.throws(() => validateRegistry(registry), /duplicate idempotency key/);
 });
 
@@ -76,6 +140,8 @@ test("observed zero remains distinct from unknown null", () => {
   for (let index = 0; index < 10; index += 1) {
     const pin = clone(registry.pins[0]);
     pin.pin_id = `pin${String(index + 1).padStart(3, "0")}`;
+    pin.experiment_id = `fixture-${pin.pin_id}`;
+    pin.image_asset = `/pinterest/pins/${pin.pin_id}.png`;
     pin.delivery.idempotency_key = `delivery-${pin.pin_id}`;
     pin.utm_url = pin.utm_url.replace("pin001", pin.pin_id);
     pin.publish_status = "published";

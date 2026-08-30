@@ -1,12 +1,14 @@
 # Pinterest Strategy 2026
 
-Last updated: 2026-08-28
+Last updated: 2026-08-30
 
 ## SSOT Scope
 
 This document is the long-term operating policy for the Creator Growth Tools Pinterest experiment. Board records live in `data/pinterest-boards.json`, Pin-level plans and metrics live in `data/pinterest-pin-experiments.json`, article publication history lives in `data/article-publication-log.json`, and affiliate approvals and URLs remain centrally managed in `data/affiliate-programs.yaml` and `src/lib/affiliateLinks.ts`.
 
 Human setup already completed: Pinterest profile, initial Boards, and Website Claim. The current phase prepares measurement only. It does not authorize image generation, browser automation, Pin publishing, or bulk posting.
+
+The machine-readable strategy contract is `data/pinterest-growth-engine-contract.json`. `scripts/pinterest-growth-review.mjs` validates the Pin registry and produces a deterministic `KEEP / MODIFY / MEASURE_MORE` review. `STOP` is supported by the policy vocabulary but requires human review in v0.1.
 
 ## Pinterest Role
 
@@ -44,6 +46,8 @@ The site currently has five published articles. Create five distinct search-inte
 ```
 
 Do not publish 25 Pins in bulk. Publish about one Pin per day, stop after the first 10 Pins, review Pinterest Analytics, then decide whether and how to produce the remaining 15. `docs/PINTEREST_MVP.md` is an existing idea bank, not permission to publish or the operational experiment record.
+
+The first 10 local assets use the five existing articles with two comparable creative types per article: `comparison` and `checklist`. They are rendered from one deterministic `cgt-pin-v1` template. Local asset availability does not authorize deployment or publication; OWNER posts the initial batch manually one item at a time.
 
 ## Pinterest Policy
 
@@ -110,6 +114,8 @@ UTM parameters are for Pinterest destination URLs only. Canonical, sitemap, JSON
 | Day 90 | Continue, improve, or stop the experiment |
 
 Do not overreact to daily fluctuations during the initial indexing period. Record the scheduled review snapshots and compare Pins by search intent, article, hook, and Board.
+
+Until the existing 10-Pin checkpoint is reached with comparable observations, the Growth Engine must return `INSUFFICIENT_DATA / MEASURE_MORE` and must not invent winner allocations. After the checkpoint it may identify directional leaders by Outbound Click Rate and Save Rate, but these are not causal claims.
 
 ## Kit Reapplication Gate
 

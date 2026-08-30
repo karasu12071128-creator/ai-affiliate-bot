@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "observed_at": "2026-08-30",
+  "template_id": "cgt-pin-v1",
+  "render_contract": {
+    "width": 1000,
+    "height": 1500,
+    "format": "png",
+    "external_calls": 0,
+    "ai_image_generation": false
+  },
+  "batch_result": {
+    "expected": 10,
+    "rendered": 10,
+    "dimension_passed": 10,
+    "status": "PASS"
+  },
+  "pin001_visual_review": {
+    "status": "PASS",
+    "brand_name": "Creator Growth Tools",
+    "headline_readable": true,
+    "text_overflow_observed": false,
+    "comparison_labels_specific": true,
+    "destination_claim_aligned": true,
+    "publication_authorized": false,
+    "note": "Local raster review only. This does not approve Pinterest publication."
+  },
+  "spot_check": {
+    "pin_id": "pin010",
+    "status": "PASS",
+    "text_overflow_observed": false,
+    "checklist_readable": true
+  }
+}

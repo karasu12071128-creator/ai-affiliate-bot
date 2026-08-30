@@ -16,7 +16,18 @@ Lightweight Astro MVP for an English SaaS affiliate experiment focused on newsle
 npm install
 npm run dev
 npm run build
+npm test
+npm run growth:review
+npm run buffer:dry-run
 ```
+
+`growth:review` validates the Pinterest experiment registry and returns an
+evidence-bounded `KEEP / MODIFY / MEASURE_MORE` review. The existing 10-Pin
+checkpoint must be reached before directional winners are reported.
+
+`buffer:dry-run` builds and validates a Buffer Pinterest draft request without
+making a network call. External delivery remains disabled until the image,
+channel, Board, credential, due time, and one-Pin OWNER approval are provided.
 
 ## Cloudflare Pages
 

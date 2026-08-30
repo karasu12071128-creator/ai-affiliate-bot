@@ -8,6 +8,8 @@ This document is the long-term operating policy for the Creator Growth Tools Pin
 
 Human setup already completed: Pinterest profile, initial Boards, and Website Claim. The current phase prepares measurement only. It does not authorize image generation, browser automation, Pin publishing, or bulk posting.
 
+The machine-readable strategy contract is `data/pinterest-growth-engine-contract.json`. `scripts/pinterest-growth-review.mjs` validates the Pin registry and produces a deterministic `KEEP / MODIFY / MEASURE_MORE` review. `STOP` is supported by the policy vocabulary but requires human review in v0.1.
+
 ## Pinterest Role
 
 Pinterest is a visual search and article-discovery channel, not an early follower-growth campaign.
@@ -110,6 +112,8 @@ UTM parameters are for Pinterest destination URLs only. Canonical, sitemap, JSON
 | Day 90 | Continue, improve, or stop the experiment |
 
 Do not overreact to daily fluctuations during the initial indexing period. Record the scheduled review snapshots and compare Pins by search intent, article, hook, and Board.
+
+Until the existing 10-Pin checkpoint is reached with comparable observations, the Growth Engine must return `INSUFFICIENT_DATA / MEASURE_MORE` and must not invent winner allocations. After the checkpoint it may identify directional leaders by Outbound Click Rate and Save Rate, but these are not causal claims.
 
 ## Kit Reapplication Gate
 

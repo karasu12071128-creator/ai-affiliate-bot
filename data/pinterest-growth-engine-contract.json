@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Define deterministic inputs and outputs for Pinterest strategy drafts without authorizing image generation or publication.",
+  "creative_types": [
+    "comparison",
+    "ranking",
+    "number_hook",
+    "checklist",
+    "problem_solution",
+    "how_to",
+    "ui_mockup",
+    "typography",
+    "abstract",
+    "human_lifestyle"
+  ],
+  "strategy_input": {
+    "required": [
+      "article_slug",
+      "article_title",
+      "article_type",
+      "search_intent",
+      "primary_keyword",
+      "editorial_hypothesis",
+      "eligible_boards"
+    ],
+    "source": "data/article-publication-log.json plus data/pinterest-boards.json"
+  },
+  "strategy_output": {
+    "required": [
+      "pin_id",
+      "experiment_id",
+      "main_hypothesis",
+      "hook",
+      "creative_type",
+      "target_article",
+      "board_id",
+      "title",
+      "description",
+      "destination_url",
+      "utm_url",
+      "approval_status"
+    ],
+    "default_approval_status": "not_authorized",
+    "default_publish_status": "draft"
+  },
+  "review_output": {
+    "decisions": ["KEEP", "MODIFY", "STOP", "MEASURE_MORE"],
+    "dimensions": ["creative_type", "hook", "article_slug", "board_id"],
+    "unknown_value": "N/A",
+    "automatic_stop_allowed": false
+  },
+  "external_actions": {
+    "image_generation": false,
+    "buffer_write": false,
+    "pinterest_publish": false,
+    "affiliate_application": false
+  }
+}

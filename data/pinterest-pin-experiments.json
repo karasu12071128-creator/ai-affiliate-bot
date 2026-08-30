@@ -1,13 +1,29 @@
 {
-  "schema_version": "1.0",
-  "last_updated": "2026-08-28",
+  "schema_version": "1.1",
+  "last_updated": "2026-08-29",
   "site": "Creator Growth Tools",
   "destination_origin": "https://ai-affiliate-bot.pages.dev",
+  "unknown_value_policy": "Machine-readable metrics use null and reports render null as N/A. Never infer zero.",
   "rollout": {
     "initial_pool_size": 25,
     "initial_batch_size": 10,
     "target_publishing_pace": "approximately_one_pin_per_day",
-    "next_batch_requires_analytics_review": true
+    "next_batch_requires_analytics_review": true,
+    "analytics_checkpoint_published_pins": 10
+  },
+  "decision_contract": {
+    "allowed_decisions": ["KEEP", "MODIFY", "STOP", "MEASURE_MORE"],
+    "default_without_comparable_data": "MEASURE_MORE",
+    "winner_statuses": ["UNKNOWN", "DIRECTIONAL_WINNER", "DIRECTIONAL_LOSER", "MIXED"],
+    "automatic_stop_allowed": false,
+    "stop_requires_human_review": true
+  },
+  "delivery_contract": {
+    "provider_candidate": "buffer",
+    "mode": "disabled",
+    "human_approval_required": true,
+    "external_write_authorized": false,
+    "automatic_retry": false
   },
   "article_publication_log_integration": {
     "join_key": "article_slug -> data/article-publication-log.json records[].slug",
@@ -18,9 +34,14 @@
     {
       "pin_id": "pin001",
       "experiment_id": "CGT-PIN-2026-001",
+      "batch_id": "initial-10",
+      "concept_id": null,
       "article_slug": "kit-vs-beehiiv",
+      "search_intent": "commercial_investigation",
       "primary_keyword": "kit vs beehiiv",
       "secondary_keywords": ["newsletter platform comparison", "best newsletter platform for creators"],
+      "creative_type": "comparison",
+      "main_hypothesis": "A direct Kit-versus-beehiiv comparison hook will attract creators who are already evaluating newsletter platforms and produce qualified outbound article visits.",
       "hook": "Kit vs beehiiv: Which Is Better?",
       "title": "Kit vs beehiiv: Which Is Better for Creators?",
       "description": "Compare Kit and beehiiv for creator funnels, newsletter growth, automation, and monetization before choosing a platform. This article may contain affiliate links.",
@@ -32,6 +53,23 @@
       "publish_status": "draft",
       "scheduled_at": null,
       "published_at": null,
+      "platform_identity": {
+        "pinterest_pin_id": null,
+        "pin_url": null,
+        "verified_at": null
+      },
+      "approval": {
+        "status": "not_authorized",
+        "approved_by": null,
+        "approved_at": null
+      },
+      "delivery": {
+        "provider": "buffer",
+        "mode": "disabled",
+        "idempotency_key": "cgt-pinterest-pin001-v1",
+        "external_post_id": null,
+        "last_attempt_at": null
+      },
       "article_log_sync_status": "not_published",
       "metrics": {
         "impressions": null,
@@ -44,6 +82,14 @@
         "signup_or_trial": null,
         "sales": null,
         "commission": null
+      },
+      "analytics_snapshots": [],
+      "result": {
+        "data_status": "INSUFFICIENT_DATA",
+        "decision": "MEASURE_MORE",
+        "winner_status": "UNKNOWN",
+        "reason": "The Pin is not published and has no observed metrics.",
+        "evaluated_at": null
       }
     }
   ]

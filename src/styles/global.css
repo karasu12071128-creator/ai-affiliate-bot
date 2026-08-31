@@ -80,6 +80,11 @@ a {
   padding: 44px 20px;
 }
 
+.hero-wrap {
+  background: var(--soft);
+  border-bottom: 1px solid var(--line);
+}
+
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
@@ -107,6 +112,83 @@ a {
   background: var(--white);
   border-radius: 8px;
   padding: 18px;
+}
+
+.card.use-case {
+  background: var(--soft);
+  border-top: 3px solid var(--accent);
+}
+
+.card.article-card {
+  border-top: 3px solid var(--gold);
+}
+
+/* Evidence bar: a factual status band, not a marketing claim. Values come straight from
+   the article collection and affiliate-programs data, never hardcoded here. */
+.evidence-bar {
+  background: var(--accent-dark);
+  border-bottom: 3px solid var(--gold);
+}
+
+.evidence-bar-list {
+  list-style: none;
+  margin: 0 auto;
+  max-width: var(--max);
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px 20px;
+}
+
+.evidence-bar-list li {
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  padding-left: 16px;
+}
+
+.evidence-bar-list li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.evidence-bar-list a {
+  display: block;
+  color: var(--white);
+  text-decoration: none;
+}
+
+.evidence-value {
+  display: block;
+  color: var(--white);
+  font-weight: 800;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.evidence-label {
+  display: block;
+  color: #dfeee6;
+  font-size: 0.82rem;
+}
+
+.evidence-bar-list a .evidence-label {
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+.differentiators {
+  background: var(--soft);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.diff-list {
+  max-width: 640px;
+}
+
+.differentiators .notice {
+  background: var(--white);
+  margin-top: 22px;
 }
 
 .eyebrow {
@@ -381,6 +463,15 @@ th {
   .tool-grid,
   .cards {
     grid-template-columns: 1fr;
+  }
+
+  .evidence-bar-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .evidence-bar-list li {
+    border-left: 0;
+    padding-left: 0;
   }
 
   h1 {

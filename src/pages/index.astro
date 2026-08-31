@@ -31,35 +31,66 @@ const useCases = [
     linkText: "Compare solopreneur tools"
   }
 ].filter((useCase) => bySlug.has(useCase.slug));
+
+const evidenceBar = [
+  { value: String(articles.length), label: "Published comparisons" },
+  { value: "Checked", label: "Official vendor sources", href: "/editorial-methodology/" },
+  { value: "Disclosed", label: "Affiliate relationships", href: "/affiliate-disclosure/" },
+  ...(lastVerified ? [{ value: lastVerified, label: "Last verified" }] : [])
+];
+
+const differentiators = [
+  "We do not invent hands-on experience we haven't had.",
+  "Affiliate commission does not decide the verdict.",
+  "Unsupported claims get corrected, not buried.",
+  "Prices and features carry a verification date.",
+  "What we haven't checked, we mark unknown, not assumed."
+];
 ---
 
 <BaseLayout
   title="Newsletter and Email Tool Comparisons for Creators"
   description="Research-backed comparisons of newsletter and email marketing tools for creators, solopreneurs, and small online businesses."
 >
-  <section class="hero">
-    <div>
-      <p class="eyebrow">Creator Growth Tools</p>
-      <h1>Newsletter tools, compared without fake reviews.</h1>
-      <p class="dek">
-        Practical comparisons for creators, newsletter operators, coaches, freelancers, and small online
-        businesses choosing email marketing software in 2026.
-      </p>
-      <ul class="trust-list">
-        <li>{articles.length} in-depth comparisons</li>
-        <li>Official sources and public review consensus, kept separate</li>
-        <li>No claimed hands-on testing we did not do</li>
-        {lastVerified && <li>Facts last verified {lastVerified}</li>}
-      </ul>
-    </div>
-    <aside class="hero-panel">
-      <h2>Start here</h2>
-      <p>
-        Most creators are choosing between a creator-funnel tool and a newsletter-growth platform. Start with the
-        full comparison, then narrow by how you actually make money.
-      </p>
-      <a class="button" href="/best-email-marketing-tools-for-creators/">Read the main comparison</a>
-    </aside>
+  <div class="hero-wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Independent, evidence-first comparisons</p>
+        <h1>Newsletter software, checked against the evidence.</h1>
+        <p class="dek">
+          Practical comparisons for creators and small online businesses choosing email marketing software, with
+          verified pricing, disclosed affiliate relationships, and no invented hands-on claims.
+        </p>
+      </div>
+      <aside class="hero-panel">
+        <h2>Start here</h2>
+        <p>
+          Most creators are choosing between a creator-funnel tool and a newsletter-growth platform. Start with the
+          full comparison, then narrow by how you actually make money.
+        </p>
+        <a class="button" href="/best-email-marketing-tools-for-creators/">Read the main comparison</a>
+      </aside>
+    </section>
+  </div>
+
+  <section class="evidence-bar" aria-label="Evidence and verification status">
+    <ul class="evidence-bar-list">
+      {evidenceBar.map((item) => (
+        <li>
+          {item.href ? (
+            <a href={item.href}>
+              <span class="evidence-value">{item.value}</span>
+              <span class="evidence-label">{item.label}</span>
+            </a>
+          ) : (
+            <>
+              <span class="evidence-value">{item.value}</span>
+              <span class="evidence-label">{item.label}</span>
+            </>
+          )}
+        </li>
+      ))}
+    </ul>
   </section>
 
   <section class="band">
@@ -93,7 +124,13 @@ const useCases = [
     </div>
   </section>
 
-  <section class="band">
+  <section class="band differentiators">
+    <h2>How we're different</h2>
+    <ul class="trust-list diff-list">
+      {differentiators.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
     <p class="notice">
       Some links on this site are affiliate links and are labelled as such on the page. Others go straight to a
       product's own website and earn us nothing. Read our

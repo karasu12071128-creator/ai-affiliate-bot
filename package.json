@@ -10,6 +10,7 @@
     "test": "node --test tests/*.test.mjs",
     "growth:review": "node scripts/pinterest-growth-review.mjs",
     "buffer:dry-run": "node scripts/buffer-pinterest-dry-run.mjs",
+    "pin:package": "node scripts/pinterest-publish-package.mjs",
     "pins:render": "node scripts/render-pinterest-pins.mjs"
   },
   "dependencies": {

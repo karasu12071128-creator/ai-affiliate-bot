@@ -46,12 +46,12 @@ We compared official pricing and feature documentation, verified public review d
 | Platform | Best for | Entry cost (verified Aug 31, 2026) | Platform cut of paid subscriptions |
 | --- | --- | --- | --- |
 | beehiiv | A publication that will earn directly | Free to 2,500 subs; Scale $43/mo at 1,000 subs | 0% on Scale and Max |
-| Substack | Starting from zero, no fixed cost | $0 to publish | Writers keep 90% minus card fees |
+| Substack | Starting from zero, no fixed cost | No publishing fee shown | Writers keep 90% minus card fees |
 | Ghost | Owning the full publication stack | Starter $18/mo billed yearly, 1,000 members | 0% |
 | Kit | A newsletter that sells products or services | Free to 10,000 subs; Creator $33/mo at 1,000 | Not a subscription-share model |
 | MailerLite | Sending good email cheaply | Free to 250 subs; Comfort from $12/mo | Not a subscription-share model |
 
-Prices on subscriber-priced platforms rise with list size. Every figure above is the price shown at that platform's default slider position, which is 1,000 subscribers for beehiiv, Ghost, and Kit.
+Prices rise with list size on all three subscriber-priced platforms. The beehiiv and Kit figures are the prices shown at those pages' default 1,000-subscriber slider position. Ghost prices by member tier rather than by slider: Starter and Publisher are the 1,000-member prices, and Business is the 10,000-member price.
 
 ## 1. beehiiv — best overall for a newsletter that earns directly
 
@@ -67,7 +67,7 @@ At our last verified check on August 22, 2026, beehiiv held **4.5/5 from 40 revi
 
 ## 2. Substack — best for starting from zero
 
-Substack charges nothing to publish. Its official page states that **writers keep 90% of their revenue minus credit card fees**, so the platform's 10% share only appears once readers pay you. Card processing is charged separately by the payment processor and varies by country.
+Substack's page shows no publishing fee and no subscriber-priced plan tiers. Its official page states that **writers keep 90% of their revenue minus credit card fees**, so the platform's 10% share only appears once readers pay you. Card processing is charged separately by the payment processor and varies by country.
 
 The real draw is not the price, though. It is the network. Recommendations between publications and the platform's own reader surfaces do genuine discovery work, which matters enormously when your list is empty and nobody is searching for you yet.
 
@@ -81,7 +81,7 @@ Ghost(Pro) lists **Starter at $18/month billed yearly** and **Publisher at $29/m
 
 What you get is a publication rather than a mailing list: a real website, themes you control, membership and paid subscriptions, and no platform sitting between you and your readers.
 
-**The case against it:** you are the operator now. Themes, hosting decisions, and integrations become your job, and there is no built-in ad network or discovery feed handing you readers. Starter also holds back staff users, custom themes, and paid subscriptions — for most people the meaningful comparison is Publisher, not the $18 headline.
+**The case against it:** you are the operator now. Themes, hosting decisions, and integrations become your job, and Ghost's pricing page advertises no ad network or discovery feed of the kind beehiiv and Substack lead with — growth is something you go and get. Starter also holds back staff users, custom themes, and paid subscriptions — for most people the meaningful comparison is Publisher, not the $18 headline.
 
 **Choose Ghost if** the website matters as much as the emails and you want the whole stack to be yours.
 
@@ -91,17 +91,17 @@ Kit's free plan runs to **10,000 subscribers** with unlimited landing pages, for
 
 At our last verified check on August 22, 2026, Kit held **4.4/5 from 236 reviews on G2** and **4.6/5 from 243 reviews on Capterra** — a much larger evidence base than beehiiv's. Reviewers praise ease of use and useful automation; the recurring complaints are cost as lists grow and limited design flexibility.
 
-**The case against it as a newsletter platform:** the publication is not really a first-class object. There is no ad network, no sponsorship storefront, and no publication-native growth loop. Kit is superb at moving a subscriber toward a purchase and merely adequate at making a publication famous.
+**The case against it as a newsletter platform:** it is a matter of where the publication features sit, not whether they exist. Kit's pricing page lists Free and Smart Recommendations on the free plan, and Paid Recommendations, a newsletter referral system, and newsletter sponsorships on **Pro** — the $66/month tier. beehiiv puts its ad network, paid recommendations, and 0% take rate on Scale at $43. If publication monetization is your main reason for choosing, compare those two tiers directly rather than the headline prices.
 
 **Choose Kit if** the money comes from courses, coaching, services, or digital products. Our [Kit review](/kit-review/) and [Kit vs beehiiv comparison](/kit-vs-beehiiv/) go deeper.
 
 ## 5. MailerLite — best low-cost sender
 
-MailerLite's free plan covers **up to 250 subscribers and 2,500 monthly emails**, with three automations, a website, a landing page, and signup forms. **Comfort starts at $12/month** and **Power at $25/month**, with an Enterprise tier for 200,000+ subscribers.
+MailerLite's free plan covers **up to 250 subscribers and 2,500 monthly emails**. Its page lists three automations, one website and one landing page, three signup forms, and 100+ integrations on that tier. **Comfort starts at $12/month** and **Power at $25/month**, with an Enterprise tier for 200,000+ subscribers.
 
 For straightforward, well-designed email at a low price, it remains one of the easiest recommendations on the market.
 
-**The case against it:** the free tier is far smaller than Kit's or beehiiv's, and there is no publication monetization layer at all — no ad network, no subscription take-rate story, no discovery network. It sends email well. It does not make your newsletter a business.
+**The case against it:** the free tier is far smaller than Kit's or beehiiv's — 250 subscribers against 10,000 and 2,500. Its pricing page sells on subscribers, sends, and automations; nothing on it is pitched at monetizing a publication, and none of the ad-network, paid-recommendation, or take-rate features the others advertise appears there. It sends email well. That is the job it is priced for.
 
 **Choose MailerLite if** cost control is the priority and the newsletter supports a business that earns elsewhere.
 
@@ -125,7 +125,7 @@ Substack if you have no audience and want the platform's discovery to help. beeh
 
 ### Which newsletter platform has the best free plan?
 
-They are free in different ways. Kit allows the largest list at 10,000 subscribers but is an email marketing tool rather than a publication platform. beehiiv's Launch plan covers 2,500 subscribers and includes a website and custom domain. Substack charges nothing to publish at any list size and takes a share only when readers pay you.
+They are free in different ways. Kit allows the largest list at 10,000 subscribers but is an email marketing tool rather than a publication platform. beehiiv's Launch plan covers 2,500 subscribers and includes a website and custom domain. Substack's page shows no publishing fee and no subscriber-priced plan tiers, and it takes a share only when readers pay you.
 
 ### Which platform takes the smallest cut of paid subscriptions?
 
@@ -141,7 +141,7 @@ Usually not. If your email tool sends what you need and the newsletter is not th
 
 ### Can I move between these platforms later?
 
-All of them let you export your subscriber list, so you are not trapped. What does not transfer is platform-native growth: network recommendations and in-app readership stay behind. Run a test import with a small segment before moving an established publication.
+We did not verify each platform's export terms on an official page, so check yours directly rather than assuming. Substack's page does state that you own your content and your subscriber list, and Ghost is open source and self-hostable. What does not transfer in any case is platform-native growth: network recommendations and in-app readership stay behind. Run a test import with a small segment before moving an established publication.
 
 ## Sources and methodology
 

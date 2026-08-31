@@ -61,6 +61,12 @@ Verbatim: "Writers keep 90% of their revenue minus credit card fees."
 | Monthly platform fee | `NOT_SHOWN` |
 | Subscriber limit | `NOT_SHOWN` |
 | Card processing fee percentage | `NOT_SHOWN` on this page |
+| "Free to start" / "no upfront cost" wording | `NOT_SHOWN` on this page |
+| Subscriber list ownership | Verbatim: "Own all of your content and your subscriber list." |
+
+**Do not write "publishing is free" as a verified fact.** The page states the revenue share and the
+ownership line; it does not state a free-to-publish claim in those words. Articles say only that the
+page shows no publishing fee and no subscriber-priced tiers, which is what was observed.
 
 `https://support.substack.com/hc/en-us/articles/360037607131` returned **HTTP 403** on 2026-08-31.
 The 10% platform share and the specific Stripe rates were therefore **not verified from an official
@@ -97,6 +103,25 @@ unlimited sequences. The free plan's automation allowance was `NOT_SHOWN` as a n
 on 2026-08-31, so the older "one basic Visual Automation" phrasing is **not** repeated in the new
 articles; they say only that unlimited visual automations begin on Creator.
 
+## Kit — growth and monetization features (OBSERVED 2026-08-31, https://kit.com/pricing)
+
+Checked specifically after the Codex review challenged an absence claim about Kit.
+
+| Feature shown on the page | Plan |
+| --- | --- |
+| "Free Recommendations" | Free |
+| "Smart Recommendations" | Free |
+| "Paid Recommendations" | Pro |
+| "Newsletter referral system" (described as including a free SparkLoop plan) | Pro |
+| "Newsletter sponsorships" (described as being matched with brands and earning from the newsletter) | Pro |
+| Ad network | `NOT_SHOWN` |
+
+**This falsified a claim in an earlier draft.** The draft said Kit had no recommendations, no
+sponsorship route, and no publication-native growth loop. Kit has recommendations on the free plan
+and both referrals and sponsorships on Pro. The claim was removed, not softened. The real, defensible
+distinction is where each product places those features and what its centre of gravity is — not
+whether they exist.
+
 ## MailerLite — pricing (OBSERVED 2026-08-31, https://www.mailerlite.com/pricing)
 
 | Plan | Displayed price | Subscribers | Monthly emails |
@@ -105,6 +130,9 @@ articles; they say only that unlimited visual automations begin on Creator.
 | Comfort | From $12/month | `NOT_SHOWN` at default | 10× the subscriber-tier ceiling |
 | Power | From $25/month | `NOT_SHOWN` at default | Unlimited (fair use) |
 | Enterprise | Custom | 200K+ | Custom |
+
+Free plan features observed verbatim: "Send email campaigns", "3 automations",
+"1 website & 1 landing page", "1 digital product/booking", "3 signup forms", "100+ integrations".
 
 **Plan names changed.** The 2026-08-22 snapshot and the existing articles predate the
 `Comfort` / `Power` naming. This is a refresh trigger for
@@ -134,3 +162,9 @@ them as current on 2026-08-31. No new rating or review count was invented.
 - Any beehiiv commission percentage.
 - Any beehiiv or Substack review rating dated 2026-08-31.
 - Any first-hand or hands-on usage claim for any product.
+- Any subscriber cap, or absence of one, for Substack.
+- Any "free to publish" wording attributed to Substack's page.
+- Subscriber-list export behaviour for beehiiv, Kit, or MailerLite. Not verified on any official
+  page on 2026-08-31, so no article asserts it. Substack's ownership line and Ghost's open-source
+  self-hosting are the only ownership facts observed.
+- Any absence claim about a competitor's features. Absence must be observed, not assumed.

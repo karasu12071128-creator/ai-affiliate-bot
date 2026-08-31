@@ -32,7 +32,7 @@ Disclosure worth stating plainly: **beehiiv is the only product on this site we 
 
 Ask what happens the month you earn $0.
 
-On Substack, you pay nothing. Publishing is free, there is no subscriber cap to worry about, and the platform's cut only appears once readers pay you.
+On Substack, you pay nothing. Its page shows no publishing fee and no subscriber-priced plan tiers, and the platform's cut only appears once readers pay you.
 
 On beehiiv, a paid plan bills you the same whether you earned $0 or $10,000.
 
@@ -59,7 +59,7 @@ The price rises as your list grows. Set the slider to your own subscriber count 
 
 Substack's model is a revenue share rather than a subscription. Its official page states that **"writers keep 90% of their revenue minus credit card fees"** — the platform's share is 10%, and card processing is charged separately by the payment processor.
 
-There is no publishing fee and no plan ladder to climb. Card fees vary by country and are set by the processor, not by Substack, so check the current rate for where you are rather than trusting any blog's number, including ours.
+The page shows no publishing fee and no subscriber-priced plan tiers. Card fees vary by country and are set by the processor, not by Substack, so check the current rate for where you are rather than trusting any blog's number, including ours.
 
 ### The break-even math
 
@@ -109,9 +109,9 @@ If your plan is sponsorships and ads rather than paid subscriptions, the break-e
 
 ## Ownership and portability
 
-Both platforms let you export your subscriber list, so this is not a lock-in horror story.
+Substack's page is explicit on this point: "Own all of your content and your subscriber list." We did not verify beehiiv's export terms on an official page, so we are not going to tell you what they are — check them yourself before you commit, on either platform.
 
-What differs is what you leave behind. A publication built on your own domain with your own recommendation flows moves with you. A publication built on network discovery, in-app readership, and platform-native subscriber relationships leaves some of its growth behind when it moves.
+What we can compare is what you leave behind even when the list moves cleanly. A publication built on your own domain with your own recommendation flows takes its growth with it. A publication built on network discovery, in-app readership, and platform-native subscriber relationships leaves some of that behind.
 
 If you expect to be on the same platform in five years, this does not matter. If you expect to outgrow it, it matters a lot.
 
@@ -159,7 +159,7 @@ No. beehiiv's Scale and Max plans list a 0% take rate on paid subscriptions. Pay
 
 ### Can I move from Substack to beehiiv?
 
-You can export your subscriber list from either platform. Run a test import with a small segment first, and rebuild one real issue before moving an established publication — community reports on beehiiv migrations are mixed enough to be worth an hour of testing.
+Substack's page states that you own your content and your subscriber list. We have not verified beehiiv's export terms on an official page, so confirm them directly. Either way, run a test import with a small segment first and rebuild one real issue before moving an established publication — community reports on beehiiv migrations are mixed enough to be worth an hour of testing.
 
 ### Which is better for growing from zero subscribers?
 

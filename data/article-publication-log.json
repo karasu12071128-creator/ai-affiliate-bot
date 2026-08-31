@@ -241,7 +241,8 @@
         "First article written after beehiiv became the only approved affiliate program on this site.",
         "Pricing, plan gating, and partner terms verified 2026-08-31 from official pages; recorded in docs/RESEARCH_SNAPSHOT_2026-08-31.md.",
         "G2 could not be re-checked on 2026-08-31 (HTTP 403); the 2026-08-22 rating is dated in place rather than restated as current.",
-        "No free-trial length published because beehiiv's pricing page does not show one."
+        "No free-trial length published because beehiiv's pricing page does not show one.",
+        "Codex adversarial review 2026-08-31: no finding against this article."
       ]
     },
     {
@@ -282,7 +283,8 @@
         "Break-even table is arithmetic on two verified figures: beehiiv Scale $517/year at 1,000 subscribers and Substack's stated 90% writer share.",
         "Substack's support page returned HTTP 403 on 2026-08-31, so only the wording observed on substack.com/going-paid is quoted.",
         "No Stripe or card-processing percentage published; stripe.com/pricing resolved to a region-specific page.",
-        "Substack is not an affiliate program here and earns this site nothing; the article recommends it for a defined reader group anyway."
+        "Substack is not an affiliate program here and earns this site nothing; the article recommends it for a defined reader group anyway.",
+        "Codex adversarial review 2026-08-31 (BLOCK_MERGE) removed an unverified Substack subscriber-cap claim, replaced a free-to-publish assertion with what the page actually shows, and replaced an unsourced subscriber-export claim with Substack's own ownership wording plus an explicit non-verification for beehiiv."
       ]
     },
     {
@@ -323,7 +325,8 @@
         "Written to sit beside best-email-marketing-tools-for-creators, not replace it; both articles now cross-link and state how they differ.",
         "Ranking is by revenue model. Two of the five recommendations (Substack, Ghost) earn this site nothing.",
         "MailerLite plan names verified as Comfort and Power on 2026-08-31; the older names still appear in two existing articles and are logged as a refresh trigger.",
-        "Ghost and Kit pricing re-verified 2026-08-31 from official pages."
+        "Ghost and Kit pricing re-verified 2026-08-31 from official pages.",
+        "Codex adversarial review 2026-08-31 (BLOCK_MERGE) caught a FALSE absence claim about Kit. Kit's pricing page lists Recommendations on Free and referrals plus sponsorships on Pro; the draft had claimed none existed, which favoured the affiliate product. Re-verified against kit.com/pricing and rewrote the section around tier placement instead. Also corrected Ghost from slider pricing to member-tier pricing, matched MailerLite free-plan features to observed wording, and reframed every remaining absence claim as a page observation."
       ]
     }
   ]

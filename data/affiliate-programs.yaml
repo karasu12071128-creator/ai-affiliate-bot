@@ -1,4 +1,4 @@
-last_updated: "2026-08-28"
+last_updated: "2026-08-31"
 verification_note: "Affiliate and pricing information changes. Re-check official sources before publishing or applying."
 programs:
   - product: "Kit"
@@ -39,12 +39,13 @@ programs:
     commission_duration: "Up to 12 months per referred account"
     cookie_period: "90 days per ActiveCampaign Help Center"
     current_pricing: "Official pricing page verified plan names Starter, Plus, Pro, and Enterprise. Price display depends on contact count, currency, and configuration selectors; verify live pricing for the target contact tier before publication."
-    approval_status: "pending_review"
+    approval_status: "rejected"
     affiliate_link: null
     tracking_id: null
     application_submitted_date: "2026-08-21"
-    status_note: "Application receipt confirmed. No later approval or rejection email was found as of 2026-08-28."
-    evidence_checked_date: "2026-08-28"
+    application_result_date: "2026-08-28"
+    status_note: "A rejection email dated 2026-08-28 was confirmed in the OWNER Gmail account. No affiliate link is active."
+    evidence_checked_date: "2026-08-31"
     evidence_urls:
       - "https://www.activecampaign.com/partners/affiliate"
       - "https://help.activecampaign.com/hc/en-us/articles/115000065864-Affiliate-program"

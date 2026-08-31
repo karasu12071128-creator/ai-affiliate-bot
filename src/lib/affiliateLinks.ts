@@ -5,7 +5,7 @@ type AffiliateTarget = {
   officialUrl: string;
   affiliateUrl: string | null;
   trackingId: string | null;
-  status: "not_applied" | "phase_2" | "approved" | "pending_review" | "rejected_reapply_later";
+  status: "not_applied" | "phase_2" | "approved" | "pending_review" | "rejected" | "rejected_reapply_later";
 };
 
 export const affiliateTargets: Record<ProductKey, AffiliateTarget> = {
@@ -28,7 +28,7 @@ export const affiliateTargets: Record<ProductKey, AffiliateTarget> = {
     officialUrl: "https://www.activecampaign.com/",
     affiliateUrl: null,
     trackingId: null,
-    status: "pending_review"
+    status: "rejected"
   },
   hubspot: {
     product: "HubSpot",

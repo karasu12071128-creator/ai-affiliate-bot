@@ -149,7 +149,7 @@ test("analytics snapshots are chronological and cumulative", () => {
   assert.throws(() => validateRegistry(registry), /cannot decrease/);
 });
 
-test("one published Pin without metrics returns deterministic insufficient-data review", () => {
+test("one measured Pin below the checkpoint still refuses to name a winner", () => {
   const first = reviewRegistry(source);
   const second = reviewRegistry(source);
   assert.deepEqual(first, second);
@@ -158,7 +158,29 @@ test("one published Pin without metrics returns deterministic insufficient-data 
   assert.equal(first.winner_claim, "UNKNOWN");
   assert.equal(first.automatic_stop, false);
   assert.equal(first.published_pins, 1);
-  assert.equal(first.measured_pins, 0);
+  assert.equal(first.measured_pins, 1);
+  assert.equal(first.required_checkpoint, 10);
+  assert.equal(first.next_allocation, "NO_REALLOCATION_UNTIL_CHECKPOINT");
+  // A single small-sample observation must never produce a ranking.
+  for (const dimension of Object.values(first.dimensions)) {
+    assert.equal(dimension.ranking.status, "INSUFFICIENT_DATA");
+    assert.equal(dimension.ranking.leader, null);
+  }
+});
+
+test("the first pin001 observation is recorded as a small directional sample", () => {
+  const pin = source.pins.find((candidate) => candidate.pin_id === "pin001");
+  assert.deepEqual(pin.metrics.impressions, 4);
+  assert.deepEqual(pin.metrics.pin_clicks, 2);
+  assert.deepEqual(pin.metrics.saves, 1);
+  assert.deepEqual(pin.metrics.outbound_clicks, 1);
+  assert.deepEqual(pin.metrics.profile_visits, 2);
+  assert.equal(pin.metrics.save_rate, 1 / 4);
+  assert.equal(pin.metrics.outbound_click_rate, 1 / 4);
+  assert.equal(pin.metrics.affiliate_clicks, null, "unobserved values stay null, never zero");
+  assert.equal(pin.analytics_snapshots.length, 1);
+  assert.equal(pin.analytics_snapshots[0].claim_strength, "DIRECTIONAL_SIGNAL_ONLY");
+  assert.equal(pin.result.winner_status, "UNKNOWN");
 });
 
 test("duplicate Pin IDs and duplicate delivery keys fail closed", () => {
@@ -190,6 +212,9 @@ test("observed zero remains distinct from unknown null", () => {
     pin.metrics.impressions = 100;
     pin.metrics.saves = index < 5 ? 5 : 2;
     pin.metrics.outbound_clicks = 0;
+    pin.metrics.save_rate = null;
+    pin.metrics.outbound_click_rate = null;
+    pin.analytics_snapshots = [];
     pins.push(pin);
   }
   registry.pins = pins;

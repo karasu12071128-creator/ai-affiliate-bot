@@ -87,23 +87,42 @@
       },
       "article_log_sync_status": "published_synced",
       "metrics": {
-        "impressions": null,
-        "saves": null,
-        "save_rate": null,
-        "pin_clicks": null,
-        "outbound_clicks": null,
-        "outbound_click_rate": null,
+        "impressions": 4,
+        "saves": 1,
+        "save_rate": 0.25,
+        "pin_clicks": 2,
+        "outbound_clicks": 1,
+        "outbound_click_rate": 0.25,
+        "profile_visits": 2,
         "affiliate_clicks": null,
         "signup_or_trial": null,
         "sales": null,
         "commission": null
       },
-      "analytics_snapshots": [],
+      "analytics_snapshots": [
+        {
+          "checkpoint_day": 1,
+          "observed_at": "2026-08-31T00:00:00Z",
+          "source": "manual",
+          "window": "cumulative",
+          "sample_size": "small",
+          "claim_strength": "DIRECTIONAL_SIGNAL_ONLY",
+          "pinterest": {
+            "impressions": 4,
+            "saves": 1,
+            "pin_clicks": 2,
+            "outbound_clicks": 1,
+            "profile_visits": 2
+          },
+          "site": null,
+          "affiliate": null
+        }
+      ],
       "result": {
         "data_status": "INSUFFICIENT_DATA",
         "decision": "MEASURE_MORE",
         "winner_status": "UNKNOWN",
-        "reason": "The Pin is published but no Pinterest analytics have been observed yet.",
+        "reason": "One published Pin with 4 observed impressions. This is a small sample and a directional signal only; no winner may be claimed before the 10-Pin checkpoint.",
         "evaluated_at": null
       }
     },

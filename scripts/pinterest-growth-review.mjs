@@ -20,6 +20,22 @@ const ALLOWED_DECISIONS = new Set(["KEEP", "MODIFY", "STOP", "MEASURE_MORE"]);
 // platform ID is observed. The unresolved state stays explicit instead of being invented.
 const IDENTITY_STATUSES = new Set(["RESOLVED", "SHORTLINK_ONLY_NOT_RESOLVED"]);
 
+// When the numeric Pin ID is unresolved the URL is the only platform evidence, so it must
+// at least be a Pinterest URL. This does not prove the Pin renders the expected content.
+const PIN_URL_HOSTS = new Set(["pin.it", "pinterest.com", "www.pinterest.com"]);
+
+function isPinterestPinUrl(value) {
+  if (typeof value !== "string" || !value) return false;
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    return false;
+  }
+  if (url.protocol !== "https:") return false;
+  return PIN_URL_HOSTS.has(url.hostname) || url.hostname.endsWith(".pinterest.com");
+}
+
 function isObservedNumber(value) {
   return typeof value === "number" && Number.isFinite(value) && value >= 0;
 }
@@ -145,7 +161,7 @@ export function validateReferences(registry, publicationLog, boardRegistry) {
       } else {
         assert(identity.pinterest_pin_id === null, `${pin.pin_id}: unresolved platform identity must keep pinterest_pin_id null`);
       }
-      assert(typeof identity.pin_url === "string" && identity.pin_url, `${pin.pin_id}: published Pin requires platform URL`);
+      assert(isPinterestPinUrl(identity.pin_url), `${pin.pin_id}: published Pin requires a https Pinterest platform URL`);
       assert(typeof identity.verified_at === "string" && !Number.isNaN(Date.parse(identity.verified_at)), `${pin.pin_id}: published Pin requires verification time`);
       assert(article.pinterest_assets.includes(pin.pin_id), `${pin.pin_id}: published Pin must be synced to article publication assets`);
     }

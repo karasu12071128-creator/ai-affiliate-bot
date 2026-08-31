@@ -40,6 +40,22 @@ test("the manually published Pin keeps an explicit unresolved platform ID", () =
   assert.throws(() => validateReferences(unknownStatus, publicationLog, boardRegistry), /invalid platform identity id_status/);
 });
 
+test("a published Pin URL must be a https Pinterest URL", () => {
+  for (const badUrl of ["not-a-url", "https://example.com/kit-vs-beehiiv/", "http://pin.it/2oYb3NO1V", "https://pin.it.example.com/x"]) {
+    const registry = clone(source);
+    registry.pins[0].platform_identity.pin_url = badUrl;
+    assert.throws(
+      () => validateReferences(registry, publicationLog, boardRegistry),
+      /requires a https Pinterest platform URL/,
+      `${badUrl} must be rejected`
+    );
+  }
+
+  const good = clone(source);
+  good.pins[0].platform_identity.pin_url = "https://www.pinterest.com/pin/1234567890/";
+  assert.doesNotThrow(() => validateReferences(good, publicationLog, boardRegistry));
+});
+
 test("UTM URL cannot redirect away from the clean destination", () => {
   const registry = clone(source);
   registry.pins[0].utm_url = registry.pins[0].utm_url.replace("/kit-vs-beehiiv/", "/kit-review/");

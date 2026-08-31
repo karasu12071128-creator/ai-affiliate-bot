@@ -68,7 +68,8 @@ export async function executeBufferPlan({
   priorReceipts = new Set(),
   provider
 }) {
-  if (pin.approval?.status !== "approved") {
+  // Approval is scope-bound: a manual Pinterest publish approval never authorizes a Buffer draft.
+  if (pin.approval?.status !== "approved" || pin.approval?.scope !== "buffer_draft") {
     return { status: "BLOCKED_NOT_AUTHORIZED", provider_calls: 0, automatic_retry: false };
   }
   if (

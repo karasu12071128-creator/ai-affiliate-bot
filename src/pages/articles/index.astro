@@ -11,7 +11,7 @@ const articles = (await getCollection("articles")).sort(
   <section class="page">
     <p class="eyebrow">Articles</p>
     <h1>Newsletter and email marketing comparisons</h1>
-    <p class="dek">A focused MVP library for creators choosing audience growth software.</p>
+    <p class="dek">A small, deliberately focused library for creators choosing audience growth software. Every comparison carries the date its facts were last verified.</p>
     <div class="article-list">
       {articles.map((article) => (
         <article class="card article-card">

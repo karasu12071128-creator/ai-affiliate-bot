@@ -16,7 +16,28 @@ test("current registry validates and keeps external delivery disabled", () => {
   assert.deepEqual(validateReferences(source, publicationLog, boardRegistry), { valid: true, article_count: 5, board_count: 5 });
   assert.equal(source.delivery_contract.external_write_authorized, false);
   assert.equal(source.delivery_contract.automatic_retry, false);
-  assert.equal(source.pins[0].approval.status, "not_authorized");
+  assert.equal(source.pins[0].approval.status, "approved");
+  assert.equal(source.pins[0].approval.scope, "manual_pinterest_publish");
+  assert.equal(source.pins[0].delivery.mode, "disabled");
+  assert.equal(source.pins.filter((pin) => pin.publish_status === "published").length, 1);
+});
+
+test("the manually published Pin keeps an explicit unresolved platform ID", () => {
+  const pin = source.pins.find((candidate) => candidate.pin_id === "pin001");
+  assert.equal(pin.publish_status, "published");
+  assert.equal(pin.platform_identity.pinterest_pin_id, null);
+  assert.equal(pin.platform_identity.id_status, "SHORTLINK_ONLY_NOT_RESOLVED");
+  assert.equal(pin.published_at, null);
+  assert.equal(pin.published_at_status, "EXACT_TIME_NOT_OBSERVED");
+  assert.doesNotThrow(() => validateReferences(source, publicationLog, boardRegistry));
+
+  const registry = clone(source);
+  registry.pins[0].platform_identity.pinterest_pin_id = "invented-id";
+  assert.throws(() => validateReferences(registry, publicationLog, boardRegistry), /must keep pinterest_pin_id null/);
+
+  const unknownStatus = clone(source);
+  unknownStatus.pins[0].platform_identity.id_status = "GUESSED";
+  assert.throws(() => validateReferences(unknownStatus, publicationLog, boardRegistry), /invalid platform identity id_status/);
 });
 
 test("UTM URL cannot redirect away from the clean destination", () => {
@@ -68,7 +89,8 @@ test("snapshot chronology uses actual instants rather than timestamp text order"
 test("published Pin requires both platform evidence and article-log sync", () => {
   const registry = clone(source);
   const log = clone(publicationLog);
-  const pin = registry.pins[0];
+  const pin = registry.pins[1];
+  assert.equal(pin.pin_id, "pin002");
   pin.publish_status = "published";
   pin.platform_identity = {
     pinterest_pin_id: "fixture-pin-id",
@@ -82,7 +104,7 @@ test("published Pin requires both platform evidence and article-log sync", () =>
 
 test("unpublished Pins cannot appear in article publication assets", () => {
   const log = clone(publicationLog);
-  log.records.find((record) => record.slug === "kit-vs-beehiiv").pinterest_assets.push("pin001");
+  log.records.find((record) => record.slug === "kit-vs-beehiiv").pinterest_assets.push("pin002");
   assert.throws(() => validateReferences(source, log, boardRegistry), /unpublished Pin/);
 });
 
@@ -111,7 +133,7 @@ test("analytics snapshots are chronological and cumulative", () => {
   assert.throws(() => validateRegistry(registry), /cannot decrease/);
 });
 
-test("current unpublished Pin returns deterministic insufficient-data review", () => {
+test("one published Pin without metrics returns deterministic insufficient-data review", () => {
   const first = reviewRegistry(source);
   const second = reviewRegistry(source);
   assert.deepEqual(first, second);
@@ -119,6 +141,8 @@ test("current unpublished Pin returns deterministic insufficient-data review", (
   assert.equal(first.decision, "MEASURE_MORE");
   assert.equal(first.winner_claim, "UNKNOWN");
   assert.equal(first.automatic_stop, false);
+  assert.equal(first.published_pins, 1);
+  assert.equal(first.measured_pins, 0);
 });
 
 test("duplicate Pin IDs and duplicate delivery keys fail closed", () => {

@@ -8,6 +8,7 @@ const registry = JSON.parse(await readFile("data/pinterest-pin-experiments.json"
 function approvedPin() {
   const pin = structuredClone(registry.pins[0]);
   pin.approval.status = "approved";
+  pin.approval.scope = "buffer_draft";
   pin.delivery.mode = "buffer_draft_authorized";
   return pin;
 }
@@ -32,8 +33,10 @@ test("request body is deterministic and creates a Buffer draft only", () => {
   assert.equal(first.secret_name, "BUFFER_API_KEY");
 });
 
-test("current Pin approval blocks every provider call", async () => {
+test("a manual Pinterest publish approval never authorizes a Buffer draft", async () => {
   const pin = structuredClone(registry.pins[0]);
+  assert.equal(pin.approval.status, "approved");
+  assert.equal(pin.approval.scope, "manual_pinterest_publish");
   let calls = 0;
   const result = await executeBufferPlan({
     pin,

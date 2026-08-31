@@ -16,6 +16,10 @@ const CREATIVE_TYPES = new Set([
 
 const ALLOWED_DECISIONS = new Set(["KEEP", "MODIFY", "STOP", "MEASURE_MORE"]);
 
+// A manually published Pin can be evidenced by a Pinterest short link before the numeric
+// platform ID is observed. The unresolved state stays explicit instead of being invented.
+const IDENTITY_STATUSES = new Set(["RESOLVED", "SHORTLINK_ONLY_NOT_RESOLVED"]);
+
 function isObservedNumber(value) {
   return typeof value === "number" && Number.isFinite(value) && value >= 0;
 }
@@ -133,9 +137,16 @@ export function validateReferences(registry, publicationLog, boardRegistry) {
     if (pin.publish_status !== "published") {
       assert(!article.pinterest_assets.includes(pin.pin_id), `${pin.pin_id}: unpublished Pin must not be in article publication assets`);
     } else {
-      assert(typeof pin.platform_identity?.pinterest_pin_id === "string" && pin.platform_identity.pinterest_pin_id, `${pin.pin_id}: published Pin requires platform ID`);
-      assert(typeof pin.platform_identity?.pin_url === "string" && pin.platform_identity.pin_url, `${pin.pin_id}: published Pin requires platform URL`);
-      assert(typeof pin.platform_identity?.verified_at === "string" && !Number.isNaN(Date.parse(pin.platform_identity.verified_at)), `${pin.pin_id}: published Pin requires verification time`);
+      const identity = pin.platform_identity ?? {};
+      const idStatus = identity.id_status ?? "RESOLVED";
+      assert(IDENTITY_STATUSES.has(idStatus), `${pin.pin_id}: invalid platform identity id_status`);
+      if (idStatus === "RESOLVED") {
+        assert(typeof identity.pinterest_pin_id === "string" && identity.pinterest_pin_id, `${pin.pin_id}: published Pin requires platform ID`);
+      } else {
+        assert(identity.pinterest_pin_id === null, `${pin.pin_id}: unresolved platform identity must keep pinterest_pin_id null`);
+      }
+      assert(typeof identity.pin_url === "string" && identity.pin_url, `${pin.pin_id}: published Pin requires platform URL`);
+      assert(typeof identity.verified_at === "string" && !Number.isNaN(Date.parse(identity.verified_at)), `${pin.pin_id}: published Pin requires verification time`);
       assert(article.pinterest_assets.includes(pin.pin_id), `${pin.pin_id}: published Pin must be synced to article publication assets`);
     }
   }

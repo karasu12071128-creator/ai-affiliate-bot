@@ -54,6 +54,7 @@ const articleJsonLd = {
         product={primary}
         article={article.slug}
         placement="top_cta"
+        variant="inline"
         note={getAffiliateStatusNote(primary)}
       />
     )}
@@ -67,7 +68,7 @@ const articleJsonLd = {
         product={primary}
         article={article.slug}
         placement="bottom_cta"
-        note="Check current pricing and plan details before buying."
+        note={`${getAffiliateStatusNote(primary)} Check current pricing and plan details before buying.`}
       />
     )}
   </article>

@@ -67,7 +67,7 @@
         { "source": "Official vendor pricing/help pages", "products": ["Kit", "beehiiv"], "observed_at": "2026-08-22" }
       ],
       "affiliate_status": "PENDING_OR_CENTRALLY_MANAGED",
-      "pinterest_assets": [],
+      "pinterest_assets": ["pin001"],
       "metrics": {
         "pageviews": null,
         "pinterest_outbound_clicks": null,

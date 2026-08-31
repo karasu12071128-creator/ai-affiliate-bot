@@ -3,58 +3,102 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const articles = (await getCollection("articles")).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  (a, b) => b.data.updatedDate.valueOf() - a.data.updatedDate.valueOf()
 );
+const lastVerified = articles
+  .map((article) => article.data.lastVerifiedDate)
+  .sort()
+  .at(-1);
+
+const bySlug = new Map(articles.map((article) => [article.slug, article]));
+const useCases = [
+  {
+    heading: "You sell courses, coaching, or digital products",
+    body: "You need forms, tagging, and simple automated sequences that turn subscribers into buyers.",
+    slug: "best-email-marketing-tools-for-creators",
+    linkText: "Compare creator email tools"
+  },
+  {
+    heading: "The newsletter itself is the business",
+    body: "You care about publication growth, recommendations, sponsorships, and paid subscriptions.",
+    slug: "beehiiv-alternatives",
+    linkText: "Compare newsletter platforms"
+  },
+  {
+    heading: "You run a one-person business",
+    body: "You want the smallest tool that removes real work, without paying for automation you will not use.",
+    slug: "best-email-marketing-for-solopreneurs",
+    linkText: "Compare solopreneur tools"
+  }
+].filter((useCase) => bySlug.has(useCase.slug));
 ---
 
-<BaseLayout title="Newsletter SaaS Comparisons for Creators" description="A small editorial site comparing email marketing, newsletter, and audience growth tools for creators and solopreneurs.">
+<BaseLayout
+  title="Newsletter and Email Tool Comparisons for Creators"
+  description="Research-backed comparisons of newsletter and email marketing tools for creators, solopreneurs, and small online businesses."
+>
   <section class="hero">
     <div>
       <p class="eyebrow">Creator Growth Tools</p>
       <h1>Newsletter tools, compared without fake reviews.</h1>
       <p class="dek">
-        Practical comparisons for creators, newsletter operators, coaches, freelancers, and small online businesses choosing email marketing software in 2026.
+        Practical comparisons for creators, newsletter operators, coaches, freelancers, and small online
+        businesses choosing email marketing software in 2026.
       </p>
-      <p class="note-list">
-        <span>5-article MVP</span>
-        <span>Affiliate links pending approval</span>
-        <span>Last verified 2026-08-21</span>
-      </p>
+      <ul class="trust-list">
+        <li>{articles.length} in-depth comparisons</li>
+        <li>Official sources and public review consensus, kept separate</li>
+        <li>No claimed hands-on testing we did not do</li>
+        {lastVerified && <li>Facts last verified {lastVerified}</li>}
+      </ul>
     </div>
     <aside class="hero-panel">
-      <h2>Start Here</h2>
-      <p>For most creator businesses, begin with a simple comparison: Kit for creator funnels, beehiiv for newsletter growth, and ActiveCampaign for heavier automation.</p>
+      <h2>Start here</h2>
+      <p>
+        Most creators are choosing between a creator-funnel tool and a newsletter-growth platform. Start with the
+        full comparison, then narrow by how you actually make money.
+      </p>
       <a class="button" href="/best-email-marketing-tools-for-creators/">Read the main comparison</a>
     </aside>
   </section>
 
   <section class="band">
-    <h2>Latest Articles</h2>
-    <div class="cards">
-      {articles.slice(0, 3).map((article) => (
-        <article class="card article-card">
-          <h3><a href={`/${article.slug}/`}>{article.data.title}</a></h3>
-          <p>{article.data.description}</p>
+    <h2>Start with your situation</h2>
+    <div class="tool-grid">
+      {useCases.map((useCase) => (
+        <article class="card use-case">
+          <h3>{useCase.heading}</h3>
+          <p>{useCase.body}</p>
+          <a href={`/${useCase.slug}/`}>{useCase.linkText}</a>
         </article>
       ))}
     </div>
   </section>
 
   <section class="band">
-    <h2>Initial Affiliate Candidates</h2>
-    <div class="tool-grid">
-      <div class="card">
-        <h3>Kit</h3>
-        <p>Best initial fit for creators who sell digital products, courses, newsletters, and simple automated funnels.</p>
-      </div>
-      <div class="card">
-        <h3>beehiiv</h3>
-        <p>Best initial fit for newsletter operators who care about publication growth, recommendations, ads, and paid newsletter monetization.</p>
-      </div>
-      <div class="card">
-        <h3>ActiveCampaign</h3>
-        <p>Best initial fit for solopreneurs who need more advanced automation, segmentation, CRM, and multi-step customer journeys.</p>
-      </div>
+    <div class="band-head">
+      <h2>Latest comparisons</h2>
+      <a href="/articles/">All articles</a>
     </div>
+    <div class="cards">
+      {articles.slice(0, 3).map((article) => (
+        <article class="card article-card">
+          <h3><a href={`/${article.slug}/`}>{article.data.title}</a></h3>
+          <p>{article.data.description}</p>
+          <p class="article-meta">
+            <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="band">
+    <p class="notice">
+      Some links on this site are affiliate links and are labelled as such on the page. Others go straight to a
+      product's own website and earn us nothing. Read our
+      <a href="/affiliate-disclosure/">affiliate disclosure</a> and
+      <a href="/editorial-methodology/">editorial methodology</a>.
+    </p>
   </section>
 </BaseLayout>

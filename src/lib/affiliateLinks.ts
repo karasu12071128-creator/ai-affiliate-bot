@@ -45,13 +45,27 @@ export function getAffiliateHref(product: ProductKey): string {
 }
 
 export function getAffiliateLabel(product: ProductKey): string {
-  return affiliateTargets[product].affiliateUrl ? `Visit ${affiliateTargets[product].product}` : `Visit ${affiliateTargets[product].product} official site`;
+  return `Go to ${affiliateTargets[product].product}`;
+}
+
+export function isAffiliateLink(product: ProductKey): boolean {
+  return affiliateTargets[product].affiliateUrl !== null;
+}
+
+export function getLinkKind(product: ProductKey): "Affiliate link" | "Official site" {
+  return isAffiliateLink(product) ? "Affiliate link" : "Official site";
+}
+
+// Only a real affiliate link may be marked rel="sponsored". Marking an ordinary
+// official-site link as sponsored would misstate the relationship to readers and crawlers.
+export function getAffiliateRel(product: ProductKey): string {
+  return isAffiliateLink(product) ? "sponsored nofollow noopener" : "nofollow noopener";
 }
 
 export function getAffiliateStatusNote(product: ProductKey): string {
   const target = affiliateTargets[product];
   if (target.affiliateUrl) {
-    return "This CTA uses our approved affiliate link. We may earn a commission at no additional cost to you.";
+    return "This is an approved affiliate link. We may earn a commission at no additional cost to you.";
   }
-  return "This CTA uses the official product site. No affiliate link is active for this product.";
+  return `This is the plain ${target.product} website. We have no active affiliate link for it, so this link earns us nothing.`;
 }

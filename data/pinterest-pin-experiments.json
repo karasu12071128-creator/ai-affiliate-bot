@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1",
-  "last_updated": "2026-08-30",
+  "last_updated": "2026-08-31",
   "site": "Creator Growth Tools",
   "destination_origin": "https://ai-affiliate-bot.pages.dev",
   "unknown_value_policy": "Machine-readable metrics use null and reports render null as N/A. Never infer zero.",
@@ -60,18 +60,23 @@
       },
       "destination_url": "https://ai-affiliate-bot.pages.dev/kit-vs-beehiiv/",
       "utm_url": "https://ai-affiliate-bot.pages.dev/kit-vs-beehiiv/?utm_source=pinterest&utm_medium=organic_pin&utm_campaign=kit-vs-beehiiv&utm_content=pin001",
-      "publish_status": "draft",
+      "publish_status": "published",
       "scheduled_at": null,
       "published_at": null,
+      "published_at_status": "EXACT_TIME_NOT_OBSERVED",
+      "publish_channel": "manual_owner_publish",
       "platform_identity": {
         "pinterest_pin_id": null,
-        "pin_url": null,
-        "verified_at": null
+        "id_status": "SHORTLINK_ONLY_NOT_RESOLVED",
+        "pin_url": "https://pin.it/2oYb3NO1V",
+        "verified_at": "2026-08-31",
+        "evidence_source": "owner_manual_report"
       },
       "approval": {
-        "status": "not_authorized",
-        "approved_by": null,
-        "approved_at": null
+        "status": "approved",
+        "scope": "manual_pinterest_publish",
+        "approved_by": "OWNER",
+        "approved_at": "2026-08-31"
       },
       "delivery": {
         "provider": "buffer",
@@ -80,7 +85,7 @@
         "external_post_id": null,
         "last_attempt_at": null
       },
-      "article_log_sync_status": "not_published",
+      "article_log_sync_status": "published_synced",
       "metrics": {
         "impressions": null,
         "saves": null,
@@ -98,7 +103,7 @@
         "data_status": "INSUFFICIENT_DATA",
         "decision": "MEASURE_MORE",
         "winner_status": "UNKNOWN",
-        "reason": "The Pin is not published and has no observed metrics.",
+        "reason": "The Pin is published but no Pinterest analytics have been observed yet.",
         "evaluated_at": null
       }
     },

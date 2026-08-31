@@ -72,7 +72,7 @@ npm run build
 - [ ] 外部リンクは2件のみ
       - `https://kit.com/` -> `rel="nofollow noopener"`（`sponsored` が **付いていない**こと）
       - `https://www.beehiiv.com/?via=5v0uGdI` -> `rel="sponsored nofollow noopener"`
-- [ ] `dist/sitemap.xml` に全ページと記事の `lastmod` が入っている
+- [ ] `dist/sitemap.xml` に記事ページの `lastmod` が入っている（`src/pages/sitemap.xml.ts` の実装上、静的ページ（`/`、`/articles/`、`/about/` 等）には `lastmod` を付けていない。これは未確認の更新日を発明しないための意図的な仕様であり、バグではない）
 - [ ] `dist/robots.txt` の Sitemap URL が本番ドメインを指している
 - [ ] `dist/404.html` が生成されている
 - [ ] `MVP` / `pending approval` / `VERIFY_BEFORE_PUBLISH` が HTML に出現しない

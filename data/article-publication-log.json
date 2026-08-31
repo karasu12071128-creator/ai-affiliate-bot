@@ -202,6 +202,129 @@
         "Preserved Kit and ActiveCampaign as central alternatives.",
         "Kept public review and community evidence separated."
       ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-31-006",
+      "slug": "beehiiv-review",
+      "title": "beehiiv Review 2026: Is It Worth It for Creators?",
+      "article_type": "review_consensus",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "beehiiv review 2026",
+      "primary_product": "beehiiv",
+      "version": "1.0",
+      "status": "published",
+      "first_published_at": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "last_verified_at": "2026-08-31",
+      "editorial_hypothesis": "A beehiiv review that states plainly when NOT to pay will convert better with high-intent readers than a uniformly positive review, and is the only honest framing while beehiiv is our sole approved affiliate program.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "Official vendor pricing pages", "products": ["beehiiv"], "observed_at": "2026-08-31" },
+        { "source": "G2", "products": ["beehiiv", "Kit"], "observed_at": "2026-08-22", "note": "Carried forward. Re-verification on 2026-08-31 returned HTTP 403 and is recorded as BLOCKED." },
+        { "source": "Capterra", "products": ["Kit"], "observed_at": "2026-08-22", "note": "Carried forward from the 2026-08-22 snapshot." }
+      ],
+      "affiliate_status": "BEEHIIV_APPROVED_OTHERS_NOT_AFFILIATE",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-29",
+      "revision_notes": [
+        "First article written after beehiiv became the only approved affiliate program on this site.",
+        "Pricing, plan gating, and partner terms verified 2026-08-31 from official pages; recorded in docs/RESEARCH_SNAPSHOT_2026-08-31.md.",
+        "G2 could not be re-checked on 2026-08-31 (HTTP 403); the 2026-08-22 rating is dated in place rather than restated as current.",
+        "No free-trial length published because beehiiv's pricing page does not show one."
+      ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-31-007",
+      "slug": "beehiiv-vs-substack",
+      "title": "beehiiv vs Substack: Which Is Better for Newsletter Growth in 2026?",
+      "article_type": "versus_comparison",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "beehiiv vs substack",
+      "primary_product": "beehiiv",
+      "version": "1.0",
+      "status": "published",
+      "first_published_at": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "last_verified_at": "2026-08-31",
+      "editorial_hypothesis": "Turning the beehiiv versus Substack decision into an explicit revenue break-even calculation will out-perform feature-table comparisons, because the reader's real question is when a fixed fee beats a permanent revenue share.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "Official vendor pricing pages", "products": ["beehiiv", "Substack"], "observed_at": "2026-08-31" },
+        { "source": "G2", "products": ["beehiiv", "Kit"], "observed_at": "2026-08-22", "note": "Carried forward. Re-verification on 2026-08-31 returned HTTP 403 and is recorded as BLOCKED." },
+        { "source": "Capterra", "products": ["Kit"], "observed_at": "2026-08-22", "note": "Carried forward from the 2026-08-22 snapshot." }
+      ],
+      "affiliate_status": "BEEHIIV_APPROVED_OTHERS_NOT_AFFILIATE",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-29",
+      "revision_notes": [
+        "Break-even table is arithmetic on two verified figures: beehiiv Scale $517/year at 1,000 subscribers and Substack's stated 90% writer share.",
+        "Substack's support page returned HTTP 403 on 2026-08-31, so only the wording observed on substack.com/going-paid is quoted.",
+        "No Stripe or card-processing percentage published; stripe.com/pricing resolved to a region-specific page.",
+        "Substack is not an affiliate program here and earns this site nothing; the article recommends it for a defined reader group anyway."
+      ]
+    },
+    {
+      "experiment_id": "CGT-CONTENT-2026-08-31-008",
+      "slug": "best-newsletter-platforms",
+      "title": "Best Newsletter Platforms for Creators in 2026",
+      "article_type": "roundup_comparison",
+      "search_intent": "commercial_investigation",
+      "primary_keyword": "best newsletter platforms",
+      "primary_product": "beehiiv",
+      "version": "1.0",
+      "status": "published",
+      "first_published_at": "2026-08-31",
+      "updated_at": "2026-08-31",
+      "last_verified_at": "2026-08-31",
+      "editorial_hypothesis": "A publication-first roundup ranked by revenue model will serve a different intent than the existing email-tools roundup, and an explicit cross-link between the two will prevent them competing for the same query.",
+      "methodology": [
+        "official_product_facts",
+        "verified_review_marketplace_consensus",
+        "recent_community_feedback_as_anecdotal"
+      ],
+      "review_sources": [
+        { "source": "Official vendor pricing pages", "products": ["beehiiv", "Substack", "Ghost", "Kit", "MailerLite"], "observed_at": "2026-08-31" },
+        { "source": "G2", "products": ["beehiiv", "Kit"], "observed_at": "2026-08-22", "note": "Carried forward. Re-verification on 2026-08-31 returned HTTP 403 and is recorded as BLOCKED." },
+        { "source": "Capterra", "products": ["Kit"], "observed_at": "2026-08-22", "note": "Carried forward from the 2026-08-22 snapshot." }
+      ],
+      "affiliate_status": "BEEHIIV_APPROVED_OTHERS_NOT_AFFILIATE",
+      "pinterest_assets": [],
+      "metrics": {
+        "pageviews": null,
+        "pinterest_outbound_clicks": null,
+        "affiliate_clicks": null,
+        "signups_or_trials": null,
+        "sales": null
+      },
+      "next_review_due": "2026-11-29",
+      "revision_notes": [
+        "Written to sit beside best-email-marketing-tools-for-creators, not replace it; both articles now cross-link and state how they differ.",
+        "Ranking is by revenue model. Two of the five recommendations (Substack, Ghost) earn this site nothing.",
+        "MailerLite plan names verified as Comfort and Power on 2026-08-31; the older names still appear in two existing articles and are logged as a refresh trigger.",
+        "Ghost and Kit pricing re-verified 2026-08-31 from official pages."
+      ]
     }
   ]
 }

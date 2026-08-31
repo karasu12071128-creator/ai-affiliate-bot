@@ -197,6 +197,13 @@ Both support paid newsletter models. beehiiv is more publication-focused; Kit ma
 
 Kit is the better fit for typical creator automation. For complex behavior-based journeys, ActiveCampaign deserves a separate comparison.
 
+## Related comparisons
+
+- [beehiiv review 2026](/beehiiv-review/) — plan-by-plan, and the cases where paying for beehiiv is a mistake.
+- [beehiiv vs Substack](/beehiiv-vs-substack/) — the other beehiiv decision, with the revenue-share break-even math.
+- [Best newsletter platforms for creators](/best-newsletter-platforms/) — the wider field, including Ghost and MailerLite.
+- [Kit review 2026](/kit-review/) — a deeper look at Kit on its own terms.
+
 ## Sources and methodology
 
 We used current official pricing and feature documentation from Kit and beehiiv, public G2 and Capterra review data where available, and recent community discussions to identify recurring user friction. Community posts are treated as anecdotal unless supported elsewhere.

@@ -12,8 +12,8 @@ function clone(value) {
 }
 
 test("current registry validates and keeps external delivery disabled", () => {
-  assert.deepEqual(validateRegistry(source), { valid: true, pin_count: 10 });
-  assert.deepEqual(validateReferences(source, publicationLog, boardRegistry), { valid: true, article_count: 5, board_count: 5 });
+  assert.deepEqual(validateRegistry(source), { valid: true, pin_count: 16 });
+  assert.deepEqual(validateReferences(source, publicationLog, boardRegistry), { valid: true, article_count: 8, board_count: 5 });
   assert.equal(source.delivery_contract.external_write_authorized, false);
   assert.equal(source.delivery_contract.automatic_retry, false);
   assert.equal(source.pins[0].approval.status, "approved");

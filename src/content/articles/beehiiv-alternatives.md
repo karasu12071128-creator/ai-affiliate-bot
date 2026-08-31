@@ -183,6 +183,13 @@ Ghost.
 
 Not based on individual complaints alone. Test the specific editor and migration workflows that matter to you. beehiiv still has strong verified review ratings and positive feedback around growth and monetization.
 
+## Related comparisons
+
+- [beehiiv review 2026](/beehiiv-review/) — before you switch, check whether the plan is the problem.
+- [beehiiv vs Substack](/beehiiv-vs-substack/) — the switch most beehiiv users actually consider.
+- [Best newsletter platforms for creators](/best-newsletter-platforms/) — the same field, ranked rather than organized by reason to leave.
+- [Kit vs beehiiv](/kit-vs-beehiiv/) — the head-to-head in detail.
+
 ## Sources and methodology
 
 This article combines current official pricing/features with public G2 and Capterra review data and recent user discussions. Community stories are treated as anecdotal, and we avoid presenting one user's experience as a platform-wide fact.

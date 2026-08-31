@@ -165,6 +165,12 @@ Move when manual follow-up starts costing money: leads fall through gaps, differ
 
 It can work, but it is not our first choice if most revenue comes from service calls, consulting, courses, or client work. Its strongest differentiation is publication growth and monetization.
 
+## Related comparisons
+
+- [Best newsletter platforms for creators](/best-newsletter-platforms/) — read this instead if the newsletter is the product.
+- [beehiiv review 2026](/beehiiv-review/) — when a one-person newsletter business should pay for beehiiv.
+- [Kit review 2026](/kit-review/) — a deeper look at the top pick above.
+
 ## Sources and methodology
 
 This comparison uses current official product/pricing information plus public review data from G2, Capterra, and recent user discussions. Community reports identify possible friction, not standalone proof.

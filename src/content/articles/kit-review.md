@@ -222,6 +222,12 @@ Kit is generally better when the audience buys products or services from the cre
 
 For typical creator workflows, yes. ActiveCampaign offers significantly deeper automation but carries a larger learning curve.
 
+## Related comparisons
+
+- [Kit vs beehiiv](/kit-vs-beehiiv/) — the head-to-head, decided by business model.
+- [beehiiv review 2026](/beehiiv-review/) — if the newsletter itself is becoming the product.
+- [Best newsletter platforms for creators](/best-newsletter-platforms/) — where Kit fits among publication-first tools.
+
 ## Sources and methodology
 
 This review uses current Kit pricing and product documentation plus public G2 and Capterra ratings, summaries, and recent verified reviews. We do not represent public reviews as our own experience and do not treat one user story as universal.

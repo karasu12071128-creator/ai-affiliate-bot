@@ -210,6 +210,12 @@ Yes, for many small businesses. Its review volume and ratings are strong. The ma
 
 At zero revenue, Substack can be cheaper because publishing is free. On paid subscriptions, Substack takes 10% of revenue, while beehiiv's paid Scale plan currently advertises a 0% take rate on paid subscriptions. The break-even point depends on your revenue and plan.
 
+## Related comparisons
+
+- [Best newsletter platforms for creators](/best-newsletter-platforms/) — the publication-first version of this question, including Substack and Ghost.
+- [beehiiv review 2026](/beehiiv-review/) — a full assessment of the newsletter-business option on this list.
+- [Kit vs beehiiv](/kit-vs-beehiiv/) — the two most common picks, compared directly.
+
 ## Sources and methodology
 
 This article was updated using official product/pricing documentation and public user-review sources, including G2, Capterra, and recent community discussions. Community feedback is treated as anecdotal unless the same issue appears repeatedly across stronger review sources.

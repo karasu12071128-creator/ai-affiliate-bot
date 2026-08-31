@@ -25,6 +25,25 @@
     "publication_authorized": false,
     "note": "Local raster review only. This does not approve Pinterest publication."
   },
+  "content_expansion_batch_2026_08_31": {
+    "observed_at": "2026-08-31",
+    "batch_id": "content-expansion-2026-08-31",
+    "pins_added": ["pin011", "pin012", "pin013", "pin014", "pin015", "pin016"],
+    "expected": 6,
+    "rendered": 6,
+    "dimension_passed": 6,
+    "status": "PASS",
+    "visual_review": {
+      "reviewed_pins": ["pin013", "pin016"],
+      "text_overflow_observed": false,
+      "headline_readable": true,
+      "checklist_readable": true,
+      "comparison_labels_specific": true,
+      "note": "pin016 carries the tallest headline (three lines) and the longest checklist items in the batch; it was reviewed as the worst case. Local raster review only. This does not approve Pinterest publication."
+    },
+    "publication_authorized": false,
+    "registry_total_after_batch": 16
+  },
   "spot_check": {
     "pin_id": "pin010",
     "status": "PASS",

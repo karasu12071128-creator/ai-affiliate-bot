@@ -184,8 +184,8 @@ Source: **Ghost Reviews — Capterra** — `https://www.capterra.com/p/151947/Gh
 | Capterra "value for money" / "features" | Not captured | Unknown |
 | G2 overall / count | **Unknown** — G2 not directly loaded 2026-09-02. Third-party summaries cite figures from ~4.1/5 to "strong"; inconsistent, treat as T3 only, do not publish a G2 number. | Unknown |
 
-The Capterra sample (**53 reviews**) is **small** — smaller even than beehiiv's ~40 on G2.
-Any consensus claim must be hedged accordingly.
+The Capterra sample (**53 reviews**) is **small** — in the same low range as beehiiv's ~40
+on G2. Any consensus claim must be hedged accordingly.
 
 Recurring **praise** (Capterra + T3): clean distraction-free editor; fast sites with
 built-in SEO; genuine all-in-one (blog + newsletter + membership) without plugin sprawl;
@@ -210,9 +210,9 @@ Synthesis from official copy (T1) + review consensus (T2/T3):
   membership business and are comfortable with (or can hire) light technical setup.
 - Natural contrast with beehiiv: Ghost = ownership, self-host option, integrated
   membership *site*, 0% fees, but you run more of it and pay from $18–29/mo with no free
-  tier. beehiiv = hosted growth engine (recommendation network, ad network, referral
-  program, paid recommendations), free Launch tier up to 2,500 subs, less ownership,
-  faster to grow.
+  tier. beehiiv = hosted platform with more built-in growth tooling (recommendation
+  network, ad network, referral program, paid recommendations), free Launch tier up to
+  2,500 subs, less ownership.
 
 ---
 

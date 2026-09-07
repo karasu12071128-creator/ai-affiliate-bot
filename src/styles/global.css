@@ -37,6 +37,18 @@
   --accent-hot: #164835;
   --mark: #7d5a10;
 
+  /* The stage: one high-contrast moment at the top of the site. The ink is the
+     body ink pushed to near-black in the same green family, so the dark slab
+     reads as the same publication rather than a bolted-on hero. The signal is
+     warm gold — an editorial/print accent. Mint or violet on black is the
+     current generated-landing-page default and is deliberately avoided. */
+  --stage-ink: #0c1411;
+  --stage-ink-lift: #16241e;
+  --stage-paper: #f4f2ec;
+  --stage-muted: #9aa8a1;
+  --stage-line: #2a3a33;
+  --signal: #e3bd7a;
+
   /* Type voices */
   --display: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia,
     "Times New Roman", serif;
@@ -143,7 +155,6 @@ a:hover {
 
 /* ------------------------------------------------------------------ layout */
 
-.hero,
 .page,
 .article,
 .article-list,
@@ -157,27 +168,249 @@ a:hover {
   padding-top: 0;
 }
 
-.hero-wrap {
-  border-bottom: 1px solid var(--line);
-  background: var(--paper-deep);
+/* ------------------------------------------------------------------ stage */
+
+/* The stage is the site's single contrast moment: a dark slab carrying the
+   question the site exists to answer, plus the one instrument that shows the
+   site is a comparison desk rather than a blog. Everything below it returns to
+   paper. No image, no web font, no gradient wash — the impact is scale,
+   inversion, and one rationed signal colour. */
+.stage {
+  position: relative;
+  isolation: isolate;
+  background: var(--stage-ink);
+  color: var(--stage-paper);
+  border-bottom: 1px solid var(--stage-line);
+  overflow: hidden;
 }
 
-.hero {
+/* Hairline field: a faint engineering grid with a single soft pool of light
+   behind the headline. Drawn in CSS, so it costs no request and no layout. */
+.stage-field {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    radial-gradient(80ch 46ch at 18% 8%, rgba(227, 189, 122, 0.13), transparent 68%),
+    linear-gradient(to right, var(--stage-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--stage-line) 1px, transparent 1px);
+  background-size: auto, 104px 104px, 104px 104px;
+  opacity: 0.5;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 72%, rgba(0, 0, 0, 0.25) 100%);
+}
+
+.stage-inner {
+  position: relative;
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 72px 24px 68px;
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.65fr);
-  gap: 48px;
-  align-items: start;
-  padding-top: 60px;
-  padding-bottom: 60px;
+  grid-template-columns: minmax(0, 1.32fr) minmax(288px, 0.68fr);
+  gap: 56px;
+  align-items: end;
+}
+
+.stage-eyebrow {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+  margin: 0 0 22px;
+}
+
+.stage-title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.6rem, 6.6vw, 4.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+  color: var(--stage-paper);
+  margin: 0 0 24px;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+/* The one word the whole proposition turns on. */
+.stage-title em {
+  font-style: italic;
+  color: var(--signal);
+}
+
+.stage-dek {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #cdd7d1;
+  margin: 0 0 32px;
+  max-width: 52ch;
+}
+
+.stage-actions {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  flex-wrap: wrap;
+}
+
+/* Paper on ink: the highest-contrast action on the site, and the only place
+   the inversion is used. Specificity is raised deliberately because the shared
+   .button rule is defined later in this file. */
+.stage .button.button-lead {
+  background: var(--stage-paper);
+  border-color: var(--stage-paper);
+  color: var(--stage-ink);
+}
+
+.stage .button.button-lead:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--stage-ink);
+}
+
+.stage-secondary {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+  text-decoration-color: var(--stage-line);
+}
+
+.stage-secondary:hover {
+  color: var(--signal);
+}
+
+/* ---------------------------------------------------------------- matchup */
+
+/* The instrument. Every value in it is counted from the article collection at
+   build time — it is the site's real coverage, not an illustration of it. */
+.matchup {
+  border: 1px solid var(--stage-line);
+  background: linear-gradient(var(--stage-ink-lift), rgba(12, 20, 17, 0.6));
+  padding: 24px 24px 20px;
+}
+
+.matchup-kicker {
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+  margin: 0 0 16px;
+}
+
+.matchup-pair {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 3.4vw, 1.95rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--stage-paper);
+  text-decoration: none;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--stage-line);
+}
+
+.matchup-pair:hover {
+  color: var(--signal);
+}
+
+.matchup-pair:hover .matchup-versus {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+.matchup-versus {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+  border: 1px solid var(--stage-line);
+  border-radius: 999px;
+  padding: 3px 9px;
+  transform: translateY(-0.22em);
+}
+
+.matchup-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0 20px;
+}
+
+.matchup-meta dt {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+  /* Two lines' worth, so a wrapping label cannot push its reading out of line
+     with the one beside it. */
+  min-height: 2.6em;
+  margin-bottom: 4px;
+}
+
+.matchup-meta dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 1.02rem;
+  color: var(--stage-paper);
+}
+
+.coverage {
+  border-top: 1px solid var(--stage-line);
+  padding-top: 16px;
+}
+
+.coverage-head {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+  margin: 0 0 12px;
+}
+
+.coverage ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+
+.coverage li {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.coverage-count {
+  font-family: var(--mono);
+  font-size: 1.15rem;
+  color: var(--signal);
+  line-height: 1;
+}
+
+.coverage-name {
+  font-size: 0.86rem;
+  color: #c2cec8;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .hero > * {
-    animation: rise 480ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  .stage-lede,
+  .matchup {
+    animation: rise 560ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
   }
 
-  .hero > *:nth-child(2) {
-    animation-delay: 90ms;
+  .matchup {
+    animation-delay: 110ms;
   }
 }
 
@@ -261,86 +494,95 @@ h3 {
   white-space: nowrap;
 }
 
-/* --------------------------------------------------------- start-here rail */
+/* -------------------------------------------------------- method band */
 
-/* Deliberately not a card: a hairline-ruled panel that reads as a standfirst
-   box in a print review, and carries the site's single primary action. */
-.start-here {
+/* Deliberately not a three-card grid: the columns are separated by a rule that
+   runs to the top of each, so the band reads as a printed page's standfirst
+   row. A uniform bordered-card triptych is the strongest generated-site tell. */
+.band-method {
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--line);
+  padding-top: 46px;
+  padding-bottom: 44px;
+}
+
+.band-method + .band {
+  padding-top: 52px;
+}
+
+.method {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 34px;
+}
+
+.method li {
   border-top: 2px solid var(--ink);
   padding-top: 14px;
 }
 
-.start-here h2 {
-  margin: 0 0 6px;
-  font-size: 1.2rem;
+.method li:nth-child(2) {
+  border-top-color: var(--accent);
 }
 
-.start-here p {
+.method li:nth-child(3) {
+  border-top-color: var(--mark);
+}
+
+.method h3 {
+  font-family: var(--ui);
+  font-size: 0.82rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  margin: 0 0 8px;
+}
+
+.method p {
+  margin: 0;
+  font-size: 0.94rem;
   color: var(--ink-soft);
-  font-size: 0.97rem;
-  margin: 0 0 18px;
+  line-height: 1.6;
 }
 
-/* --------------------------------------------------- verification strip */
-
-/* Factual status, rendered as a ledger. Every value is derived from the
-   article collection or the affiliate registry — never hardcoded here. */
-.verification {
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  background: var(--white);
-}
-
-.verification-list {
-  list-style: none;
-  margin: 0 auto;
-  max-width: var(--max);
-  padding: 20px 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
-  gap: 16px 28px;
-}
-
-.verification-list li {
-  border-left: 1px solid var(--line);
-  padding-left: 18px;
-}
-
-.verification-list li:first-child {
-  border-left: 0;
-  padding-left: 0;
-}
-
-.verification-list a {
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
-
-.verification-value {
-  display: block;
-  font-family: var(--display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  line-height: 1.15;
-  color: var(--ink);
-}
-
-.verification-label {
-  display: block;
+.method-stamp {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 26px 0 0;
   font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.09em;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 4px;
 }
 
-.verification-list a .verification-label {
-  color: var(--accent);
-  text-decoration: underline;
-  text-decoration-thickness: 0.07em;
-  text-underline-offset: 0.2em;
+.method-stamp strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------- quiet band */
+
+/* Disclosure lives here — present, complete, and linked, but at the foot of
+   the page rather than in the hero. Compliance is unchanged; only its visual
+   dominance is. The per-article label and /affiliate-disclosure/ are the
+   binding surfaces and neither is weakened. */
+.band-quiet {
+  border-top: 1px solid var(--line);
+  padding-top: 30px;
+  padding-bottom: 46px;
+}
+
+.colophon-line {
+  margin: 0;
+  max-width: 76ch;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--muted);
 }
 
 /* -------------------------------------------------------------- entries */
@@ -762,33 +1004,6 @@ th {
   background: var(--line-strong);
 }
 
-/* ------------------------------------------------------- presenter slot */
-
-/* Reserved region for an optional video/still presenter asset (see
-   docs/PRESENTER_SLOT.md). It renders nothing until a registered asset
-   exists; there is no approved asset today, so nothing ships here. */
-.presenter {
-  border-top: 1px solid var(--line);
-  padding-top: 18px;
-  margin-top: 28px;
-}
-
-.presenter figcaption {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 8px;
-}
-
-.presenter video,
-.presenter img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
 /* ------------------------------------------------------------- colophon */
 
 .site-footer {
@@ -863,11 +1078,15 @@ th {
 /* -------------------------------------------------------------- mobile */
 
 @media (max-width: 860px) {
-  .hero {
+  .stage-inner {
     grid-template-columns: 1fr;
     gap: 34px;
-    padding-top: 40px;
-    padding-bottom: 44px;
+    padding: 54px 24px 48px;
+    align-items: start;
+  }
+
+  .stage-title {
+    max-width: 18ch;
   }
 
   .colophon {
@@ -876,7 +1095,6 @@ th {
 }
 
 @media (max-width: 620px) {
-  .hero,
   .page,
   .article,
   .article-list,
@@ -885,11 +1103,35 @@ th {
   }
 
   /* Tighter on phones: most arrivals are from Pinterest and short-form, where
-     the primary action needs to be reachable without a long scroll. */
-  .hero {
-    padding-top: 30px;
-    padding-bottom: 34px;
+     the primary action needs to be reachable without a long scroll. The stage
+     keeps its scale — the headline is the reason the page works on a phone —
+     but loses vertical padding so the CTA stays close to the fold. */
+  .stage-inner {
+    padding: 34px 20px 36px;
     gap: 26px;
+  }
+
+  .stage-title {
+    font-size: clamp(2.15rem, 10.4vw, 2.9rem);
+    max-width: 14ch;
+  }
+
+  .stage-dek {
+    font-size: 1rem;
+  }
+
+  .stage-actions {
+    gap: 16px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .stage-secondary {
+    text-align: center;
+  }
+
+  .matchup {
+    padding: 20px 18px 18px;
   }
 
   h1 {

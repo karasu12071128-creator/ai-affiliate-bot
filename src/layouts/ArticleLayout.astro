@@ -4,7 +4,6 @@ import BaseLayout from "./BaseLayout.astro";
 import AffiliateDisclosure from "../components/AffiliateDisclosure.astro";
 import CTA from "../components/CTA.astro";
 import EvidenceMark from "../components/EvidenceMark.astro";
-import PresenterSlot from "../components/PresenterSlot.astro";
 import { getAffiliateStatusNote } from "../lib/affiliateLinks";
 import { getCategory, categoryPath } from "../lib/categories";
 import { getEvidenceMeaning } from "../lib/evidence";
@@ -49,7 +48,6 @@ const articleJsonLd = {
         <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
         <span>Last verified {article.data.lastVerifiedDate}</span>
       </div>
-      <PresenterSlot slot="article-intro" />
     </header>
 
     {article.data.commercial && (

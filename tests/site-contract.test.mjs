@@ -124,23 +124,43 @@ test("the affiliate registry matches the affiliate program data file", () => {
   );
 });
 
-test("the presenter slot ships no media until an asset is registered", () => {
-  const registry = read("src/lib/presenterAssets.ts");
-  // The slot exists so a presenter asset can be added later without a redesign.
-  // Until a real, approved, licensed asset is registered, the site must ship no
-  // placeholder or stand-in media through it.
-  assert.match(
-    registry,
-    /export const presenterAssets: PresenterAsset\[\] = \[\s*\];/,
-    "presenterAssets must stay empty until an approved asset is registered"
+test("the homepage ships no fabricated media, metrics, or social proof", () => {
+  const home = read("src/pages/index.astro");
+
+  // v0.2 removed the empty presenter slot rather than shipping structure that
+  // renders nothing. The rule it protected still holds and is asserted here
+  // directly: the homepage carries no stand-in media and no borrowed authority.
+  assert.doesNotMatch(home, /<img|<video|<picture/, "homepage must ship no media stand-ins");
+  assert.doesNotMatch(
+    home,
+    /testimonial|as seen (in|on)|trusted by|logo(s)?-?(wall|cloud)|★|customers say/i,
+    "homepage must carry no testimonials, logo walls, or borrowed authority"
   );
 
-  const component = read("src/components/PresenterSlot.astro");
-  assert.match(
-    component,
-    /asset &&/,
-    "PresenterSlot must render nothing when no asset is registered"
+  // Every figure shown in the hero instrument must be counted from the article
+  // collection, never hand-typed. A bare digit in JSX text would be a literal.
+  assert.match(home, /coverageCount|matchupCovered|articles\.length/, "hero figures must be derived");
+  assert.doesNotMatch(
+    home,
+    />\s*[0-9][0-9,.]*\s*(\+|k|K|m|M)?\s*(readers|users|subscribers|reviews|visitors)/,
+    "no hand-typed audience or volume figures"
   );
+});
+
+test("affiliate disclosure stays reachable from the homepage", () => {
+  const home = read("src/pages/index.astro");
+  // v0.2 reduced disclosure's visual dominance. It must not have reduced its
+  // presence: the homepage still links the disclosure page, and the footer
+  // (rendered on every page) still carries the standing affiliate statement.
+  assert.match(home, /\/affiliate-disclosure\//, "homepage must link the affiliate disclosure page");
+  assert.match(
+    home,
+    /affiliate links/i,
+    "homepage must state that some outbound links are affiliate links"
+  );
+
+  const footer = read("src/components/Footer.astro");
+  assert.match(footer, /affiliate/i, "footer must carry the standing affiliate statement");
 });
 
 test("every static route in the sitemap has a page that builds it", () => {

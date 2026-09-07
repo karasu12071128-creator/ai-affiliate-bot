@@ -2,9 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import EvidenceMark from "../components/EvidenceMark.astro";
-import PresenterSlot from "../components/PresenterSlot.astro";
 import { categories, categoryPath } from "../lib/categories";
-import { affiliateTargets } from "../lib/affiliateLinks";
 import { operator } from "../site";
 
 const articles = (await getCollection("articles")).sort(
@@ -38,6 +36,39 @@ const startHere = [
 
 const primaryRead = bySlug.get("best-email-marketing-tools-for-creators") ?? articles[0];
 
+// ---------------------------------------------------------------------------
+// The hero's visual hook is the site's own coverage, rendered as an instrument
+// rather than described in a sentence. Every figure below is counted from the
+// article collection at build time, so it cannot drift from what we publish and
+// nothing here is a hand-typed marketing number.
+// ---------------------------------------------------------------------------
+const productNames: Record<string, string> = {
+  kit: "Kit",
+  beehiiv: "beehiiv",
+  activecampaign: "ActiveCampaign",
+  hubspot: "HubSpot"
+};
+
+const coverageCount = new Map<string, number>();
+for (const article of articles) {
+  for (const product of article.data.products) {
+    coverageCount.set(product, (coverageCount.get(product) ?? 0) + 1);
+  }
+}
+const coverage = [...coverageCount.entries()]
+  .map(([key, count]) => ({ key, name: productNames[key] ?? key, count }))
+  .sort((a, b) => b.count - a.count);
+
+// The headline matchup is a real article, not a constructed pairing: it appears
+// only because kit-vs-beehiiv exists and covers exactly these two products.
+const matchupArticle = bySlug.get("kit-vs-beehiiv");
+const matchupPair = matchupArticle?.data.products.map((p) => productNames[p] ?? p) ?? [];
+const matchupCovered = matchupArticle
+  ? articles.filter((article) =>
+      matchupArticle.data.products.every((product) => article.data.products.includes(product))
+    ).length
+  : 0;
+
 const articleCountByCategory = new Map<string, number>();
 for (const article of articles) {
   articleCountByCategory.set(
@@ -57,78 +88,106 @@ const plannedTopics = categories.filter(
   (category) => (articleCountByCategory.get(category.key) ?? 0) === 0
 );
 
-// Derived, never hardcoded: every figure below comes from the article
-// collection or the affiliate registry, so it cannot drift from reality.
-const approvedPrograms = Object.values(affiliateTargets).filter(
-  (target) => target.status === "approved"
-).length;
-
-const verification = [
-  { value: String(articles.length), label: "Published comparisons" },
-  { value: "Official sources", label: "How we verify", href: "/how-we-test/" },
+// Why this site is different, stated as method rather than as a trust plea.
+// Kept to three: a longer list reads as protesting too much.
+const method = [
   {
-    value: String(approvedPrograms),
-    label: approvedPrograms === 1 ? "Affiliate relationship, disclosed" : "Affiliate relationships, disclosed",
-    href: "/affiliate-disclosure/"
+    heading: "Verified, not repeated",
+    body: "Pricing and plan limits come from the vendor's own pages and carry the date we last checked them."
   },
-  ...(lastVerified ? [{ value: lastVerified, label: "Facts last verified" }] : [])
-];
-
-const principles = [
-  "We do not claim hands-on experience we have not had. Every article states what its claims are built on.",
-  "Affiliate commission does not decide a verdict, and a page with no affiliate link says so.",
-  "Prices and plan details carry the date we last checked them.",
-  "What we have not checked is marked unknown, not assumed."
+  {
+    heading: "Evidence stated per article",
+    body: "Each comparison says on the page what its claims are built on. We never imply hands-on use we have not had."
+  },
+  {
+    heading: "Unknowns stay unknown",
+    body: "What we have not checked is marked as such rather than filled in with a confident guess."
+  }
 ];
 ---
 
 <BaseLayout
-  title="Creator tool comparisons, checked against the evidence"
-  description="Independent comparisons of the software creators and one-person businesses actually pay for — with verified pricing, stated evidence, and disclosed affiliate relationships."
+  title="Which creator tool is worth paying for?"
+  description="Independent comparisons of the software creators and one-person businesses actually pay for — checked against the vendors' own pricing, with the evidence behind every verdict stated on the page."
 >
-  <div class="hero-wrap">
-    <section class="hero">
-      <div>
-        <p class="eyebrow">Independent &middot; Evidence-first &middot; Since 2026</p>
-        <h1>Creator tools, checked against the evidence.</h1>
-        <p class="dek">
-          Comparisons of the software creators and one-person businesses actually pay for. Every
-          article shows what its claims are built on, when we last checked the facts, and which
-          links earn us a commission.
+  <section class="stage">
+    <div class="stage-field" aria-hidden="true"></div>
+    <div class="stage-inner">
+      <div class="stage-lede">
+        <p class="stage-eyebrow">Independent &middot; Creator tool comparisons</p>
+        <h1 class="stage-title">
+          Which creator tool is <em>actually</em> worth paying for?
+        </h1>
+        <p class="stage-dek">
+          Comparisons of the software creators and one-person businesses really pay for —
+          checked against the vendors' own pricing, with the evidence behind every verdict
+          stated on the page.
         </p>
-        <PresenterSlot slot="homepage-hero" />
+        <div class="stage-actions">
+          {primaryRead && (
+            <a class="button button-lead" href={`/${primaryRead.slug}/`}>
+              Start with the field guide
+            </a>
+          )}
+          <a class="stage-secondary" href="/articles/">
+            All {articles.length} comparisons
+          </a>
+        </div>
       </div>
-      {primaryRead && (
-        <aside class="start-here">
-          <h2>Start here</h2>
-          <p>
-            Most people arrive mid-decision. This is the comparison that covers the whole field
-            before you narrow it down.
-          </p>
-          <a class="button" href={`/${primaryRead.slug}/`}>Read the main comparison</a>
+
+      {matchupArticle && matchupPair.length === 2 && (
+        <aside class="matchup" aria-label="Most-read comparison">
+          <p class="matchup-kicker">The comparison most people arrive for</p>
+          <a class="matchup-pair" href={`/${matchupArticle.slug}/`}>
+            <span class="matchup-name">{matchupPair[0]}</span>
+            <span class="matchup-versus" aria-hidden="true">vs</span>
+            <span class="matchup-name">{matchupPair[1]}</span>
+          </a>
+          <dl class="matchup-meta">
+            <div>
+              <dt>Articles covering both</dt>
+              <dd>{matchupCovered}</dd>
+            </div>
+            <div>
+              <dt>Facts last verified</dt>
+              <dd>{matchupArticle.data.lastVerifiedDate}</dd>
+            </div>
+          </dl>
+          <div class="coverage">
+            <p class="coverage-head">Tools covered so far</p>
+            <ul>
+              {coverage.map((item) => (
+                <li>
+                  <span class="coverage-count">{item.count}</span>
+                  <span class="coverage-name">{item.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </aside>
       )}
-    </section>
-  </div>
+    </div>
+  </section>
 
-  <section class="verification" aria-label="Verification status">
-    <ul class="verification-list">
-      {verification.map((item) => (
+  <section class="band band-method" aria-label="How this site works">
+    <div class="section-head">
+      <h2>Why these comparisons are different</h2>
+      <a href="/how-we-test/">Our review criteria</a>
+    </div>
+    <ul class="method">
+      {method.map((item) => (
         <li>
-          {item.href ? (
-            <a href={item.href}>
-              <span class="verification-value">{item.value}</span>
-              <span class="verification-label">{item.label}</span>
-            </a>
-          ) : (
-            <>
-              <span class="verification-value">{item.value}</span>
-              <span class="verification-label">{item.label}</span>
-            </>
-          )}
+          <h3>{item.heading}</h3>
+          <p>{item.body}</p>
         </li>
       ))}
     </ul>
+    {lastVerified && (
+      <p class="method-stamp">
+        <span>Most recent fact check</span>
+        <strong>{lastVerified}</strong>
+      </p>
+    )}
   </section>
 
   <section class="band">
@@ -179,19 +238,12 @@ const principles = [
     )}
   </section>
 
-  <section class="band">
-    <div class="section-head">
-      <h2>How we work</h2>
-      <a href="/how-we-test/">Our review criteria</a>
-    </div>
-    <ul class="trust-list">
-      {principles.map((item) => (
-        <li>{item}</li>
-      ))}
-    </ul>
-    <p class="notice">
+  <section class="band band-quiet">
+    <p class="colophon-line">
       Published by <a href={operator.url} rel="noopener">{operator.name}</a>, an independent
-      one-person studio. Questions, corrections, and product enquiries:
+      one-person studio. Some outbound links are affiliate links, labelled where they appear and
+      listed in full on <a href="/affiliate-disclosure/">affiliate disclosure</a>. Commission never
+      decides a verdict. Questions and corrections:
       <a href={`mailto:${operator.email}`}>{operator.email}</a>.
     </p>
   </section>

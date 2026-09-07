@@ -11,7 +11,8 @@
     "growth:review": "node scripts/pinterest-growth-review.mjs",
     "buffer:dry-run": "node scripts/buffer-pinterest-dry-run.mjs",
     "pin:package": "node scripts/pinterest-publish-package.mjs",
-    "pins:render": "node scripts/render-pinterest-pins.mjs"
+    "pins:render": "node scripts/render-pinterest-pins.mjs",
+    "check:site": "node scripts/check-site.mjs"
   },
   "dependencies": {
     "astro": "^5.13.3"

@@ -1,6 +1,11 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import EvidenceMark from "../components/EvidenceMark.astro";
+import PresenterSlot from "../components/PresenterSlot.astro";
+import { categories, categoryPath } from "../lib/categories";
+import { affiliateTargets } from "../lib/affiliateLinks";
+import { operator } from "../site";
 
 const articles = (await getCollection("articles")).sort(
   (a, b) => b.data.updatedDate.valueOf() - a.data.updatedDate.valueOf()
@@ -11,81 +16,114 @@ const lastVerified = articles
   .at(-1);
 
 const bySlug = new Map(articles.map((article) => [article.slug, article]));
-const useCases = [
-  {
-    heading: "You sell courses, coaching, or digital products",
-    body: "You need forms, tagging, and simple automated sequences that turn subscribers into buyers.",
-    slug: "best-email-marketing-tools-for-creators",
-    linkText: "Compare creator email tools"
-  },
-  {
-    heading: "The newsletter itself is the business",
-    body: "You care about publication growth, recommendations, sponsorships, and paid subscriptions.",
-    slug: "beehiiv-alternatives",
-    linkText: "Compare newsletter platforms"
-  },
-  {
-    heading: "You run a one-person business",
-    body: "You want the smallest tool that removes real work, without paying for automation you will not use.",
-    slug: "best-email-marketing-for-solopreneurs",
-    linkText: "Compare solopreneur tools"
-  }
-].filter((useCase) => bySlug.has(useCase.slug));
 
-const evidenceBar = [
+// The entry route into the site, ordered by how a reader actually decides:
+// what am I choosing between, then which one, then is it worth the money.
+const startHere = [
+  {
+    slug: "best-email-marketing-tools-for-creators",
+    context: "If you are still narrowing the field"
+  },
+  {
+    slug: "kit-vs-beehiiv",
+    context: "If it is down to the two most common choices"
+  },
+  {
+    slug: "beehiiv-review",
+    context: "If you want one platform examined in detail"
+  }
+]
+  .map((item) => ({ ...item, article: bySlug.get(item.slug) }))
+  .filter((item) => item.article !== undefined);
+
+const primaryRead = bySlug.get("best-email-marketing-tools-for-creators") ?? articles[0];
+
+const articleCountByCategory = new Map<string, number>();
+for (const article of articles) {
+  articleCountByCategory.set(
+    article.data.category,
+    (articleCountByCategory.get(article.data.category) ?? 0) + 1
+  );
+}
+
+// The homepage shows the topics we actually publish in. Planned topics are
+// named in one line underneath rather than given equal visual weight — four
+// empty blocks reading "nothing published yet" would make an honest roadmap
+// look like an empty site. The full list, with status, lives on /topics/.
+const liveTopics = categories
+  .map((category) => ({ ...category, count: articleCountByCategory.get(category.key) ?? 0 }))
+  .filter((category) => category.count > 0);
+const plannedTopics = categories.filter(
+  (category) => (articleCountByCategory.get(category.key) ?? 0) === 0
+);
+
+// Derived, never hardcoded: every figure below comes from the article
+// collection or the affiliate registry, so it cannot drift from reality.
+const approvedPrograms = Object.values(affiliateTargets).filter(
+  (target) => target.status === "approved"
+).length;
+
+const verification = [
   { value: String(articles.length), label: "Published comparisons" },
-  { value: "Checked", label: "Official vendor sources", href: "/editorial-methodology/" },
-  { value: "Disclosed", label: "Affiliate relationships", href: "/affiliate-disclosure/" },
-  ...(lastVerified ? [{ value: lastVerified, label: "Last verified" }] : [])
+  { value: "Official sources", label: "How we verify", href: "/how-we-test/" },
+  {
+    value: String(approvedPrograms),
+    label: approvedPrograms === 1 ? "Affiliate relationship, disclosed" : "Affiliate relationships, disclosed",
+    href: "/affiliate-disclosure/"
+  },
+  ...(lastVerified ? [{ value: lastVerified, label: "Facts last verified" }] : [])
 ];
 
-const differentiators = [
-  "We do not invent hands-on experience we haven't had.",
-  "Affiliate commission does not decide the verdict.",
-  "Unsupported claims get corrected, not buried.",
-  "Prices and features carry a verification date.",
-  "What we haven't checked, we mark unknown, not assumed."
+const principles = [
+  "We do not claim hands-on experience we have not had. Every article states what its claims are built on.",
+  "Affiliate commission does not decide a verdict, and a page with no affiliate link says so.",
+  "Prices and plan details carry the date we last checked them.",
+  "What we have not checked is marked unknown, not assumed."
 ];
 ---
 
 <BaseLayout
-  title="Newsletter and Email Tool Comparisons for Creators"
-  description="Research-backed comparisons of newsletter and email marketing tools for creators, solopreneurs, and small online businesses."
+  title="Creator tool comparisons, checked against the evidence"
+  description="Independent comparisons of the software creators and one-person businesses actually pay for — with verified pricing, stated evidence, and disclosed affiliate relationships."
 >
   <div class="hero-wrap">
     <section class="hero">
       <div>
-        <p class="eyebrow">Independent, evidence-first comparisons</p>
-        <h1>Newsletter software, checked against the evidence.</h1>
+        <p class="eyebrow">Independent &middot; Evidence-first &middot; Since 2026</p>
+        <h1>Creator tools, checked against the evidence.</h1>
         <p class="dek">
-          Practical comparisons for creators and small online businesses choosing email marketing software, with
-          verified pricing, disclosed affiliate relationships, and no invented hands-on claims.
+          Comparisons of the software creators and one-person businesses actually pay for. Every
+          article shows what its claims are built on, when we last checked the facts, and which
+          links earn us a commission.
         </p>
+        <PresenterSlot slot="homepage-hero" />
       </div>
-      <aside class="hero-panel">
-        <h2>Start here</h2>
-        <p>
-          Most creators are choosing between a creator-funnel tool and a newsletter-growth platform. Start with the
-          full comparison, then narrow by how you actually make money.
-        </p>
-        <a class="button" href="/best-email-marketing-tools-for-creators/">Read the main comparison</a>
-      </aside>
+      {primaryRead && (
+        <aside class="start-here">
+          <h2>Start here</h2>
+          <p>
+            Most people arrive mid-decision. This is the comparison that covers the whole field
+            before you narrow it down.
+          </p>
+          <a class="button" href={`/${primaryRead.slug}/`}>Read the main comparison</a>
+        </aside>
+      )}
     </section>
   </div>
 
-  <section class="evidence-bar" aria-label="Evidence and verification status">
-    <ul class="evidence-bar-list">
-      {evidenceBar.map((item) => (
+  <section class="verification" aria-label="Verification status">
+    <ul class="verification-list">
+      {verification.map((item) => (
         <li>
           {item.href ? (
             <a href={item.href}>
-              <span class="evidence-value">{item.value}</span>
-              <span class="evidence-label">{item.label}</span>
+              <span class="verification-value">{item.value}</span>
+              <span class="verification-label">{item.label}</span>
             </a>
           ) : (
             <>
-              <span class="evidence-value">{item.value}</span>
-              <span class="evidence-label">{item.label}</span>
+              <span class="verification-value">{item.value}</span>
+              <span class="verification-label">{item.label}</span>
             </>
           )}
         </li>
@@ -94,48 +132,67 @@ const differentiators = [
   </section>
 
   <section class="band">
-    <h2>Start with your situation</h2>
-    <div class="tool-grid">
-      {useCases.map((useCase) => (
-        <article class="card use-case">
-          <h3>{useCase.heading}</h3>
-          <p>{useCase.body}</p>
-          <a href={`/${useCase.slug}/`}>{useCase.linkText}</a>
-        </article>
-      ))}
+    <div class="section-head">
+      <h2>Where to start</h2>
+      <a href="/articles/">All articles</a>
     </div>
+    <ol class="entries">
+      {startHere.map((item, index) => (
+        <li class="entry">
+          <span class="entry-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          <div>
+            <p class="eyebrow">{item.context}</p>
+            <h3><a href={`/${item.article!.slug}/`}>{item.article!.data.title}</a></h3>
+            <p>{item.article!.data.description}</p>
+            <p class="entry-meta">
+              <EvidenceMark grade={item.article!.data.evidence} />
+              <span>Updated {item.article!.data.updatedDate.toISOString().slice(0, 10)}</span>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
   </section>
 
   <section class="band">
-    <div class="band-head">
-      <h2>Latest comparisons</h2>
-      <a href="/articles/">All articles</a>
+    <div class="section-head">
+      <h2>What we cover</h2>
+      <a href="/topics/">All topics</a>
     </div>
-    <div class="cards">
-      {articles.slice(0, 3).map((article) => (
-        <article class="card article-card">
-          <h3><a href={`/${article.slug}/`}>{article.data.title}</a></h3>
-          <p>{article.data.description}</p>
-          <p class="article-meta">
-            <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
-          </p>
-        </article>
+    <ul class="topics">
+      {liveTopics.map((topic) => (
+        <li class="topic" data-state="live">
+          <h3><a href={categoryPath(topic.key)}>{topic.name}</a></h3>
+          <p>{topic.description}</p>
+          <span class="topic-state">
+            {topic.count} {topic.count === 1 ? "article" : "articles"}
+          </span>
+        </li>
       ))}
-    </div>
+    </ul>
+    {plannedTopics.length > 0 && (
+      <p class="notice">
+        Extending next into {plannedTopics.map((topic) => topic.name).join(", ")}.
+        Nothing is published in those yet, and <a href="/topics/">topics</a> says so rather than
+        filling them with thin pages.
+      </p>
+    )}
   </section>
 
-  <section class="band differentiators">
-    <h2>How we're different</h2>
-    <ul class="trust-list diff-list">
-      {differentiators.map((item) => (
+  <section class="band">
+    <div class="section-head">
+      <h2>How we work</h2>
+      <a href="/how-we-test/">Our review criteria</a>
+    </div>
+    <ul class="trust-list">
+      {principles.map((item) => (
         <li>{item}</li>
       ))}
     </ul>
     <p class="notice">
-      Some links on this site are affiliate links and are labelled as such on the page. Others go straight to a
-      product's own website and earn us nothing. Read our
-      <a href="/affiliate-disclosure/">affiliate disclosure</a> and
-      <a href="/editorial-methodology/">editorial methodology</a>.
+      Published by <a href={operator.url} rel="noopener">{operator.name}</a>, an independent
+      one-person studio. Questions, corrections, and product enquiries:
+      <a href={`mailto:${operator.email}`}>{operator.email}</a>.
     </p>
   </section>
 </BaseLayout>

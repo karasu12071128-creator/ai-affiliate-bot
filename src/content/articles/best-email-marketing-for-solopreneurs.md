@@ -5,6 +5,8 @@ pubDate: 2026-08-21
 updatedDate: 2026-08-22
 lastVerifiedDate: "2026-08-22"
 commercial: true
+category: "newsletter-email"
+evidence: "official-sources"
 products: ["kit", "activecampaign", "beehiiv"]
 primaryProduct: "kit"
 ---

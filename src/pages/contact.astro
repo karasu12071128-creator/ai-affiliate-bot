@@ -1,0 +1,71 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, operator } from "../site";
+
+const reasons = [
+  {
+    heading: "A correction",
+    body: "A price, plan gate, or feature claim that is wrong or out of date. Tell us what the page says and what it should say; we will check it against the vendor's own page and update the verification date."
+  },
+  {
+    heading: "A vendor or affiliate programme",
+    body: "Questions about how we cover a product, or about an affiliate relationship. We do not accept payment for placement or for a verdict, and we say so before the conversation rather than after."
+  },
+  {
+    heading: "Anything else",
+    body: "Reader questions, requests for a comparison we have not written, and press enquiries all go to the same address."
+  }
+];
+---
+
+<BaseLayout
+  title="Contact"
+  description="How to reach the operator of Creator Growth Tools, including corrections and vendor enquiries."
+>
+  <section class="page">
+    <p class="eyebrow">Contact</p>
+    <h1>There is a person behind this site.</h1>
+    <p class="dek">
+      {site.name} is published by <a href={operator.url} rel="noopener">{operator.name}</a>, an
+      independent one-person studio based in {operator.location}. Email is the only channel; there
+      is no contact form, because the site stores no submitted data and we would rather not start.
+    </p>
+
+    <div class="prose">
+      <h2>Email</h2>
+      <p>
+        <a href={`mailto:${operator.email}`}><strong>{operator.email}</strong></a>
+      </p>
+      <p>
+        This is a small operation, not a support desk. Expect a reply in a few working days rather
+        than the same afternoon, and treat no reply as no reply rather than a decision.
+      </p>
+
+      <h2>What to write about</h2>
+    </div>
+
+    <ol class="entries">
+      {reasons.map((reason, index) => (
+        <li class="entry">
+          <span class="entry-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          <div>
+            <h3>{reason.heading}</h3>
+            <p>{reason.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="prose">
+      <h2>What we will not do</h2>
+      <p>
+        We do not publish paid placements, guest posts, or link insertions, and we do not sell
+        listings. If your message is a link-building request, this is the answer to it.
+      </p>
+      <p>
+        For how we evaluate tools, see <a href="/how-we-test/">how we test</a>. For who pays us, see
+        the <a href="/affiliate-disclosure/">affiliate disclosure</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

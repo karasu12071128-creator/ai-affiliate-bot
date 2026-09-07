@@ -1,12 +1,27 @@
 ---
-import { site } from "../site";
+import { site, operator } from "../site";
 ---
 
 <footer class="site-footer">
-  <p>&copy; 2026 {site.name}. Editorial comparisons for creators and small online businesses.</p>
-  <nav aria-label="Footer navigation">
-    <a href="/editorial-methodology/">Editorial Methodology</a>
-    <a href="/privacy-policy/">Privacy Policy</a>
-    <a href="/affiliate-disclosure/">Affiliate Disclosure</a>
-  </nav>
+  <div class="colophon">
+    <div>
+      <p class="colophon-operator">
+        {site.name} is published by <a href={operator.url} rel="noopener">{operator.name}</a>, an
+        independent one-person studio based in {operator.location}. Editorial contact:
+        <a href={`mailto:${operator.email}`}>{operator.email}</a>.
+      </p>
+      <p>
+        Some outbound links are affiliate links and are labelled on the page. Links that are not
+        affiliate links earn us nothing.
+      </p>
+      <p>&copy; 2026 {operator.name}.</p>
+    </div>
+    <nav aria-label="Footer navigation">
+      <a href="/how-we-test/">How we test</a>
+      <a href="/editorial-methodology/">Editorial methodology</a>
+      <a href="/affiliate-disclosure/">Affiliate disclosure</a>
+      <a href="/privacy-policy/">Privacy policy</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+  </div>
 </footer>

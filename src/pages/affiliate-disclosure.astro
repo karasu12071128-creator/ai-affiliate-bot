@@ -1,18 +1,84 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import AffiliateDisclosure from "../components/AffiliateDisclosure.astro";
+import { affiliateTargets, type ProductKey } from "../lib/affiliateLinks";
+import { operator } from "../site";
+
+// Rendered from the affiliate registry, so this page cannot drift out of sync
+// with what the site's links actually do.
+const programs = (Object.entries(affiliateTargets) as [ProductKey, (typeof affiliateTargets)[ProductKey]][]).map(
+  ([key, target]) => ({
+    key,
+    product: target.product,
+    active: target.affiliateUrl !== null,
+    note:
+      target.affiliateUrl !== null
+        ? "Active affiliate relationship. Links to this product are labelled “Affiliate link” and carry rel=\"sponsored\"."
+        : "No affiliate relationship. Links to this product go to its own website and earn us nothing."
+  })
+);
+const activeCount = programs.filter((program) => program.active).length;
 ---
 
-<BaseLayout title="Affiliate Disclosure" description="Affiliate disclosure for Creator Growth Tools.">
+<BaseLayout title="Affiliate Disclosure" description="Which products Creator Growth Tools earns commission on, and which it does not.">
   <section class="page">
     <p class="eyebrow">Disclosure</p>
-    <h1>Affiliate Disclosure</h1>
-    <AffiliateDisclosure />
+    <h1>Who pays us, and who does not.</h1>
+    <p class="dek">
+      {activeCount === 1
+        ? "Exactly one product on this site pays us a commission. Everything else earns us nothing, and the site says so on the page rather than only here."
+        : `${activeCount} products on this site pay us a commission. Everything else earns us nothing, and the site says so on the page rather than only here.`}
+    </p>
+
     <div class="prose">
-      <p>Some articles on this site may contain affiliate links. If you click a link and purchase a product, we may earn a commission at no additional cost to you.</p>
-      <p>Right now, beehiiv is the only active affiliate relationship on this site. Links to Kit, ActiveCampaign, and any other product go straight to that product's own website and earn us nothing. Each link on the site is labelled "Affiliate link" or "Official site" so you can tell which is which without checking this page.</p>
-      <p>Affiliate relationships do not determine whether a product is included. Articles may include non-affiliate alternatives when they are useful to the reader.</p>
-      <p>Pricing, commissions, cookie periods, and program terms can change. Always verify current details on the official vendor website before purchasing or joining any program.</p>
+      <h2>Current relationships</h2>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Product</th>
+            <th scope="col">Affiliate relationship</th>
+            <th scope="col">What that means on the page</th>
+          </tr>
+        </thead>
+        <tbody>
+          {programs.map((program) => (
+            <tr>
+              <th scope="row">{program.product}</th>
+              <td>{program.active ? "Active" : "None"}</td>
+              <td>{program.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose">
+      <h2>How links are labelled</h2>
+      <p>
+        Every outbound product link on this site is labelled <strong>Affiliate link</strong> or
+        <strong>Official site</strong> at the point you click it, so you never have to come back to
+        this page to know which is which. Only real affiliate links carry
+        <code>rel="sponsored"</code>; marking an ordinary link as sponsored would misstate the
+        relationship to you and to search engines just as badly as hiding one.
+      </p>
+
+      <h2>What commission does not buy</h2>
+      <p>
+        Affiliate relationships do not determine whether a product is included, where it ranks, or
+        what verdict it gets. Articles recommend tools we have no affiliate relationship with when
+        those tools fit the reader better — several currently do. Nobody can pay for placement, a
+        review, a link, or a change to a verdict. See <a href="/how-we-test/">how we test</a>.
+      </p>
+
+      <h2>Terms change</h2>
+      <p>
+        Pricing, commissions, cookie windows, and program terms change without notice. Always verify
+        current details on the vendor's own site before purchasing or joining a program. If you
+        spot something out of date here, tell us:
+        <a href={`mailto:${operator.email}`}>{operator.email}</a>.
+      </p>
     </div>
   </section>
 </BaseLayout>

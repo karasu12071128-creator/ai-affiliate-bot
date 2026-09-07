@@ -1,0 +1,151 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EvidenceMark from "../components/EvidenceMark.astro";
+import { evidenceGrades, getEvidenceLabel, getEvidenceMeaning } from "../lib/evidence";
+import { operator } from "../site";
+
+// The axes we score a tool against. These are the questions a creator is
+// actually deciding on, in the order the decision usually happens.
+const criteria = [
+  {
+    axis: "Who it is for",
+    detail:
+      "The workflow the tool assumes. A platform built for a paid newsletter and one built for a course funnel are not competitors, and calling them one is the most common mistake in this category."
+  },
+  {
+    axis: "Who should not use it",
+    detail:
+      "Stated explicitly on every review. A tool with no disqualifying case has not been examined properly."
+  },
+  {
+    axis: "Real cost at your size",
+    detail:
+      "Headline pricing plus the thresholds that change it — subscriber tiers, send limits, seats, and what moves you up a plan. Quoted with the date we checked."
+  },
+  {
+    axis: "Free plan and trial",
+    detail:
+      "Whether you can evaluate it without paying, and what the free tier withholds."
+  },
+  {
+    axis: "Learning curve",
+    detail: "How long before the tool is doing useful work, not how many features exist."
+  },
+  {
+    axis: "Output and export",
+    detail:
+      "What you can take with you: list export, content export, file formats, and whether leaving is realistic."
+  },
+  {
+    axis: "Limits and hard edges",
+    detail:
+      "The constraints people hit after committing — automation ceilings, deliverability handling, plan gates, support response."
+  },
+  {
+    axis: "Commercial terms",
+    detail:
+      "Usage rights, and for AI tooling, whether output is licensed for commercial and monetised use. This decides whether the tool is usable at all."
+  },
+  {
+    axis: "Fit with a small operation",
+    detail:
+      "Whether one person can run it without hiring around it — the constraint most reviews written for teams ignore."
+  }
+];
+
+const rules = [
+  "A tool is compared against the alternative a reader is realistically weighing, not against a strawman.",
+  "Pricing is read from the vendor's own pricing page and dated. Where a plan gate is unclear, we say it is unclear.",
+  "Repeated patterns across verified review marketplaces count as evidence. A single forum comment does not.",
+  "An affiliate relationship never moves a tool up. Where we have no affiliate link for a better-fitting tool, we still recommend it.",
+  "When we get something wrong, the page is corrected and the verification date moves. Nothing is quietly deleted."
+];
+---
+
+<BaseLayout
+  title="How we test"
+  description="The criteria Creator Growth Tools evaluates tools against, and the evidence grade shown on every article."
+>
+  <section class="page">
+    <p class="eyebrow">Method</p>
+    <h1>How we evaluate a tool.</h1>
+    <p class="dek">
+      This page exists so you can judge our judgement. It sets out what we score a tool against,
+      what our evidence grades mean, and what we will not do.
+    </p>
+
+    <div class="prose">
+      <h2>Evidence grades</h2>
+      <p>
+        Every article carries one of these marks at the top. It states what the article's claims
+        are actually built on, before you read a single verdict.
+      </p>
+    </div>
+
+    <ul class="entries">
+      {evidenceGrades.map((grade) => (
+        <li class="entry">
+          <span class="entry-index" aria-hidden="true"><EvidenceMark grade={grade} /></span>
+          <div>
+            <h3>{getEvidenceLabel(grade)}</h3>
+            <p>{getEvidenceMeaning(grade)}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <div class="prose">
+      <h2>What "hands-on" requires</h2>
+      <p>
+        We use the <strong>hands-on</strong> mark only where a real account was used, and the
+        article says which parts of the product were exercised. Where an article is built on
+        official documentation and verified public review consensus, it carries the
+        <strong>official sources reviewed</strong> mark instead. We do not describe an interface we
+        have not opened, publish a screenshot we did not take, or write in the first person about a
+        workflow we have not run. Most of the library currently sits at official sources reviewed,
+        and that is stated rather than blurred.
+      </p>
+
+      <h2>What we score against</h2>
+    </div>
+
+    <ol class="entries">
+      {criteria.map((item, index) => (
+        <li class="entry">
+          <span class="entry-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          <div>
+            <h3>{item.axis}</h3>
+            <p>{item.detail}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <div class="prose">
+      <h2>Rules we hold ourselves to</h2>
+    </div>
+    <ul class="trust-list">
+      {rules.map((rule) => (
+        <li>{rule}</li>
+      ))}
+    </ul>
+
+    <div class="prose">
+      <h2>What we do not publish</h2>
+      <p>
+        No invented user counts, revenue figures, testimonials, or review histories. No AI-written
+        claim of personal experience. No "sponsored" attribute on a link that is not an affiliate
+        link, and no unlabelled affiliate link. Where a claim cannot be sourced, it does not go on
+        the page.
+      </p>
+
+      <h2>Found something wrong?</h2>
+      <p>
+        Corrections are welcome and we would rather hear them than not. Write to
+        <a href={`mailto:${operator.email}`}>{operator.email}</a> — see our
+        <a href="/editorial-methodology/">editorial methodology</a> for how sources are weighted,
+        and our <a href="/affiliate-disclosure/">affiliate disclosure</a> for who pays us.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

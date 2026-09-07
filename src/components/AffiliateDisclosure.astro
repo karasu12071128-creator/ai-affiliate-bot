@@ -1,8 +1,42 @@
 ---
-const { compact = false } = Astro.props;
+import { isAffiliateLink, type ProductKey } from "../lib/affiliateLinks";
+
+type Props = {
+  compact?: boolean;
+  /** Products this page links to, so the notice can state what is actually true here. */
+  products?: ProductKey[];
+};
+
+const { compact = false, products } = Astro.props;
+
+// The disclosure must describe *this* page. A blanket "contains affiliate
+// links" on a page whose only outbound link is a plain official-site link
+// would misstate the relationship in the opposite direction from the usual
+// failure, and it is just as inaccurate.
+const hasAffiliateLink = products ? products.some((product) => isAffiliateLink(product)) : null;
 ---
 
 <aside class:list={["affiliate-disclosure", { compact }]} aria-label="Affiliate disclosure">
-  <strong>Affiliate disclosure:</strong>
-  This article contains affiliate links or may be updated with affiliate links after program approval. We may earn a commission if you purchase through these links, at no additional cost to you.
+  <strong>Affiliate disclosure</strong>
+  {hasAffiliateLink === true && (
+    <span>
+      This page contains at least one affiliate link, labelled &ldquo;Affiliate link&rdquo; where it
+      appears. If you sign up through it we may earn a commission, at no additional cost to you.
+      Commission does not decide our recommendation. <a href="/affiliate-disclosure/">Full disclosure</a>.
+    </span>
+  )}
+  {hasAffiliateLink === false && (
+    <span>
+      This page contains no affiliate links. Every outbound link here goes straight to the
+      product&rsquo;s own website and earns us nothing.
+      <a href="/affiliate-disclosure/">Full disclosure</a>.
+    </span>
+  )}
+  {hasAffiliateLink === null && (
+    <span>
+      Some links on this site are affiliate links and are labelled where they appear. We may earn a
+      commission if you sign up through one, at no additional cost to you.
+      <a href="/affiliate-disclosure/">Full disclosure</a>.
+    </span>
+  )}
 </aside>

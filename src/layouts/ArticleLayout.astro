@@ -3,8 +3,12 @@ import type { CollectionEntry } from "astro:content";
 import BaseLayout from "./BaseLayout.astro";
 import AffiliateDisclosure from "../components/AffiliateDisclosure.astro";
 import CTA from "../components/CTA.astro";
+import EvidenceMark from "../components/EvidenceMark.astro";
+import PresenterSlot from "../components/PresenterSlot.astro";
 import { getAffiliateStatusNote } from "../lib/affiliateLinks";
-import { site } from "../site";
+import { getCategory, categoryPath } from "../lib/categories";
+import { getEvidenceMeaning } from "../lib/evidence";
+import { site, operator } from "../site";
 
 type Props = {
   article: CollectionEntry<"articles">;
@@ -13,6 +17,7 @@ type Props = {
 const { article } = Astro.props;
 const canonicalPath = `/${article.slug}/`;
 const primary = article.data.primaryProduct ?? article.data.products[0];
+const category = getCategory(article.data.category);
 const articleJsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -20,10 +25,12 @@ const articleJsonLd = {
   description: article.data.description,
   datePublished: article.data.pubDate.toISOString(),
   dateModified: article.data.updatedDate.toISOString(),
+  articleSection: category.name,
   mainEntityOfPage: new URL(canonicalPath, site.url).toString(),
   publisher: {
     "@type": "Organization",
-    name: site.name
+    name: operator.name,
+    url: operator.url
   }
 };
 ---
@@ -31,21 +38,34 @@ const articleJsonLd = {
 <BaseLayout title={article.data.title} description={article.data.description} canonicalPath={canonicalPath}>
   <article class="article">
     <header class="article-header">
-      <p class="eyebrow">Newsletter and email marketing tools</p>
+      <p class="eyebrow">
+        <a href={categoryPath(category.key)}>{category.name}</a>
+      </p>
       <h1>{article.data.title}</h1>
       <p class="dek">{article.data.description}</p>
       <div class="article-meta">
+        <EvidenceMark grade={article.data.evidence} />
         <span>Published {article.data.pubDate.toISOString().slice(0, 10)}</span>
         <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
         <span>Last verified {article.data.lastVerifiedDate}</span>
       </div>
+      <PresenterSlot slot="article-intro" />
     </header>
 
     {article.data.commercial && (
       <>
-        <AffiliateDisclosure compact />
+        {/* Driven by the CTA that is actually rendered, not by the `products`
+            frontmatter. `products` lists what an article discusses; only the
+            primary product gets an outbound link. Disclosing an affiliate
+            relationship for a link the page does not contain is as inaccurate
+            as hiding one that it does. */}
+        <AffiliateDisclosure compact products={primary ? [primary] : []} />
         <p class="methodology-note">
-          Research approach: official sources, verified public review consensus, and community feedback are separated in our <a href="/editorial-methodology/">Editorial Methodology</a>.
+          {getEvidenceMeaning(article.data.evidence)}
+          {article.data.testedNote && ` ${article.data.testedNote}`}
+          {" "}
+          <a href="/how-we-test/">How we test</a> &middot;
+          <a href="/editorial-methodology/">Editorial methodology</a>
         </p>
       </>
     )}

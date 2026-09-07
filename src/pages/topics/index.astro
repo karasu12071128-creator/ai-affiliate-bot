@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { categories, categoryPath } from "../../lib/categories";
+
+const articles = await getCollection("articles");
+const counts = new Map<string, number>();
+for (const article of articles) {
+  counts.set(article.data.category, (counts.get(article.data.category) ?? 0) + 1);
+}
+const topics = categories.map((category) => ({
+  ...category,
+  count: counts.get(category.key) ?? 0
+}));
+---
+
+<BaseLayout
+  title="Topics"
+  description="The tool categories Creator Growth Tools covers today, and the ones it plans to cover."
+>
+  <section class="page">
+    <p class="eyebrow">Topics</p>
+    <h1>What we cover, and what we do not yet.</h1>
+    <p class="dek">
+      We would rather name a gap than fill it with thin pages. A topic is listed as planned until
+      there is something published in it worth reading.
+    </p>
+    <ul class="topics">
+      {topics.map((topic) => (
+        <li class="topic" data-state={topic.count > 0 ? "live" : "planned"}>
+          <h2>
+            {topic.count > 0 ? <a href={categoryPath(topic.key)}>{topic.name}</a> : topic.name}
+          </h2>
+          <p>{topic.description}</p>
+          <span class="topic-state">
+            {topic.count > 0
+              ? `${topic.count} ${topic.count === 1 ? "article" : "articles"}`
+              : "Planned — nothing published yet"}
+          </span>
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

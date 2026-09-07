@@ -1,15 +1,51 @@
+/* ============================================================================
+   Creator Growth Tools — editorial design system v0.1
+   ----------------------------------------------------------------------------
+   Direction: a small print review section, not a SaaS landing page.
+
+   Three deliberate constraints, each with a reason:
+
+   1. Zero web fonts. Personality comes from a three-voice stack — an old-style
+      serif for editorial voice, the system grotesque for interface, and mono
+      for anything that is *evidence* (dates, grades, identifiers). This costs
+      0 bytes and 0 network requests, which matters because Pinterest and
+      short-form traffic arrives on mobile connections.
+   2. Rules, not boxes. Hairlines and vertical rhythm carry the hierarchy.
+      A bordered rounded card is used only where the object really is a card.
+      Uniform card grids are the single strongest "generated" tell.
+   3. Colour is rationed. One accent for actions, one mark colour reserved
+      exclusively for verification signals. Nothing is coloured decoratively.
+   ========================================================================== */
+
 :root {
   color-scheme: light;
-  --ink: #18231f;
-  --muted: #5f6f68;
-  --line: #d9e2dc;
-  --paper: #fffdf7;
-  --soft: #eef6f0;
-  --accent: #2f7d5f;
-  --accent-dark: #1f5f48;
-  --gold: #d5a11e;
+
+  /* Paper and ink */
+  --paper: #faf8f3;
+  --paper-deep: #f2eee4;
   --white: #ffffff;
-  --max: 1120px;
+  --ink: #16201c;
+  --ink-soft: #35423c;
+  --muted: #66756e;
+
+  /* Hairlines */
+  --line: #ded8ca;
+  --line-strong: #b6ae99;
+
+  /* Rationed colour */
+  --accent: #1f5f48;
+  --accent-hot: #164835;
+  --mark: #7d5a10;
+
+  /* Type voices */
+  --display: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia,
+    "Times New Roman", serif;
+  --ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  /* Measure */
+  --max: 1080px;
+  --measure: 68ch;
 }
 
 * {
@@ -18,57 +54,94 @@
 
 body {
   margin: 0;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--ui);
   color: var(--ink);
   background: var(--paper);
   line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
-  color: var(--accent-dark);
-  text-decoration-thickness: 0.08em;
-  text-underline-offset: 0.18em;
+  color: var(--accent);
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.2em;
 }
 
-.site-header,
-.site-footer {
+a:hover {
+  color: var(--accent-hot);
+}
+
+/* ---------------------------------------------------------------- masthead */
+
+.site-header {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 20px;
+  padding: 22px 24px 18px;
   display: flex;
   justify-content: space-between;
-  gap: 20px;
-  align-items: center;
-}
-
-.brand,
-.site-nav,
-.site-footer nav {
-  display: flex;
-  gap: 16px;
-  align-items: center;
+  align-items: baseline;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
 }
 
 .brand {
-  font-weight: 800;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  text-decoration: none;
   color: var(--ink);
-  text-decoration: none;
 }
 
+/* A typographic monogram. A gradient chip here would say "AI startup" before
+   a single word of the site was read. */
 .brand-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--accent), var(--gold));
-  display: inline-block;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 3px 7px 4px;
+  line-height: 1;
 }
 
-.site-nav a,
-.site-footer a {
-  color: var(--muted);
-  font-weight: 650;
-  text-decoration: none;
+.brand-name {
+  font-family: var(--display);
+  font-size: 1.22rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 20px;
+  align-items: baseline;
+}
+
+.site-nav a {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+}
+
+.site-nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-nav a {
+    transition: color 140ms ease, border-color 140ms ease;
+  }
+}
+
+/* ------------------------------------------------------------------ layout */
 
 .hero,
 .page,
@@ -77,334 +150,403 @@ a {
 .band {
   max-width: var(--max);
   margin: 0 auto;
-  padding: 44px 20px;
+  padding: 52px 24px;
+}
+
+.band + .band {
+  padding-top: 0;
 }
 
 .hero-wrap {
-  background: var(--soft);
   border-bottom: 1px solid var(--line);
+  background: var(--paper-deep);
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
-  gap: 36px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1.35fr) minmax(270px, 0.65fr);
+  gap: 48px;
+  align-items: start;
+  padding-top: 60px;
+  padding-bottom: 60px;
 }
 
-.hero-panel,
-.feature-panel {
-  border: 1px solid var(--line);
-  background: var(--white);
-  border-radius: 8px;
-  padding: 24px;
+@media (prefers-reduced-motion: no-preference) {
+  .hero > * {
+    animation: rise 480ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+  }
+
+  .hero > *:nth-child(2) {
+    animation-delay: 90ms;
+  }
 }
 
-.tool-grid,
-.cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 
-.card {
-  border: 1px solid var(--line);
-  background: var(--white);
-  border-radius: 8px;
-  padding: 18px;
-}
-
-.card.use-case {
-  background: var(--soft);
-  border-top: 3px solid var(--accent);
-}
-
-.card.article-card {
-  border-top: 3px solid var(--gold);
-}
-
-/* Evidence bar: a factual status band, not a marketing claim. Values come straight from
-   the article collection and affiliate-programs data, never hardcoded here. */
-.evidence-bar {
-  background: var(--accent-dark);
-  border-bottom: 3px solid var(--gold);
-}
-
-.evidence-bar-list {
-  list-style: none;
-  margin: 0 auto;
-  max-width: var(--max);
-  padding: 18px 20px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 10px 20px;
-}
-
-.evidence-bar-list li {
-  border-left: 1px solid rgba(255, 255, 255, 0.25);
-  padding-left: 16px;
-}
-
-.evidence-bar-list li:first-child {
-  border-left: 0;
-  padding-left: 0;
-}
-
-.evidence-bar-list a {
-  display: block;
-  color: var(--white);
-  text-decoration: none;
-}
-
-.evidence-value {
-  display: block;
-  color: var(--white);
-  font-weight: 800;
-  font-size: 1.15rem;
-  line-height: 1.2;
-}
-
-.evidence-label {
-  display: block;
-  color: #dfeee6;
-  font-size: 0.82rem;
-}
-
-.evidence-bar-list a .evidence-label {
-  text-decoration: underline;
-  text-decoration-thickness: 0.08em;
-  text-underline-offset: 0.18em;
-}
-
-.differentiators {
-  background: var(--soft);
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-
-.diff-list {
-  max-width: 640px;
-}
-
-.differentiators .notice {
-  background: var(--white);
-  margin-top: 22px;
-}
-
-.eyebrow {
-  color: var(--accent-dark);
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
+/* ------------------------------------------------------------------- type */
 
 h1,
 h2,
 h3 {
-  line-height: 1.15;
+  font-family: var(--display);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
 }
 
 h1 {
-  font-size: clamp(2rem, 4.6vw, 3.1rem);
-  max-width: 20ch;
-  margin: 8px 0 18px;
+  font-size: clamp(2.15rem, 5.2vw, 3.35rem);
+  max-width: 17ch;
+  margin: 10px 0 20px;
 }
 
 .article h1 {
-  font-size: clamp(1.9rem, 4.2vw, 2.7rem);
-  max-width: 24ch;
+  font-size: clamp(1.95rem, 4.4vw, 2.75rem);
+  max-width: 22ch;
 }
 
 h2 {
-  font-size: 1.45rem;
-  margin-top: 40px;
+  font-size: clamp(1.4rem, 2.4vw, 1.72rem);
+  margin-top: 44px;
 }
 
 h3 {
-  font-size: 1.18rem;
+  font-size: 1.16rem;
   margin-top: 30px;
 }
 
 .dek {
-  font-size: 1.12rem;
-  color: var(--muted);
-  max-width: 760px;
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  max-width: 62ch;
+  line-height: 1.6;
 }
 
-.article-meta,
-.note-list {
-  color: var(--muted);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 18px;
-  font-size: 0.94rem;
-}
-
-.affiliate-disclosure,
-.cta,
-.notice {
-  border: 1px solid var(--line);
-  background: var(--soft);
-  border-radius: 8px;
-  padding: 16px;
-}
-
-.affiliate-disclosure.compact {
-  margin: 26px 0 14px;
-}
-
-.methodology-note {
-  color: var(--muted);
-  font-size: 0.94rem;
-  margin: 0 0 20px;
-}
-
-.cta {
-  display: flex;
-  justify-content: space-between;
-  gap: 18px;
-  align-items: center;
-  margin: 18px 0 30px;
-}
-
-.cta p {
-  margin: 4px 0 0;
-  color: var(--muted);
-}
-
-/* A reader arriving cold from Pinterest should meet the article, not a wall of CTA. */
-.cta.inline {
-  background: transparent;
-  border: 0;
-  border-left: 3px solid var(--line);
-  border-radius: 0;
-  padding: 6px 0 6px 16px;
-  margin: 18px 0 26px;
-}
-
-.cta.inline .button {
-  background: transparent;
-  color: var(--accent-dark);
-  border: 1px solid var(--accent);
-  font-weight: 700;
-}
-
-.cta-kind {
-  margin: 0 0 2px;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+/* The eyebrow is a section stamp, not a marketing kicker. */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
+  margin: 0;
 }
 
-.cta-kind[data-affiliate="true"] {
-  color: var(--accent-dark);
-}
-
-.cta-note {
-  max-width: 62ch;
-}
-
-.trust-list {
-  list-style: none;
-  margin: 20px 0 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 0.96rem;
-  max-width: 60ch;
-}
-
-.trust-list li {
-  padding-left: 20px;
-  position: relative;
-}
-
-.trust-list li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0.62em;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-
-.band-head {
+.section-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 16px;
+  border-top: 2px solid var(--ink);
+  padding-top: 12px;
+  margin-bottom: 8px;
 }
 
-.band-head h2 {
-  margin-top: 0;
+.section-head h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
 }
 
-.use-case a {
-  font-weight: 700;
-}
-
-.notice {
-  max-width: 78ch;
-  color: var(--muted);
-}
-
-:where(a, .button, summary):focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 10px 16px;
-  border-radius: 6px;
-  background: var(--accent);
-  color: var(--white);
-  font-weight: 800;
-  text-decoration: none;
+.section-head a {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
+/* --------------------------------------------------------- start-here rail */
+
+/* Deliberately not a card: a hairline-ruled panel that reads as a standfirst
+   box in a print review, and carries the site's single primary action. */
+.start-here {
+  border-top: 2px solid var(--ink);
+  padding-top: 14px;
+}
+
+.start-here h2 {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+}
+
+.start-here p {
+  color: var(--ink-soft);
+  font-size: 0.97rem;
+  margin: 0 0 18px;
+}
+
+/* --------------------------------------------------- verification strip */
+
+/* Factual status, rendered as a ledger. Every value is derived from the
+   article collection or the affiliate registry — never hardcoded here. */
+.verification {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--white);
+}
+
+.verification-list {
+  list-style: none;
+  margin: 0 auto;
+  max-width: var(--max);
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 16px 28px;
+}
+
+.verification-list li {
+  border-left: 1px solid var(--line);
+  padding-left: 18px;
+}
+
+.verification-list li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+
+.verification-list a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.verification-value {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--ink);
+}
+
+.verification-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.verification-list a .verification-label {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.2em;
+}
+
+/* -------------------------------------------------------------- entries */
+
+/* An entry is a sequenced editorial item: mono index, serif headline,
+   hairline separator. The index number is the cheapest honest signal that
+   an editor ordered this list rather than a loop rendering it. */
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr);
+  gap: 0 20px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.entry:last-child {
+  border-bottom: 0;
+}
+
+.entry-index {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--line-strong);
+  padding-top: 0.42em;
+  font-variant-numeric: tabular-nums;
+}
+
+.entry h3,
+.entry h2 {
+  margin: 0 0 6px;
+  font-size: clamp(1.14rem, 2vw, 1.34rem);
+  line-height: 1.24;
+}
+
+.entry h3 a,
+.entry h2 a {
+  color: var(--ink);
+  text-decoration: none;
+  background-image: linear-gradient(var(--line-strong), var(--line-strong));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 100% 1px;
+  padding-bottom: 2px;
+}
+
+.entry h3 a:hover,
+.entry h2 a:hover {
+  background-image: linear-gradient(var(--ink), var(--ink));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .entry h3 a,
+  .entry h2 a {
+    transition: background-image 140ms ease;
+  }
+}
+
+.entry p {
+  margin: 0;
+  color: var(--ink-soft);
+  max-width: 62ch;
+}
+
+.entry-meta {
+  margin-top: 10px;
+}
+
+/* ------------------------------------------------------------ topic rail */
+
+.topics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 0 32px;
+}
+
+.topic {
+  border-top: 1px solid var(--line);
+  padding: 20px 0 22px;
+}
+
+.topic h2,
+.topic h3 {
+  margin: 0 0 4px;
+  font-size: 1.08rem;
+}
+
+.topic h2 a,
+.topic h3 a {
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.topic h2 a:hover,
+.topic h3 a:hover {
+  border-bottom-color: var(--ink);
+}
+
+.topic p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  max-width: 42ch;
+}
+
+/* A planned topic is stated as planned. It is never dressed up as live
+   coverage — an empty category presented as a section is exactly the kind of
+   padding an affiliate reviewer is looking for. */
+.topic[data-state="planned"] h2,
+.topic[data-state="planned"] h3 {
+  color: var(--muted);
+}
+
+.topic-state {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+/* ------------------------------------------------------- evidence marks */
+
+/* The evidence grade is a trust primitive and a design element at once.
+   Outline only: it states a fact, it does not advertise. */
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border: 1px solid var(--line-strong);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.mark::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--line-strong);
+  flex: none;
+}
+
+.mark[data-evidence="hands-on"] {
+  color: var(--mark);
+  border-color: var(--mark);
+}
+
+.mark[data-evidence="hands-on"]::before {
+  background: var(--mark);
+}
+
+.mark[data-evidence="official-sources"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.mark[data-evidence="official-sources"]::before {
+  background: var(--accent);
+}
+
+/* ------------------------------------------------------------ meta lines */
+
+.article-meta,
+.note-list,
+.entry-meta {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------ prose */
+
 .prose {
-  max-width: 780px;
+  max-width: var(--measure);
 }
 
 .prose p,
 .prose li {
-  font-size: 1.02rem;
+  font-size: 1.03rem;
 }
 
-.table-wrap {
-  overflow-x: auto;
-  margin: 24px 0;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--white);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.table-wrap table {
-  min-width: 720px;
-}
-
-.prose table {
-  display: block;
-  max-width: 100%;
-  min-width: 0;
-  overflow-x: auto;
+.prose h2 {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
 }
 
 .prose p,
@@ -415,82 +557,392 @@ table {
   overflow-wrap: anywhere;
 }
 
+blockquote {
+  margin: 26px 0;
+  padding-left: 20px;
+  border-left: 2px solid var(--line-strong);
+  font-family: var(--display);
+  font-size: 1.14rem;
+  color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------------------ tables */
+
+.table-wrap,
+.prose table {
+  margin: 26px 0;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--line);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrap table {
+  min-width: 700px;
+}
+
+.prose table {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
 th,
 td {
-  padding: 12px;
+  padding: 12px 14px 12px 0;
   border-bottom: 1px solid var(--line);
   vertical-align: top;
   text-align: left;
 }
 
 th {
-  background: #f7faf8;
-  font-size: 0.9rem;
-}
-
-.article-list {
-  display: grid;
-  gap: 16px;
-}
-
-.article-card h2 {
-  margin-top: 0;
-}
-
-.site-footer {
-  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   color: var(--muted);
+}
+
+/* ----------------------------------------------------- notices and CTAs */
+
+.affiliate-disclosure,
+.notice {
+  border-left: 2px solid var(--line-strong);
+  background: transparent;
+  padding: 4px 0 4px 18px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  max-width: var(--measure);
+}
+
+.affiliate-disclosure strong {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.affiliate-disclosure.compact {
+  margin: 24px 0 14px;
+}
+
+.methodology-note {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0 0 22px;
+  max-width: var(--measure);
+}
+
+.cta {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+  border-top: 2px solid var(--ink);
+  padding-top: 16px;
+  margin: 34px 0;
+  max-width: var(--measure);
+}
+
+.cta p {
+  margin: 5px 0 0;
+  color: var(--ink-soft);
+}
+
+/* A reader arriving cold from Pinterest should meet the article, not a wall
+   of CTA — the top placement stays quiet, the bottom one converts. */
+.cta.inline {
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+  margin: 20px 0 28px;
+}
+
+.cta.inline .button {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.cta.inline .button:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.cta-kind {
+  margin: 0 0 3px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.cta-kind[data-affiliate="true"] {
+  color: var(--mark);
+}
+
+.cta strong {
+  font-family: var(--display);
+  font-size: 1.16rem;
+  font-weight: 600;
+}
+
+.cta-note {
+  max-width: 58ch;
   font-size: 0.94rem;
 }
 
-@media (max-width: 760px) {
-  .site-header,
-  .site-footer,
-  .cta {
-    align-items: flex-start;
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 11px 20px;
+  background: var(--accent);
+  color: var(--paper);
+  font-family: var(--ui);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  white-space: nowrap;
+}
+
+.button:hover {
+  background: var(--accent-hot);
+  border-color: var(--accent-hot);
+  color: var(--paper);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button,
+  .cta.inline .button {
+    transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+  }
+}
+
+/* --------------------------------------------------------------- lists */
+
+.trust-list {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  color: var(--ink-soft);
+  max-width: var(--measure);
+}
+
+.trust-list li {
+  padding-left: 22px;
+  position: relative;
+}
+
+.trust-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.66em;
+  width: 10px;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+/* ------------------------------------------------------- presenter slot */
+
+/* Reserved region for an optional video/still presenter asset (see
+   docs/PRESENTER_SLOT.md). It renders nothing until a registered asset
+   exists; there is no approved asset today, so nothing ships here. */
+.presenter {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: 28px;
+}
+
+.presenter figcaption {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.presenter video,
+.presenter img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ------------------------------------------------------------- colophon */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 40px;
+  background: var(--paper-deep);
+}
+
+.colophon {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 34px 24px 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 28px 40px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.colophon p {
+  margin: 0 0 8px;
+  max-width: 52ch;
+}
+
+.colophon-operator {
+  color: var(--ink-soft);
+}
+
+.colophon nav {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.colophon nav a {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  width: fit-content;
+  border-bottom: 1px solid transparent;
+}
+
+.colophon nav a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* --------------------------------------------------------------- a11y */
+
+:where(a, .button, summary):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 10px 16px;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* -------------------------------------------------------------- mobile */
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    padding-top: 40px;
+    padding-bottom: 44px;
+  }
+
+  .colophon {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero,
+  .page,
+  .article,
+  .article-list,
+  .band {
+    padding: 34px 20px;
+  }
+
+  /* Tighter on phones: most arrivals are from Pinterest and short-form, where
+     the primary action needs to be reachable without a long scroll. */
+  .hero {
+    padding-top: 30px;
+    padding-bottom: 34px;
+    gap: 26px;
+  }
+
+  h1 {
+    font-size: clamp(1.9rem, 8.4vw, 2.35rem);
+  }
+
+  .dek {
+    font-size: 1.02rem;
+  }
+
+  .site-header {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px 20px 12px;
   }
 
   .site-nav {
-    flex-wrap: wrap;
+    gap: 2px 14px;
   }
 
-  .hero {
-    grid-template-columns: 1fr;
-    padding-top: 24px;
+  .site-nav a {
+    font-size: 0.72rem;
   }
 
-  .tool-grid,
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .evidence-bar-list {
+  .verification-list {
     grid-template-columns: 1fr 1fr;
+    padding: 18px 20px;
   }
 
-  .evidence-bar-list li {
+  .verification-list li {
     border-left: 0;
     padding-left: 0;
+  }
+
+  .entry {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .entry-index {
+    padding-top: 0;
   }
 
   h1 {
     max-width: none;
   }
 
+  .cta {
+    align-items: flex-start;
+  }
+
   .button {
     width: 100%;
-  }
-
-  .cta.inline {
-    border-left: 0;
-    border-top: 3px solid var(--line);
-    padding: 16px 0 0;
-  }
-
-  .band-head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
   }
 }

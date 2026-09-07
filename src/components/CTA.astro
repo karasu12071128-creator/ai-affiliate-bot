@@ -18,11 +18,16 @@ type Props = {
 
 const { product, article, placement, note, variant = "prominent" } = Astro.props;
 const href = getAffiliateHref(product);
+const affiliate = isAffiliateLink(product);
+// A plain official-site link is not an affiliate click. Emitting one event
+// name for both would inflate the affiliate_click count that the funnel
+// review reads, so the event name follows the actual link kind.
+const eventName = affiliate ? "affiliate_click" : "outbound_click";
 ---
 
 <div class:list={["cta", variant]}>
   <div class="cta-copy">
-    <p class="cta-kind" data-affiliate={isAffiliateLink(product)}>{getLinkKind(product)}</p>
+    <p class="cta-kind" data-affiliate={affiliate}>{getLinkKind(product)}</p>
     <strong>{getAffiliateLabel(product)}</strong>
     {note && <p class="cta-note">{note}</p>}
   </div>
@@ -31,7 +36,7 @@ const href = getAffiliateHref(product);
     href={href}
     rel={getAffiliateRel(product)}
     target="_blank"
-    data-event="affiliate_click"
+    data-event={eventName}
     data-product={product}
     data-article={article}
     data-placement={placement}

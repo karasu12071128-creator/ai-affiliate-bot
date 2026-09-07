@@ -5,6 +5,8 @@ pubDate: 2026-08-31
 updatedDate: 2026-08-31
 lastVerifiedDate: "2026-08-31"
 commercial: true
+category: "newsletter-email"
+evidence: "official-sources"
 products: ["beehiiv", "kit"]
 primaryProduct: "beehiiv"
 ---

@@ -1,0 +1,56 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EvidenceMark from "../../components/EvidenceMark.astro";
+import { categories, getCategory, categoryPath, type CategoryKey } from "../../lib/categories";
+
+// Only categories that actually contain articles get a page. A planned
+// category has no index page at all, so the site can never serve an empty
+// topic index as if it were coverage.
+export async function getStaticPaths() {
+  const articles = await getCollection("articles");
+  return categories
+    .map((category) => ({
+      category,
+      entries: articles
+        .filter((article) => article.data.category === category.key)
+        .sort((a, b) => b.data.updatedDate.valueOf() - a.data.updatedDate.valueOf())
+    }))
+    .filter((group) => group.entries.length > 0)
+    .map((group) => ({
+      params: { category: group.category.key },
+      props: { categoryKey: group.category.key as CategoryKey, entries: group.entries }
+    }));
+}
+
+const { categoryKey, entries } = Astro.props;
+const category = getCategory(categoryKey);
+---
+
+<BaseLayout
+  title={category.name}
+  description={category.description}
+  canonicalPath={categoryPath(categoryKey)}
+>
+  <section class="page">
+    <p class="eyebrow"><a href="/topics/">Topics</a></p>
+    <h1>{category.name}</h1>
+    <p class="dek">{category.description}</p>
+    <ol class="entries">
+      {entries.map((article, index) => (
+        <li class="entry">
+          <span class="entry-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+          <div>
+            <h2><a href={`/${article.slug}/`}>{article.data.title}</a></h2>
+            <p>{article.data.description}</p>
+            <p class="entry-meta">
+              <EvidenceMark grade={article.data.evidence} />
+              <span>Updated {article.data.updatedDate.toISOString().slice(0, 10)}</span>
+              <span>Last verified {article.data.lastVerifiedDate}</span>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </section>
+</BaseLayout>

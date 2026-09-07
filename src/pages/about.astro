@@ -1,22 +1,60 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { site, operator } from "../site";
 ---
 
-<BaseLayout title="About" description="About Creator Growth Tools and its editorial approach.">
+<BaseLayout title="About" description="Who publishes Creator Growth Tools, what it covers, and how it is funded.">
   <section class="page">
     <p class="eyebrow">About</p>
-    <h1>Independent editorial comparisons for creator tools.</h1>
+    <h1>A small, deliberately narrow review site.</h1>
     <p class="dek">
-      Creator Growth Tools is a small independent publication for English-speaking creators and solo businesses
-      who want a concise, honest comparison before choosing newsletter and email marketing software.
+      {site.name} publishes comparisons of the software creators and one-person businesses actually
+      pay for. It is written for someone mid-decision who wants the trade-offs stated plainly and
+      the sources shown.
     </p>
     <div class="prose">
+      <h2>Who publishes it</h2>
+      <p>
+        {site.name} is published by <a href={operator.url} rel="noopener">{operator.name}</a>, an
+        independent one-person studio based in {operator.location} that builds small AI and
+        automation tooling. There is no editorial team and no outside investor. Reaching the person
+        who writes these pages takes one email: <a href={`mailto:${operator.email}`}>{operator.email}</a>.
+      </p>
+
       <h2>Editorial approach</h2>
-      <p>We separate verified vendor facts from editorial assessment. If we have not used a product first-hand, we do not claim hands-on testing or personal experience.</p>
+      <p>
+        We separate verified vendor facts from editorial assessment, and every article states which
+        it is built on using a visible evidence grade. If we have not used a product first-hand, we
+        do not claim hands-on testing or personal experience — see
+        <a href="/how-we-test/">how we test</a> for what each grade requires.
+      </p>
+
       <h2>Current scope</h2>
-      <p>We cover newsletter, email marketing, and audience growth tools for creators and one-person businesses. We would rather publish a small number of comparisons we can keep verified than a large catalogue we cannot.</p>
+      <p>
+        We cover newsletter, email marketing, and audience growth tools for creators and one-person
+        businesses today, and we are extending into faceless creation, AI video, and AI voice
+        tooling. <a href="/topics/">Topics</a> lists what is published and what is still planned,
+        with planned topics marked as planned rather than filled with thin pages. We would rather
+        keep a small number of comparisons verified than run a catalogue we cannot maintain.
+      </p>
+
       <h2>How this site is funded</h2>
-      <p>Some outbound links are affiliate links, and every link is labelled on the page so you can see which is which before you click. Links that are not affiliate links earn us nothing. Affiliate relationships never decide which tool we recommend; see our <a href="/editorial-methodology/">editorial methodology</a> and <a href="/affiliate-disclosure/">affiliate disclosure</a>.</p>
+      <p>
+        Some outbound links are affiliate links, and every link is labelled on the page so you can
+        see which is which before you click. Links that are not affiliate links earn us nothing, and
+        a page with no affiliate link says exactly that. Affiliate relationships never decide which
+        tool we recommend; see our <a href="/editorial-methodology/">editorial methodology</a> and
+        <a href="/affiliate-disclosure/">affiliate disclosure</a>.
+      </p>
+
+      <h2>How AI is used here</h2>
+      <p>
+        {operator.name} builds AI tooling, and AI assists the production of these pages — drafting,
+        structuring, and checking consistency. It is not used to invent experience, sources, prices,
+        screenshots, or results. Every factual claim traces to an official vendor page or verified
+        public review consensus, a human decides every verdict, and the evidence grade on each
+        article is the record of that boundary.
+      </p>
     </div>
   </section>
 </BaseLayout>

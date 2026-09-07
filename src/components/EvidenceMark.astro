@@ -1,0 +1,11 @@
+---
+import { getEvidenceLabel, type EvidenceGrade } from "../lib/evidence";
+
+type Props = {
+  grade: EvidenceGrade;
+};
+
+const { grade } = Astro.props;
+---
+
+<span class="mark" data-evidence={grade}>{getEvidenceLabel(grade)}</span>

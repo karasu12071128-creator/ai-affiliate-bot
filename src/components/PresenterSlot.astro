@@ -1,0 +1,30 @@
+---
+import { getPresenterAsset, type PresenterAsset } from "../lib/presenterAssets";
+
+type Props = {
+  slot: PresenterAsset["slot"];
+};
+
+const asset = getPresenterAsset(Astro.props.slot);
+---
+
+{
+  asset && (
+    <figure class="presenter">
+      {asset.type === "video" ? (
+        <video
+          src={asset.src}
+          poster={asset.poster}
+          muted
+          loop
+          playsinline
+          preload="none"
+          aria-label={asset.alt}
+        />
+      ) : (
+        <img src={asset.src} alt={asset.alt} loading="lazy" decoding="async" />
+      )}
+      <figcaption>{asset.caption}</figcaption>
+    </figure>
+  )
+}

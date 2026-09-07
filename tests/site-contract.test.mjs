@@ -163,6 +163,46 @@ test("affiliate disclosure stays reachable from the homepage", () => {
   assert.match(footer, /affiliate/i, "footer must carry the standing affiliate statement");
 });
 
+test("lab entries state a status and claim no results", () => {
+  const lab = read("src/lib/lab.ts");
+
+  // The Lab shows work in progress. An entry that implied a finished outcome,
+  // or carried a performance figure, would break the same evidence rule the
+  // articles are held to — so both are asserted against the source directly.
+  const entries = [...lab.matchAll(/status:\s*"(running|building|unverified)"/g)];
+  const titles = [...lab.matchAll(/^\s{4}title:/gm)];
+  assert.ok(titles.length > 0, "the lab must carry at least one entry");
+  assert.equal(
+    entries.length,
+    titles.length,
+    "every lab entry must declare an explicit status"
+  );
+
+  const entryBody = lab.slice(lab.indexOf("export const labEntries"));
+  assert.doesNotMatch(
+    entryBody,
+    /\b\d+(\.\d+)?\s*(%|x|×)|\b\d[\d,]*\s*(views|clicks|impressions|subscribers|followers|hours saved)/i,
+    "lab entries must carry no metric, rate, or performance figure"
+  );
+  assert.doesNotMatch(
+    entryBody,
+    /\b(proven|guaranteed|best-in-class|industry-leading|10x)\b/i,
+    "lab entries must not overclaim"
+  );
+});
+
+test("a pillar with nothing published is not presented as a destination", () => {
+  const home = read("src/pages/index.astro");
+  // The v0.1 failure was shipping structure that led nowhere. A pillar without
+  // a href must render as a plain element, never as a link.
+  assert.match(home, /href:\s*null/, "an unpublished pillar must carry href: null");
+  assert.match(
+    home,
+    /pillar\.href \?/,
+    "the pillar must branch on href so an empty pillar is not a link"
+  );
+});
+
 test("every static route in the sitemap has a page that builds it", () => {
   const sitemap = read("src/pages/sitemap.xml.ts");
   const paths = [...sitemap.matchAll(/^\s{4}"(\/[a-z0-9/-]*)",?$/gm)].map((match) => match[1]);

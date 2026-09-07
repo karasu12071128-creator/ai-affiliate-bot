@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import EvidenceMark from "../components/EvidenceMark.astro";
 import { categories, categoryPath } from "../lib/categories";
+import { labEntries, labStatusLabel } from "../lib/lab";
 import { operator } from "../site";
 
 const articles = (await getCollection("articles")).sort(
@@ -88,6 +89,40 @@ const plannedTopics = categories.filter(
   (category) => (articleCountByCategory.get(category.key) ?? 0) === 0
 );
 
+// The four ways into the site. Each one states its real state: a pillar with
+// nothing published says so and does not become a link, because a nav item
+// leading to an empty room is the same mistake as an empty component.
+const pillars = [
+  {
+    key: "explore",
+    name: "Explore",
+    blurb: "Tools by category, and what we have not covered yet.",
+    href: "/topics/",
+    state: `${liveTopics.length} live \u00b7 ${plannedTopics.length} planned`
+  },
+  {
+    key: "compare",
+    name: "Compare",
+    blurb: "Head-to-head decisions between the tools people shortlist.",
+    href: "/articles/",
+    state: `${articles.length} comparisons`
+  },
+  {
+    key: "build",
+    name: "Build",
+    blurb: "The workflows these tools are actually assembled into.",
+    href: null,
+    state: "First workflow in progress"
+  },
+  {
+    key: "lab",
+    name: "Lab",
+    blurb: "What the studio is building and testing right now.",
+    href: "#lab",
+    state: `${labEntries.length} open`
+  }
+];
+
 // Why this site is different, stated as method rather than as a trust plea.
 // Kept to three: a longer list reads as protesting too much.
 const method = [
@@ -169,6 +204,28 @@ const method = [
     </div>
   </section>
 
+  <nav class="pillars" aria-label="Ways into the site">
+    <ul>
+      {pillars.map((pillar) => (
+        <li class="pillar" data-open={pillar.href ? "true" : "false"}>
+          {pillar.href ? (
+            <a href={pillar.href}>
+              <span class="pillar-name">{pillar.name}</span>
+              <span class="pillar-blurb">{pillar.blurb}</span>
+              <span class="pillar-state">{pillar.state}</span>
+            </a>
+          ) : (
+            <div>
+              <span class="pillar-name">{pillar.name}</span>
+              <span class="pillar-blurb">{pillar.blurb}</span>
+              <span class="pillar-state">{pillar.state}</span>
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  </nav>
+
   <section class="band band-method" aria-label="How this site works">
     <div class="section-head">
       <h2>Why these comparisons are different</h2>
@@ -236,6 +293,36 @@ const method = [
         filling them with thin pages.
       </p>
     )}
+  </section>
+
+  <section class="lab" id="lab" aria-label="Current lab">
+    <div class="lab-inner">
+      <div class="section-head section-head-dark">
+        <h2>Current lab</h2>
+        <span class="lab-note">What the studio is building with these tools</span>
+      </div>
+      <ul class="lab-list">
+        {labEntries.map((entry) => (
+          <li class="lab-entry">
+            <div class="lab-entry-head">
+              <h3>{entry.title}</h3>
+              <span class="lab-status" data-status={entry.status}>
+                {labStatusLabel[entry.status]}
+              </span>
+            </div>
+            <p class="lab-premise">{entry.premise}</p>
+            {entry.chain.length > 0 && (
+              <ol class="chain" aria-label="Workflow stages">
+                {entry.chain.map((stage) => (
+                  <li>{stage}</li>
+                ))}
+              </ol>
+            )}
+            <p class="lab-status-note">{entry.statusNote}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   </section>
 
   <section class="band band-quiet">

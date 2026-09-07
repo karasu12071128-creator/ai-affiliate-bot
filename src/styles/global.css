@@ -494,6 +494,217 @@ h3 {
   white-space: nowrap;
 }
 
+/* ----------------------------------------------------------- pillars */
+
+/* The four ways in, as a ruled rail rather than four bordered cards. The rail
+   sits directly under the stage and inherits its ink, so the dark region reads
+   as one masthead block instead of a hero with a strip bolted beneath it. */
+.pillars {
+  background: var(--stage-ink);
+  border-bottom: 1px solid var(--line);
+}
+
+.pillars ul {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 24px 30px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--stage-line);
+  border-top: 1px solid var(--stage-line);
+}
+
+.pillar {
+  background: var(--stage-ink);
+  padding: 20px 18px 18px;
+}
+
+.pillar a,
+.pillar > div {
+  display: block;
+  text-decoration: none;
+  height: 100%;
+}
+
+.pillar-name {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.22rem;
+  letter-spacing: -0.015em;
+  color: var(--stage-paper);
+  margin-bottom: 6px;
+}
+
+.pillar a:hover .pillar-name {
+  color: var(--signal);
+}
+
+.pillar-blurb {
+  display: block;
+  font-size: 0.83rem;
+  line-height: 1.5;
+  color: #b3c0b9;
+  margin-bottom: 12px;
+}
+
+.pillar-state {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+}
+
+.pillar a .pillar-state::after {
+  content: " \2192";
+  color: var(--signal);
+}
+
+/* A pillar with nothing published is dimmed and is not a link. It is shown
+   because the shape of the site is honest information; it is not dressed up
+   as a destination that exists. */
+.pillar[data-open="false"] {
+  opacity: 0.62;
+}
+
+/* --------------------------------------------------------------- lab */
+
+/* The proof section: what the studio is actually building. Dark again, so the
+   page reads ink -> paper -> ink and the Lab lands as the second event rather
+   than another band of text. */
+.lab {
+  background: var(--stage-ink);
+  color: var(--stage-paper);
+  border-top: 1px solid var(--stage-line);
+}
+
+.lab-inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 52px 24px 56px;
+}
+
+.section-head-dark {
+  border-bottom-color: var(--stage-line);
+}
+
+.section-head-dark h2 {
+  color: var(--stage-paper);
+}
+
+.lab-note {
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stage-muted);
+}
+
+.lab-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 34px;
+}
+
+.lab-entry {
+  border-top: 1px solid var(--stage-line);
+  padding-top: 18px;
+}
+
+.lab-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.lab-entry h3 {
+  font-family: var(--display);
+  font-size: 1.28rem;
+  letter-spacing: -0.018em;
+  color: var(--stage-paper);
+  margin: 0;
+}
+
+/* The status is the honest part of this section and is typed as evidence, not
+   styled as a badge. `unverified` is deliberately the loudest of the three. */
+.lab-status {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid var(--stage-line);
+  color: var(--stage-muted);
+  white-space: nowrap;
+}
+
+.lab-status[data-status="running"] {
+  color: var(--signal);
+  border-color: rgba(227, 189, 122, 0.45);
+}
+
+.lab-status[data-status="unverified"] {
+  color: #e8b6a0;
+  border-color: rgba(232, 182, 160, 0.45);
+}
+
+.lab-premise {
+  margin: 0 0 16px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cdd7d1;
+}
+
+/* The workflow chain. Stages are separated by a drawn arrow rather than a
+   character, so it survives wrapping on a phone. */
+.chain {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 6px;
+  counter-reset: stage;
+}
+
+.chain li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stage-paper);
+  border: 1px solid var(--stage-line);
+  background: var(--stage-ink-lift);
+  padding: 5px 9px;
+}
+
+.chain li:not(:last-child)::after {
+  content: "";
+  width: 12px;
+  height: 1px;
+  background: var(--signal);
+  opacity: 0.7;
+}
+
+.lab-status-note {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--stage-muted);
+}
+
 /* -------------------------------------------------------- method band */
 
 /* Deliberately not a three-card grid: the columns are separated by a rule that
@@ -1089,6 +1300,16 @@ th {
     max-width: 18ch;
   }
 
+  .lab-list {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .method {
+    grid-template-columns: 1fr 1fr;
+    gap: 26px;
+  }
+
   .colophon {
     grid-template-columns: 1fr;
   }
@@ -1132,6 +1353,44 @@ th {
 
   .matchup {
     padding: 20px 18px 18px;
+  }
+
+  .pillars ul {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 20px 24px;
+  }
+
+  .pillar {
+    padding: 16px 14px 14px;
+  }
+
+  .pillar-blurb {
+    font-size: 0.79rem;
+  }
+
+  .lab-inner {
+    padding: 40px 20px 44px;
+  }
+
+  .lab-list {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  /* Three columns at 390px gave one to two words per line. The method reads as
+     a stacked list on a phone. */
+  .method {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .method-stamp {
+    justify-content: flex-start;
+  }
+
+  .section-head {
+    flex-wrap: wrap;
+    gap: 6px;
   }
 
   h1 {

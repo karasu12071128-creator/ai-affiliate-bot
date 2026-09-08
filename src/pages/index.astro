@@ -4,7 +4,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import EvidenceMark from "../components/EvidenceMark.astro";
 import { categories, categoryPath } from "../lib/categories";
 import { labEntries, labStatusLabel } from "../lib/lab";
+import { activeHeroMedia } from "../lib/heroMedia";
 import { operator } from "../site";
+
+// Behind the stage's CSS field, when an approved asset exists. The stage is a
+// finished design without it; see src/lib/heroMedia.ts.
+const heroMedia = activeHeroMedia();
 
 const articles = (await getCollection("articles")).sort(
   (a, b) => b.data.updatedDate.valueOf() - a.data.updatedDate.valueOf()
@@ -62,6 +67,13 @@ const coverage = [...coverageCount.entries()]
 
 // The headline matchup is a real article, not a constructed pairing: it appears
 // only because kit-vs-beehiiv exists and covers exactly these two products.
+//
+// It is NOT labelled "most read". The site ships no analytics store — see
+// `public/analytics.js`, which dispatches a local event and persists nothing —
+// so we have no readership data and cannot honestly rank anything by traffic.
+// The only claim we can support is coverage, which is counted above, so the
+// panel is labelled by coverage and the label is withheld if that stops being
+// true.
 const matchupArticle = bySlug.get("kit-vs-beehiiv");
 const matchupPair = matchupArticle?.data.products.map((p) => productNames[p] ?? p) ?? [];
 const matchupCovered = matchupArticle
@@ -69,6 +81,15 @@ const matchupCovered = matchupArticle
       matchupArticle.data.products.every((product) => article.data.products.includes(product))
     ).length
   : 0;
+
+// True only while the matchup really is the pairing of our two most-covered
+// tools. If coverage shifts, the claim disappears rather than becoming stale.
+const topTwoCovered = coverage.slice(0, 2).map((item) => item.key);
+const matchupIsTopCovered =
+  matchupArticle !== undefined &&
+  topTwoCovered.length === 2 &&
+  matchupArticle.data.products.length === 2 &&
+  topTwoCovered.every((key) => matchupArticle.data.products.includes(key as never));
 
 const articleCountByCategory = new Map<string, number>();
 for (const article of articles) {
@@ -145,16 +166,40 @@ const method = [
   title="Which creator tool is worth paying for?"
   description="Independent comparisons of the software creators and one-person businesses actually pay for — checked against the vendors' own pricing, with the evidence behind every verdict stated on the page."
 >
-  <section class="stage">
+  <section
+    class="stage"
+    data-media={heroMedia ? "true" : "false"}
+    style={heroMedia ? `--stage-poster: url("${heroMedia.poster}")` : undefined}
+  >
+    {heroMedia && (
+      <video
+        class="stage-media"
+        src={heroMedia.src}
+        poster={heroMedia.poster}
+        width={heroMedia.width}
+        height={heroMedia.height}
+        data-subject={heroMedia.subjectSide}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-hidden="true"
+        tabindex="-1"
+      />
+    )}
     <div class="stage-field" aria-hidden="true"></div>
     <div class="stage-inner">
       <div class="stage-lede">
-        <p class="stage-eyebrow">Independent &middot; Creator tool comparisons</p>
+        <p class="stage-eyebrow">
+          Independent &middot; {liveTopics.map((topic) => topic.name).join(", ")}
+          {plannedTopics.length > 0 && ` · ${plannedTopics.length} more categories in progress`}
+        </p>
         <h1 class="stage-title">
           Which creator tool is <em>actually</em> worth paying for?
         </h1>
         <p class="stage-dek">
-          Comparisons of the software creators and one-person businesses really pay for —
+          We answer that one category at a time, starting with newsletter and email —
           checked against the vendors' own pricing, with the evidence behind every verdict
           stated on the page.
         </p>
@@ -171,9 +216,17 @@ const method = [
       </div>
 
       {matchupArticle && matchupPair.length === 2 && (
-        <aside class="matchup" aria-label="Most-read comparison">
-          <p class="matchup-kicker">The comparison most people arrive for</p>
-          <a class="matchup-pair" href={`/${matchupArticle.slug}/`}>
+        <aside class="matchup" aria-label="Coverage summary">
+          <p class="matchup-kicker">
+            {matchupIsTopCovered
+              ? "The head-to-head between our two most-covered tools"
+              : "A head-to-head between two tools we cover"}
+          </p>
+          <a
+            class="matchup-pair"
+            href={`/${matchupArticle.slug}/`}
+            aria-label={`${matchupPair[0]} versus ${matchupPair[1]} — read the comparison`}
+          >
             <span class="matchup-name">{matchupPair[0]}</span>
             <span class="matchup-versus" aria-hidden="true">vs</span>
             <span class="matchup-name">{matchupPair[1]}</span>
@@ -216,7 +269,10 @@ const method = [
             </a>
           ) : (
             <div>
-              <span class="pillar-name">{pillar.name}</span>
+              <span class="pillar-name">
+                {pillar.name}
+                <span class="pillar-flag">Not open yet</span>
+              </span>
               <span class="pillar-blurb">{pillar.blurb}</span>
               <span class="pillar-state">{pillar.state}</span>
             </div>

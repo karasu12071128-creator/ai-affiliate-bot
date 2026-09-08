@@ -2,8 +2,12 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const root = new URL("..", import.meta.url).pathname;
+// `new URL(...).pathname` yields "/C:/..." on Windows, so join() produced
+// "C:\C:\..." and every test in this file threw ENOENT on the operator's PC
+// while passing in Linux CI. fileURLToPath is the portable conversion.
+const root = fileURLToPath(new URL("..", import.meta.url));
 const read = (relative) => readFileSync(join(root, relative), "utf8");
 
 /**
@@ -128,9 +132,30 @@ test("the homepage ships no fabricated media, metrics, or social proof", () => {
   const home = read("src/pages/index.astro");
 
   // v0.2 removed the empty presenter slot rather than shipping structure that
-  // renders nothing. The rule it protected still holds and is asserted here
-  // directly: the homepage carries no stand-in media and no borrowed authority.
-  assert.doesNotMatch(home, /<img|<video|<picture/, "homepage must ship no media stand-ins");
+  // renders nothing. The rule it protected still holds: the homepage carries no
+  // stand-in media and no borrowed authority.
+  //
+  // v0.4 admits exactly one exception — the hero media layer — and constrains
+  // it so it cannot become a stand-in. Still images stay banned outright, and
+  // the one permitted <video> may not name a file: its src and poster must be
+  // bound from the approved registry, so media cannot reach the page without
+  // passing the checks asserted in the next test.
+  assert.doesNotMatch(home, /<img|<picture/, "homepage must ship no image stand-ins");
+
+  const videoTags = home.match(/<video[\s\S]*?\/>/g) ?? [];
+  assert.ok(videoTags.length <= 1, "homepage may carry at most one media layer");
+  for (const tag of videoTags) {
+    assert.match(tag, /src=\{heroMedia\.src\}/, "hero video src must come from the registry");
+    assert.match(tag, /poster=\{heroMedia\.poster\}/, "hero video poster must come from the registry");
+    assert.doesNotMatch(tag, /src="/, "hero video must not hard-code a file path");
+  }
+  if (videoTags.length === 1) {
+    assert.match(
+      home,
+      /activeHeroMedia\(\)/,
+      "the media layer must be gated on the approved-asset lookup"
+    );
+  }
   assert.doesNotMatch(
     home,
     /testimonial|as seen (in|on)|trusted by|logo(s)?-?(wall|cloud)|★|customers say/i,
@@ -144,6 +169,58 @@ test("the homepage ships no fabricated media, metrics, or social proof", () => {
     home,
     />\s*[0-9][0-9,.]*\s*(\+|k|K|m|M)?\s*(readers|users|subscribers|reviews|visitors)/,
     "no hand-typed audience or volume figures"
+  );
+});
+
+test("hero media can only ship as an approved, attributed asset", () => {
+  const media = read("src/lib/heroMedia.ts");
+
+  // Rendering is gated on the approval flag, not merely on an asset existing.
+  assert.match(
+    media,
+    /heroMediaLibrary\.find\(\(asset\) => asset\.approved\)/,
+    "only an approved asset may be selected for render"
+  );
+
+  // Every registered asset states where it came from and ships a poster. The
+  // poster is what reduced-motion and slow connections actually see, so an
+  // asset without one is incomplete rather than merely unpolished.
+  const entries = [...media.matchAll(/\{[^{}]*?\bsrc:\s*"[^"]+"[\s\S]*?\}/g)];
+  for (const [entry] of entries) {
+    assert.match(entry, /poster:\s*"[^"]+"/, "a registered hero asset must declare a poster");
+    assert.match(entry, /provenance:\s*"[^"]+"/, "a registered hero asset must declare provenance");
+    assert.match(entry, /approved:\s*(true|false)/, "a registered hero asset must state approval");
+  }
+
+  // The stage must stay legible with the footage gone: the copy contrast comes
+  // from the scrim, and reduced motion drops the video entirely.
+  const css = read("src/styles/global.css");
+  assert.match(css, /prefers-reduced-motion: reduce\)[\s\S]{0,200}\.stage-media\s*\{\s*display:\s*none/,
+    "reduced motion must drop the hero video and leave the poster");
+});
+
+test("the homepage claims no readership it does not measure", () => {
+  // Comments are stripped first: this contract is about what reaches the
+  // reader, and a source comment explaining why a claim was removed must not
+  // itself trip the check.
+  const home = read("src/pages/index.astro")
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/^\s*\/\/.*$/gm, " ");
+
+  // public/analytics.js dispatches a local event and stores nothing, so the
+  // site holds no traffic data. Any popularity or readership claim on the
+  // homepage would therefore be unsupported.
+  assert.doesNotMatch(
+    home,
+    /most[- ](read|popular|viewed|visited)|most people (arrive|read|visit)|#1|top[- ]rated|best[- ]selling/i,
+    "homepage must not rank anything by readership it cannot measure"
+  );
+
+  const analytics = read("public/analytics.js");
+  assert.doesNotMatch(
+    analytics,
+    /localStorage|sessionStorage|fetch\(|navigator\.sendBeacon|XMLHttpRequest/,
+    "analytics must remain local-only; a readership claim needs a real store first"
   );
 });
 

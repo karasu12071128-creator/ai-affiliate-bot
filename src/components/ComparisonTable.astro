@@ -1,4 +1,13 @@
 ---
+/**
+ * Structured comparison table.
+ *
+ * Currently unreferenced: articles are Markdown and use Markdown tables, so
+ * nothing imports this today. It is kept, and kept accessible, so the first
+ * page that does use it does not ship a table without a caption or header
+ * scopes. If it is still unused at the next review, delete it rather than
+ * carrying it.
+ */
 type Row = {
   tool: string;
   bestFor: string;
@@ -7,24 +16,25 @@ type Row = {
   caution: string;
 };
 
-const { rows } = Astro.props as { rows: Row[] };
+const { rows, caption } = Astro.props as { rows: Row[]; caption?: string };
 ---
 
 <div class="table-wrap">
   <table>
+    <caption>{caption ?? "Tool comparison: best use case, pricing note, standout feature, and caution."}</caption>
     <thead>
       <tr>
-        <th>Tool</th>
-        <th>Best for</th>
-        <th>Pricing note</th>
-        <th>Standout</th>
-        <th>Caution</th>
+        <th scope="col">Tool</th>
+        <th scope="col">Best for</th>
+        <th scope="col">Pricing note</th>
+        <th scope="col">Standout</th>
+        <th scope="col">Caution</th>
       </tr>
     </thead>
     <tbody>
       {rows.map((row) => (
         <tr>
-          <td>{row.tool}</td>
+          <th scope="row">{row.tool}</th>
           <td>{row.bestFor}</td>
           <td>{row.pricing}</td>
           <td>{row.standout}</td>

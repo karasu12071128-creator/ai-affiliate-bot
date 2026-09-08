@@ -184,6 +184,87 @@ a:hover {
   overflow: hidden;
 }
 
+/* Hero media layer.
+   ----------------------------------------------------------------------------
+   Sits behind the hairline field, so the field stops being the background and
+   becomes a scrim over footage. Nothing here changes the stage when no asset
+   is registered: without `data-media="true"` none of these rules apply and the
+   field renders exactly as designed.
+
+   The poster is painted on the section itself, so `prefers-reduced-motion` can
+   drop the video element and leave a still frame rather than a black box. */
+.stage[data-media="true"] {
+  background-color: var(--stage-ink);
+  background-image: var(--stage-poster, none);
+  background-size: cover;
+  background-position: center;
+}
+
+.stage-media {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Footage must never carry the copy contrast; the scrim below does that.
+     Held down so the stage reads as one dark publication surface rather than
+     a video with text on it. */
+  opacity: 0.5;
+  filter: saturate(0.72) contrast(1.04);
+  pointer-events: none;
+}
+
+/* Directional scrim, driven by which side the subject occupies. The copy sits
+   opposite the subject, and that side is taken to near-solid ink so the
+   headline keeps its contrast regardless of what the footage is doing. */
+.stage[data-media="true"] .stage-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--stage-ink) 0%,
+    rgba(12, 20, 17, 0.92) 34%,
+    rgba(12, 20, 17, 0.55) 68%,
+    rgba(12, 20, 17, 0.35) 100%
+  );
+}
+
+.stage-media[data-subject="left"] ~ .stage-field::after {
+  background: linear-gradient(
+    to left,
+    var(--stage-ink) 0%,
+    rgba(12, 20, 17, 0.92) 34%,
+    rgba(12, 20, 17, 0.55) 68%,
+    rgba(12, 20, 17, 0.35) 100%
+  );
+}
+
+/* On a phone the subject is largely cropped out and the copy needs the whole
+   width, so the scrim goes vertical and the footage drops back further. */
+@media (max-width: 860px) {
+  .stage-media {
+    opacity: 0.34;
+  }
+
+  .stage[data-media="true"] .stage-field::after,
+  .stage-media[data-subject="left"] ~ .stage-field::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(12, 20, 17, 0.62) 0%,
+      rgba(12, 20, 17, 0.88) 46%,
+      var(--stage-ink) 100%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-media {
+    display: none;
+  }
+}
+
 /* Hairline field: a faint engineering grid with a single soft pool of light
    behind the headline. Drawn in CSS, so it costs no request and no layout. */
 .stage-field {
@@ -529,12 +610,29 @@ h3 {
 }
 
 .pillar-name {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
   font-family: var(--display);
   font-size: 1.22rem;
   letter-spacing: -0.015em;
   color: var(--stage-paper);
   margin-bottom: 6px;
+}
+
+/* Four equal columns imply four destinations. A pillar with nothing behind it
+   says so on its own name, so the rail reads as a roadmap with one item still
+   closed rather than as a nav with a broken link. */
+.pillar-flag {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stage-ink);
+  background: var(--stage-muted);
+  border-radius: 2px;
+  padding: 2px 6px;
+  white-space: nowrap;
 }
 
 .pillar a:hover .pillar-name {
@@ -1272,6 +1370,17 @@ th {
   outline-offset: 3px;
 }
 
+/* The default ring is body ink. On the two dark sections that is near-black on
+   near-black — a focus indicator you cannot see is the same as not having one.
+   Both ink sections therefore invert the ring to the signal colour, which
+   clears 3:1 against --stage-ink. */
+.stage :where(a, .button, summary):focus-visible,
+.pillars :where(a, .button, summary):focus-visible,
+.lab :where(a, .button, summary):focus-visible {
+  outline-color: var(--signal);
+  outline-offset: 4px;
+}
+
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -1355,17 +1464,20 @@ th {
     padding: 20px 18px 18px;
   }
 
+  /* Two columns at phone width squeezed the blurb to 0.79rem and gave each
+     pillar a cramped tap area. One column per row restores readable copy and
+     a full-width target. */
   .pillars ul {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     padding: 0 20px 24px;
   }
 
   .pillar {
-    padding: 16px 14px 14px;
+    padding: 14px 14px 13px;
   }
 
   .pillar-blurb {
-    font-size: 0.79rem;
+    font-size: 0.9rem;
   }
 
   .lab-inner {
@@ -1408,12 +1520,17 @@ th {
     padding: 16px 20px 12px;
   }
 
+  /* Six nav links at 0.72rem with 2px of padding computed well under a 24px
+     tap target. The type stays small so the row still fits, but each link now
+     carries its own vertical padding so the target is finger-sized. */
   .site-nav {
-    gap: 2px 14px;
+    gap: 4px 16px;
   }
 
   .site-nav a {
-    font-size: 0.72rem;
+    font-size: 0.78rem;
+    padding-block: 9px;
+    display: inline-block;
   }
 
   .verification-list {

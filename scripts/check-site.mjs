@@ -15,8 +15,12 @@
 
 import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const dist = new URL("../dist", import.meta.url).pathname;
+// `.pathname` returns "/C:/..." on Windows, so this resolved to a path that
+// never exists and the check exited "dist/ not found" immediately after a
+// successful build — reporting nothing while appearing to run.
+const dist = fileURLToPath(new URL("../dist", import.meta.url));
 
 if (!existsSync(dist)) {
   console.error("dist/ not found. Run `npm run build` first.");

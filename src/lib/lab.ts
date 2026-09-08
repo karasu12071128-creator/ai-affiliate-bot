@@ -55,6 +55,6 @@ export const labEntries: LabEntry[] = [
     chain: [],
     status: "running",
     statusNote:
-      "The cohort is published and being measured. Impressions are still too low to separate the formats, so there is no conclusion and we are not calling a winner."
+      "One pin of the cohort is out and being measured; the rest are not published yet. A single pin cannot be compared against anything, so there is no conclusion and no format is being called."
   }
 ];

@@ -181,6 +181,71 @@ for (const path of htmlFiles) {
   if (!/lang="[a-z]{2}/.test(html)) failures.push(`${from}: <html> has no lang attribute`);
 }
 
+// ------------------------------------------- claims the site cannot support
+//
+// The source-level contract tests can be defeated through indirection: a
+// component, a frontmatter value, or a constructed string ships the claim while
+// the regex over `index.astro` still passes. This check reads the rendered HTML
+// instead, which is what the reader actually receives, so there is nowhere for
+// an unsupported claim to hide.
+//
+// public/analytics.js dispatches a local event and persists nothing, so the
+// site holds no readership, popularity, or market-frequency evidence at all.
+
+const unsupportedClaim =
+  /most[- ](read|popular|viewed|visited|used|chosen)|most people (arrive|read|visit|choose|pick)|(the|two|three) most common (choice|pick|option)s?|people shortlist|#1|top[- ]rated|best[- ]selling|trusted by|as seen (in|on)/i;
+
+let claimsChecked = 0;
+for (const path of htmlFiles) {
+  const from = routeOf(path);
+  // Strip script/style so an analytics identifier can never look like copy.
+  const body = readFileSync(path, "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ");
+  const hit = body.match(unsupportedClaim);
+  if (hit) {
+    failures.push(
+      `${from}: ships a popularity/readership claim the site has no data for — "${hit[0]}"`
+    );
+  }
+  claimsChecked += 1;
+}
+notes.push(`pages scanned for unsupported popularity claims: ${claimsChecked}`);
+
+// --------------------------------------------- hero media is real and approved
+//
+// Source tests assert the registry's shape. This asserts the outcome: whatever
+// media the homepage actually shipped resolves to a file that exists in the
+// build. A registry entry pointing at a missing asset would otherwise ship a
+// broken hero and pass every source check.
+
+const homepage = join(dist, "index.html");
+if (existsSync(homepage)) {
+  const home = readFileSync(homepage, "utf8");
+  const stageMedia = [...home.matchAll(/<video[^>]*class="stage-media"[^>]*>/g)];
+  if (stageMedia.length > 1) {
+    failures.push("/: more than one hero media element shipped");
+  }
+  for (const [tag] of stageMedia) {
+    for (const attribute of ["src", "poster"]) {
+      const value = tag.match(new RegExp(`${attribute}="([^"]+)"`))?.[1];
+      if (!value) {
+        failures.push(`/: hero media has no ${attribute}`);
+      } else if (!assets.has(value)) {
+        failures.push(`/: hero media ${attribute} "${value}" is not in the build`);
+      }
+    }
+  }
+  // The stage must declare its own state honestly: media present iff flagged.
+  const flagged = /<section class="stage" data-media="true"/.test(home);
+  if (flagged !== stageMedia.length > 0) {
+    failures.push(
+      `/: stage data-media flag (${flagged}) disagrees with the media actually shipped (${stageMedia.length})`
+    );
+  }
+  notes.push(`hero media shipped: ${stageMedia.length}`);
+}
+
 // ------------------------------------------------------------------- report
 
 notes.push(`pages checked: ${htmlFiles.length}`);

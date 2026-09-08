@@ -216,7 +216,7 @@ At zero revenue, Substack can be cheaper because publishing is free. On paid sub
 
 - [Best newsletter platforms for creators](/best-newsletter-platforms/) — the publication-first version of this question, including Substack and Ghost.
 - [beehiiv review 2026](/beehiiv-review/) — a full assessment of the newsletter-business option on this list.
-- [Kit vs beehiiv](/kit-vs-beehiiv/) — the two most common picks, compared directly.
+- [Kit vs beehiiv](/kit-vs-beehiiv/) — the top two on this list, compared directly.
 
 ## Sources and methodology
 

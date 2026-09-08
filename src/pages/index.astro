@@ -30,7 +30,7 @@ const startHere = [
   },
   {
     slug: "kit-vs-beehiiv",
-    context: "If it is down to the two most common choices"
+    context: "If it is down to a straight head-to-head"
   },
   {
     slug: "beehiiv-review",
@@ -68,12 +68,12 @@ const coverage = [...coverageCount.entries()]
 // The headline matchup is a real article, not a constructed pairing: it appears
 // only because kit-vs-beehiiv exists and covers exactly these two products.
 //
-// It is NOT labelled "most read". The site ships no analytics store — see
-// `public/analytics.js`, which dispatches a local event and persists nothing —
-// so we have no readership data and cannot honestly rank anything by traffic.
-// The only claim we can support is coverage, which is counted above, so the
-// panel is labelled by coverage and the label is withheld if that stops being
-// true.
+// The panel makes no popularity claim. `public/analytics.js` dispatches a local
+// event and persists nothing, so there is no readership data to rank by. It
+// also makes no "most covered" claim: `products` tracks only the four keys in
+// the affiliate registry, while the articles discuss more tools than that, so a
+// superlative drawn from these counts would describe the registry rather than
+// our coverage. The kicker states a plain derived count instead.
 const matchupArticle = bySlug.get("kit-vs-beehiiv");
 const matchupPair = matchupArticle?.data.products.map((p) => productNames[p] ?? p) ?? [];
 const matchupCovered = matchupArticle
@@ -81,15 +81,6 @@ const matchupCovered = matchupArticle
       matchupArticle.data.products.every((product) => article.data.products.includes(product))
     ).length
   : 0;
-
-// True only while the matchup really is the pairing of our two most-covered
-// tools. If coverage shifts, the claim disappears rather than becoming stale.
-const topTwoCovered = coverage.slice(0, 2).map((item) => item.key);
-const matchupIsTopCovered =
-  matchupArticle !== undefined &&
-  topTwoCovered.length === 2 &&
-  matchupArticle.data.products.length === 2 &&
-  topTwoCovered.every((key) => matchupArticle.data.products.includes(key as never));
 
 const articleCountByCategory = new Map<string, number>();
 for (const article of articles) {
@@ -124,7 +115,7 @@ const pillars = [
   {
     key: "compare",
     name: "Compare",
-    blurb: "Head-to-head decisions between the tools people shortlist.",
+    blurb: "Head-to-head decisions between the tools we cover.",
     href: "/articles/",
     state: `${articles.length} comparisons`
   },
@@ -163,8 +154,8 @@ const method = [
 ---
 
 <BaseLayout
-  title="Which creator tool is worth paying for?"
-  description="Independent comparisons of the software creators and one-person businesses actually pay for — checked against the vendors' own pricing, with the evidence behind every verdict stated on the page."
+  title="Which newsletter tool is worth paying for?"
+  description="Independent newsletter and email platform comparisons for creators and one-person businesses — checked against the vendors' own pricing, with the evidence behind every verdict stated on the page."
 >
   <section
     class="stage"
@@ -192,16 +183,16 @@ const method = [
     <div class="stage-inner">
       <div class="stage-lede">
         <p class="stage-eyebrow">
-          Independent &middot; {liveTopics.map((topic) => topic.name).join(", ")}
+          Independent &middot; Creator tool comparisons
           {plannedTopics.length > 0 && ` · ${plannedTopics.length} more categories in progress`}
         </p>
         <h1 class="stage-title">
-          Which creator tool is <em>actually</em> worth paying for?
+          Which newsletter tool is <em>actually</em> worth paying for?
         </h1>
         <p class="stage-dek">
-          We answer that one category at a time, starting with newsletter and email —
-          checked against the vendors' own pricing, with the evidence behind every verdict
-          stated on the page.
+          We take one category at a time and finish it properly. Newsletter and email
+          first — checked against the vendors' own pricing, with the evidence behind
+          every verdict stated on the page.
         </p>
         <div class="stage-actions">
           {primaryRead && (
@@ -218,9 +209,7 @@ const method = [
       {matchupArticle && matchupPair.length === 2 && (
         <aside class="matchup" aria-label="Coverage summary">
           <p class="matchup-kicker">
-            {matchupIsTopCovered
-              ? "The head-to-head between our two most-covered tools"
-              : "A head-to-head between two tools we cover"}
+            Both covered in {matchupCovered} of our {articles.length} articles
           </p>
           <a
             class="matchup-pair"
@@ -242,7 +231,7 @@ const method = [
             </div>
           </dl>
           <div class="coverage">
-            <p class="coverage-head">Tools covered so far</p>
+            <p class="coverage-head">Products we track across articles</p>
             <ul>
               {coverage.map((item) => (
                 <li>

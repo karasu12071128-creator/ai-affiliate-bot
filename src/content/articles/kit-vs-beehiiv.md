@@ -133,7 +133,7 @@ A typical Kit workflow might be:
 4. readers who click a specific link get a different offer;
 5. a product or service launch follows later.
 
-beehiiv supports automations on paid tiers, but advanced marketing automation is not the core reason most people choose it.
+beehiiv supports automations on paid tiers, but that is not where the product's weight sits — its paid tiers are built around growth and monetization.
 
 If your needs go far beyond either platform, compare ActiveCampaign.
 

@@ -1,6 +1,6 @@
-# Creator Growth Tools — Renewal v0.4 (Truth repairs, a11y, hero media slot)
+# Creator Growth Tools — Renewal v0.4 (Truth repairs, a11y, Shiori hero)
 
-Status: `CANDIDATE_READY / CODEX_REVIEWED_AND_REPAIRED / CHATGPT_REVIEW_PENDING / NOT_MERGED / NOT_DEPLOYED`
+Status: `CANDIDATE_READY / SHIORI_INTEGRATED / CODEX_REVIEWED_AND_REPAIRED / CHATGPT_REVIEW_PENDING / NOT_MERGED / NOT_DEPLOYED`
 Branch: `feat/creator-growth-site-renewal-v0-4`
 Base: `feat/creator-growth-site-renewal-v0-3` @ `20a16e5`
 Date: 2026-09-08
@@ -98,8 +98,9 @@ explicitly prohibits.
 **Why not `SHIORI_NOT_NEEDED`.** The material exists and the character is
 defined. The blocker is fitness for this specific use, not absence.
 
-**Decision: `NEW_ASSET_REQUIRED`.** Per the brief, no media was generated. The
-OWNER is producing one asset in Google Flow. Required spec:
+**Decision at the time: `NEW_ASSET_REQUIRED`.** No media was generated here.
+The OWNER then produced the asset in Google Flow and it is now integrated — see
+"The delivered asset" below. The spec issued was:
 
 - 16:9 landscape, 1920×1080 or better
 - 6–8 seconds, seamless silent loop
@@ -111,6 +112,52 @@ OWNER is producing one asset in Google Flow. Required spec:
 
 The existing 9:16 clips stay where they are as vertical short-form source.
 Nothing was moved, renamed, deleted, or overwritten.
+
+## The delivered asset
+
+Two candidates arrived in `G:\マイドライブ\siori\`, both 1920×1080, 24fps, 8s,
+h264. Read read-only; nothing in that folder was moved, renamed, or deleted.
+
+**V1 was chosen.** The two are equal on face stability, wardrobe, subject side,
+and format. They differ on the one thing the hero needs: V1's left third is a
+clean wall, so the headline lands on empty ground, while V2's left third carries
+a lit desk lamp and two monitors that fight the type even under a scrim. V1 does
+not lose the creator context — an editing timeline and headphones sit behind the
+subject.
+
+**Preparation** produced a derivative; the master was only read.
+
+| Step | Why | Result |
+| --- | --- | --- |
+| Forward-then-reverse | The master ends on a dolly-out and cuts back to its start | Loop-point PSNR **14.2 dB → 39.6 dB**; the seam is gone |
+| Audio stripped | The layer is silent by design | no audio stream |
+| Re-encode at CRF 30 | It renders under a scrim, so pristine detail is wasted bytes | **895 KB / 16s**, below the 2.47 MB master |
+| Poster = frame 0 | What reduced-motion and slow links actually see | 77 KB |
+
+**Scrim layering was wrong and is fixed.** The scrim began as
+`.stage-field::after` and inherited that element's `opacity: 0.5` and bottom
+mask, so it rendered at half strength and the headline sat on mid-grey. It is
+now its own layer between the video and the hairline grid.
+
+**Mobile framing.** A cover crop into a narrow, very tall stage keeps about a
+fifth of the plate. At the desktop framing that fifth is empty wall and the
+subject disappears; tracking her instead magnified her into a face the headline
+had to sit on. The media is now a band across the top at 46% height, masked so
+it dissolves into the ink before the copy starts.
+
+**Measured on the rendered page**, with the copy hidden so only the background
+is sampled:
+
+| Surface | Worst background pixel under the type | Contrast vs the copy |
+| --- | --- | --- |
+| Desktop H1 (1280px) | Y=55 | **10.6:1** |
+| Mobile H1 (390px) | Y=109 | **4.6:1** (bar for display type is 3:1) |
+| Desktop dek | Y=52 | ~11:1 |
+| Mobile dek | Y=54 | ~8:1 |
+
+Horizontal overflow is **0px** at 1280px and at a true 390px viewport, and
+`prefers-reduced-motion` drops the video and leaves the poster in the same
+composition.
 
 ## The hero media slot, and why it is not the v0.1 presenter slot again
 
@@ -194,8 +241,6 @@ code. That is accurate. It is left in place with a delete-by date recorded in
 the file itself.
 
 ## Outstanding
-- The hero asset is not delivered. The media layer is the last thing to
-  integrate, after OWNER approval.
 - Performance: one global stylesheet carries homepage-only rules to every
   route (29.4 KB source). Codex raised it; splitting it is a real refactor and
   was not attempted late in this pass.

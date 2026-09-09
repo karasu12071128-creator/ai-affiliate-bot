@@ -69,12 +69,13 @@ export const affiliateTargets: Record<ProductKey, AffiliateTarget> = {
   elevenlabs: {
     product: "ElevenLabs",
     officialUrl: "https://elevenlabs.io/",
-    // Active per OWNER confirmation 2026-09-10, but the referral URL is not in
-    // this repository. Inventing one would send readers through a link we
-    // cannot verify, so the site links nothing until the exact URL is supplied.
-    affiliateUrl: null,
-    trackingId: null,
-    status: "approved_link_pending"
+    // Standard (non-custom) referral link supplied by OWNER 2026-09-10.
+    // Verified the same day: 302 to elevenlabs.io carrying PartnerStack
+    // tracking parameters, final status 200. Stored as the short link given,
+    // not the expanded redirect target.
+    affiliateUrl: "https://try.elevenlabs.io/tdp01i4rjqv8",
+    trackingId: "tdp01i4rjqv8",
+    status: "approved"
   },
   vidiq: {
     product: "vidIQ",

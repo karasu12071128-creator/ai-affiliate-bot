@@ -237,11 +237,41 @@ Synthesis from official copy (T1) + review consensus (T2/T3):
 
 ## Draft status
 
-**DRAFT_UNBLOCKED (with conditions).** Official pricing/feature facts for MailerLite are
-now observed and dated. Conditions before publish:
+**DRAFT_UNBLOCKED.** Official pricing/feature facts for MailerLite are observed and dated,
+and the publication conditions below are closed.
 
-1. Re-confirm the Capterra rating/count on the live page and date it.
-2. Keep every §11 item as user-consensus language, never as fact.
-3. Run the beehiiv-side numbers from the refreshed 2026-09-02 read (see session report),
-   not from memory.
-4. Codex adversarial review of the finished draft.
+1. **Closed 2026-09-08.** The Capterra rating was re-confirmed against the live page:
+   `https://www.capterra.com/p/136603/MailerLite/reviews/` displayed "4.7 (2322)". The
+   figure matching 2026-08-22 is therefore a stable value, not a cached read.
+2. Standing rule, not a gate: every §11 item stays user-consensus language, never a fact.
+3. **Closed 2026-09-08.** Both sides were re-read live on the vendors' own pages — see §13.
+4. Codex adversarial review of the finished draft — run 2026-09-10.
+
+## 13. Live re-verification (OBSERVED 2026-09-08, Claude Code)
+
+Every figure the article publishes was re-read on the vendor's own page on 2026-09-08 and
+matched what was already recorded. Codex could not perform this pass: its sandbox has no
+network access (every `curl` returned exit 7 / HTTP 000), so this is Claude Code's
+verification and must not be attributed to Codex.
+
+| # | Fact | Live observation 2026-09-08 | Source | Verdict |
+| --- | --- | --- | --- | --- |
+| 1 | MailerLite Free = 250 subscribers / 2,500 emails | "Up to 250 subscribers", "2,500 monthly emails" | `mailerlite.com/pricing` (T1) | CONFIRMED |
+| 2 | MailerLite Comfort from $12/month | "starting $12/month" | `mailerlite.com/pricing` (T1) | CONFIRMED* |
+| 3 | MailerLite Power from $25/month | "starting $25/month" | `mailerlite.com/pricing` (T1) | CONFIRMED* |
+| 4 | MailerLite Free = 3 automations | "3 automations" | `mailerlite.com/pricing` (T1) | CONFIRMED |
+| 5 | MailerLite Capterra 4.7 / 2,322 | "4.7 (2322)" | Capterra (T2) | CONFIRMED |
+| 6 | beehiiv Launch up to 2,500 subscribers | "$0 per month", "Up to 2,500 subscribers" | `beehiiv.com/pricing` (T1) | CONFIRMED |
+| 7 | beehiiv Scale $43/month | "$43 per month", billed annually "$517" | `beehiiv.com/pricing` (T1) | CONFIRMED |
+| 8 | beehiiv Max $96/month | "$96 per month", billed annually "$1,151" | `beehiiv.com/pricing` (T1) | CONFIRMED |
+
+\* The $12 and $25 figures appear in the pricing page's FAQ copy rather than in the plan
+table. They are on the official page, but an article must present them as "from" prices and
+must not imply they were read off the plan table. They are also two different plans: $12 is
+Comfort's entry price and $25 is Power's. Stating them as one range is an error.
+
+**beehiiv provenance.** The beehiiv plan figures originate in
+`docs/RESEARCH_SNAPSHOT_2026-08-31.md` (OBSERVED 2026-08-31 at the default
+1,000-subscriber slider position) and were re-confirmed live on 2026-09-08 as above. There
+is **no** 2026-09-02 beehiiv observation anywhere in this repository; an article dating
+beehiiv figures to 2026-09-02 is misdating them.

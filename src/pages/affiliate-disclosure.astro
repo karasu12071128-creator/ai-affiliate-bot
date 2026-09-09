@@ -1,22 +1,35 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { affiliateTargets, type ProductKey } from "../lib/affiliateLinks";
+import { affiliateTargets, hasAffiliateProgram, type ProductKey } from "../lib/affiliateLinks";
 import { operator } from "../site";
 
 // Rendered from the affiliate registry, so this page cannot drift out of sync
 // with what the site's links actually do.
+//
+// Three states, not two. A program can be live while the site still has no link
+// for it — reporting that as "no relationship" would be false, and reporting it
+// as a live affiliate link would be false in the other direction.
 const programs = (Object.entries(affiliateTargets) as [ProductKey, (typeof affiliateTargets)[ProductKey]][]).map(
-  ([key, target]) => ({
-    key,
-    product: target.product,
-    active: target.affiliateUrl !== null,
-    note:
-      target.affiliateUrl !== null
+  ([key, target]) => {
+    const linked = target.affiliateUrl !== null;
+    const inProgram = hasAffiliateProgram(key);
+    return {
+      key,
+      product: target.product,
+      linked,
+      inProgram,
+      relationship: linked ? "Active" : inProgram ? "Active, not yet linked" : "None",
+      note: linked
         ? "Active affiliate relationship. Links are labeled “Affiliate link” and carry rel=\"sponsored\"."
-        : "No affiliate relationship. Links go to the product's own website."
-  })
+        : inProgram
+          ? "Affiliate relationship exists, but no referral link is live on this site yet. Any link here goes to the product's own website and earns us nothing."
+          : "No affiliate relationship. Links go to the product's own website."
+    };
+  }
 );
-const activeCount = programs.filter((program) => program.active).length;
+const linkedCount = programs.filter((program) => program.linked).length;
+const programCount = programs.filter((program) => program.inProgram).length;
+const pendingCount = programCount - linkedCount;
 ---
 
 <BaseLayout title="Affiliate Disclosure" description="Which products Creator Growth Tools earns commission on, and which it does not.">
@@ -24,9 +37,10 @@ const activeCount = programs.filter((program) => program.active).length;
     <p class="eyebrow">Disclosure</p>
     <h1>Who pays us, and who does not.</h1>
     <p class="dek">
-      {activeCount === 1
-        ? "We currently earn a commission from one product. Relevant links are labeled where they appear and listed below."
-        : `We currently earn a commission from ${activeCount} products. Relevant links are labeled where they appear and listed below.`}
+      {`We have affiliate relationships with ${programCount} ${programCount === 1 ? "product" : "products"}. ` +
+        `${linkedCount === 1 ? "One of them has" : `${linkedCount} of them have`} a referral link live on this site; ` +
+        `${pendingCount === 0 ? "there are no others waiting" : `${pendingCount} ${pendingCount === 1 ? "does" : "do"} not, and ${pendingCount === 1 ? "earns" : "earn"} us nothing here yet`}. ` +
+        "Live links are labeled where they appear and listed below."}
     </p>
 
     <div class="prose">
@@ -46,7 +60,7 @@ const activeCount = programs.filter((program) => program.active).length;
           {programs.map((program) => (
             <tr>
               <th scope="row">{program.product}</th>
-              <td>{program.active ? "Active" : "None"}</td>
+              <td>{program.relationship}</td>
               <td>{program.note}</td>
             </tr>
           ))}

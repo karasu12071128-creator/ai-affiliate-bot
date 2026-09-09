@@ -1,4 +1,4 @@
-last_updated: "2026-08-31"
+last_updated: "2026-09-10"
 verification_note: "Affiliate and pricing information changes. Re-check official sources before publishing or applying."
 programs:
   - product: "Kit"
@@ -62,3 +62,45 @@ programs:
     evidence_checked_date: "2026-08-22"
     evidence_urls:
       - "https://www.hubspot.com/partners/affiliates"
+  - product: "ElevenLabs"
+    affiliate_program_url: "VERIFY_BEFORE_PUBLISH"
+    commission: "VERIFY_BEFORE_PUBLISH"
+    commission_duration: "VERIFY_BEFORE_PUBLISH"
+    cookie_period: "VERIFY_BEFORE_PUBLISH"
+    current_pricing: "VERIFY_BEFORE_PUBLISH"
+    approval_status: "approved_link_pending"
+    affiliate_link: null
+    tracking_id: null
+    application_result_date: "2026-09-10"
+    status_note: "OWNER confirmed the program is active on 2026-09-10. The referral URL is not stored in this repository, so no link is live on the site and nothing may be marked rel=\"sponsored\" for this product. Supply the exact URL before any article links it."
+    evidence_checked_date: "2026-09-10"
+    evidence_urls:
+      - "https://elevenlabs.io/"
+  - product: "vidIQ"
+    affiliate_program_url: "VERIFY_BEFORE_PUBLISH"
+    commission: "VERIFY_BEFORE_PUBLISH"
+    commission_duration: "VERIFY_BEFORE_PUBLISH"
+    cookie_period: "VERIFY_BEFORE_PUBLISH"
+    current_pricing: "VERIFY_BEFORE_PUBLISH"
+    approval_status: "approved"
+    affiliate_link: "https://vidiq.com/hisholabs"
+    tracking_id: null
+    application_result_date: "2026-09-10"
+    status_note: "OWNER confirmed the program is active on 2026-09-10 and supplied this custom referral path. The referral path itself was not independently opened: an automated request to vidiq.com returned HTTP 429 (bot protection), not a 404, so the domain is live but the path is unverified from here. Tracking is carried by the path, so there is no separate tracking ID."
+    evidence_checked_date: "2026-09-10"
+    evidence_urls:
+      - "https://vidiq.com/"
+  - product: "AI Studios"
+    affiliate_program_url: "VERIFY_BEFORE_PUBLISH"
+    commission: "VERIFY_BEFORE_PUBLISH"
+    commission_duration: "VERIFY_BEFORE_PUBLISH"
+    cookie_period: "VERIFY_BEFORE_PUBLISH"
+    current_pricing: "VERIFY_BEFORE_PUBLISH"
+    approval_status: "pending_review"
+    affiliate_link: null
+    tracking_id: null
+    application_submitted_date: "VERIFY_BEFORE_PUBLISH"
+    status_note: "OWNER reported the application is under review on 2026-09-10. Not approved. No link exists and none may be created until an approval is observed."
+    evidence_checked_date: "2026-09-10"
+    evidence_urls:
+      - "https://www.aistudios.com/"

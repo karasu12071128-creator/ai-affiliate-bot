@@ -126,6 +126,40 @@ test("the affiliate registry matches the affiliate program data file", () => {
     yamlApproved.sort(),
     "products carrying an affiliate URL must be exactly the approved programs"
   );
+
+  // `approved_link_pending` exists so a live program with no stored referral URL
+  // can be disclosed honestly. It must never become a way to ship a commission
+  // link that the check above would otherwise have to match against "approved":
+  // in both files, that status requires the absence of a URL.
+  const yamlPending = [...yaml.matchAll(/- product: "([^"]+)"[\s\S]*?approval_status: "([^"]+)"[\s\S]*?affiliate_link: ([^\r\n]+)/g)]
+    .filter(([, , status]) => status === "approved_link_pending");
+  for (const [, product, , link] of yamlPending) {
+    assert.equal(
+      link.trim(),
+      "null",
+      `${product} is approved_link_pending, so its affiliate_link must stay null`
+    );
+  }
+
+  const registryPending = [...registry.matchAll(/^\s{2}(\w+): \{[\s\S]*?\n\s{2}\}/gm)]
+    .filter((match) => /status: "approved_link_pending"/.test(match[0]));
+  for (const match of registryPending) {
+    assert.match(
+      match[0],
+      /affiliateUrl: null/,
+      `${match[1]} is approved_link_pending, so it must carry no affiliateUrl`
+    );
+  }
+
+  // The two files must describe the same set of products, or one of them is
+  // silently omitting a commercial relationship.
+  const registryProducts = [...registry.matchAll(/^\s{4}product: "([^"]+)",$/gm)].map((m) => m[1].toLowerCase());
+  const yamlProducts = [...yaml.matchAll(/- product: "([^"]+)"/g)].map((m) => m[1].toLowerCase());
+  assert.deepEqual(
+    registryProducts.sort(),
+    yamlProducts.sort(),
+    "the registry and the program data file must cover the same products"
+  );
 });
 
 test("the homepage ships no fabricated media, metrics, or social proof", () => {

@@ -203,59 +203,90 @@ a:hover {
 .stage-media {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -3;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Footage must never carry the copy contrast; the scrim below does that.
-     Held down so the stage reads as one dark publication surface rather than
-     a video with text on it. */
-  opacity: 0.5;
-  filter: saturate(0.72) contrast(1.04);
+  /* Frame the subject's head rather than the middle of the plate: the source is
+     composed with her high and right, so a centred cover crop clips the top of
+     the head on tall containers. */
+  object-position: 62% 12%;
+  filter: saturate(0.74) contrast(1.03);
   pointer-events: none;
 }
 
-/* Directional scrim, driven by which side the subject occupies. The copy sits
-   opposite the subject, and that side is taken to near-solid ink so the
-   headline keeps its contrast regardless of what the footage is doing. */
-.stage[data-media="true"] .stage-field::after {
+/* Directional scrim.
+   ----------------------------------------------------------------------------
+   This is its own layer rather than `.stage-field::after`, which is where it
+   started. `.stage-field` carries `opacity: 0.5` and a bottom mask for the
+   hairline grid; a scrim nested inside it inherited both and rendered at half
+   strength, leaving the headline on mid-grey instead of near-solid ink.
+
+   Copy sits opposite the subject, and that side is taken almost to the stage
+   ink so the headline's contrast never depends on what the footage is doing. */
+.stage[data-media="true"]::before {
   content: "";
   position: absolute;
   inset: 0;
+  z-index: -2;
+  pointer-events: none;
   background: linear-gradient(
     to right,
     var(--stage-ink) 0%,
-    rgba(12, 20, 17, 0.92) 34%,
-    rgba(12, 20, 17, 0.55) 68%,
-    rgba(12, 20, 17, 0.35) 100%
+    rgba(12, 20, 17, 0.97) 30%,
+    rgba(12, 20, 17, 0.86) 52%,
+    rgba(12, 20, 17, 0.58) 78%,
+    rgba(12, 20, 17, 0.46) 100%
   );
 }
 
-.stage-media[data-subject="left"] ~ .stage-field::after {
+.stage[data-media="true"]:has(.stage-media[data-subject="left"])::before {
   background: linear-gradient(
     to left,
     var(--stage-ink) 0%,
-    rgba(12, 20, 17, 0.92) 34%,
-    rgba(12, 20, 17, 0.55) 68%,
-    rgba(12, 20, 17, 0.35) 100%
+    rgba(12, 20, 17, 0.97) 30%,
+    rgba(12, 20, 17, 0.86) 52%,
+    rgba(12, 20, 17, 0.58) 78%,
+    rgba(12, 20, 17, 0.46) 100%
   );
 }
 
-/* On a phone the subject is largely cropped out and the copy needs the whole
-   width, so the scrim goes vertical and the footage drops back further. */
+/* On a phone the stage is narrow and very tall. Filling it with `cover` keeps
+   only about a fifth of the plate's width: at the desktop framing that fifth
+   lands on empty wall and the subject falls off the edge entirely, and tracking
+   her instead magnifies her into a face the headline then has to sit on.
+   Neither is the composition that was shot.
+
+   So the media becomes a band across the top. The shorter box halves the
+   magnification — she reads as a figure in a room again — and the mask
+   dissolves the band into the ink before the copy starts. */
 @media (max-width: 860px) {
   .stage-media {
-    opacity: 0.34;
+    height: 46%;
+    bottom: auto;
+    object-position: 74% 14%;
+    mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 100%);
   }
 
-  .stage[data-media="true"] .stage-field::after,
-  .stage-media[data-subject="left"] ~ .stage-field::after {
+  .stage[data-media="true"]::before,
+  .stage[data-media="true"]:has(.stage-media[data-subject="left"])::before {
     background: linear-gradient(
       to bottom,
-      rgba(12, 20, 17, 0.62) 0%,
-      rgba(12, 20, 17, 0.88) 46%,
-      var(--stage-ink) 100%
+      rgba(12, 20, 17, 0.28) 0%,
+      rgba(12, 20, 17, 0.62) 20%,
+      rgba(12, 20, 17, 0.9) 38%,
+      var(--stage-ink) 56%
     );
+  }
+}
+
+.stage[data-media="true"]:has(.stage-media[data-subject="left"]) .stage-media {
+  object-position: 38% 12%;
+}
+
+@media (max-width: 860px) {
+  .stage[data-media="true"]:has(.stage-media[data-subject="left"]) .stage-media {
+    object-position: 20% 6%;
   }
 }
 

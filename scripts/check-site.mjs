@@ -193,7 +193,7 @@ for (const path of htmlFiles) {
 // site holds no readership, popularity, or market-frequency evidence at all.
 
 const unsupportedClaim =
-  /most[- ](read|popular|viewed|visited|used|chosen)|most people (arrive|read|visit|choose|pick)|(the|two|three) most common (choice|pick|option)s?|people shortlist|#1|top[- ]rated|best[- ]selling|trusted by|as seen (in|on)/i;
+  /most[- ](read|popular|viewed|visited|used|chosen)|most people (arrive|read|visit|choose|pick)|(the|two|three) most common (choice|pick|option)s?|people shortlist|#1\b|top[- ]rated|best[- ]selling|trusted by|as seen (in|on)/i;
 
 let claimsChecked = 0;
 for (const path of htmlFiles) {
@@ -222,7 +222,7 @@ notes.push(`pages scanned for unsupported popularity claims: ${claimsChecked}`);
 const homepage = join(dist, "index.html");
 if (existsSync(homepage)) {
   const home = readFileSync(homepage, "utf8");
-  const stageMedia = [...home.matchAll(/<video[^>]*class="stage-media"[^>]*>/g)];
+  const stageMedia = [...home.matchAll(/<video\b[^>]*class="stage-media"[^>]*>/g)];
   if (stageMedia.length > 1) {
     failures.push("/: more than one hero media element shipped");
   }

@@ -119,6 +119,16 @@ if (affiliateUrls.size === 0) {
   failures.push("no affiliate URL found in src/lib/affiliateLinks.ts — the labelling check would pass vacuously");
 }
 notes.push(`affiliate URLs in registry: ${affiliateUrls.size}`);
+
+/**
+ * The shapes referral links actually take. This is a heuristic and cannot be
+ * complete, but it catches the realistic accident: someone pastes a raw
+ * referral URL into an article, where it renders as an ordinary anchor with no
+ * label, no rel, and no disclosure.
+ */
+function looksLikeReferral(url) {
+  return /[?&](via|ref|aff|affiliate|partner|fpr|rfsn|irclickid|utm_source=affiliate)=|\/(ref|aff|affiliate|partner)\/|^https?:\/\/(try|go|get|link|refer|partners?)\./i.test(url);
+}
 let sponsored = 0;
 let plainOutbound = 0;
 
@@ -147,6 +157,16 @@ for (const path of htmlFiles) {
           `${from}: ${href} is marked rel="sponsored" but is not an affiliate link`
         );
       }
+    } else if (looksLikeReferral(href)) {
+      // A bare Markdown link is neither a CTA nor rel-tagged, so both branches
+      // above skipped it entirely — a raw referral URL pasted into an article
+      // shipped unlabelled and undisclosed. Anything that carries the shape of a
+      // referral URL must be in the registry, which is what puts a label and a
+      // rel on it.
+      failures.push(
+        `${from}: ${href} looks like a referral link but is not in the affiliate registry, ` +
+          `so it ships with no label and no rel. Register it or link the plain vendor URL.`
+      );
     }
   }
 }

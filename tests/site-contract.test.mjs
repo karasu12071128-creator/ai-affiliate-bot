@@ -174,21 +174,39 @@ test("no article claims a site-wide affiliate exclusivity it cannot keep", () =>
   // never touched the articles. Page-scoped wording ("in this review", "on this
   // list", "in this article") stays true as the program set changes; site-scoped
   // wording cannot, so it is banned outright.
-  const exclusivity =
-    /(?:only|one)\s+(?:\w+\s+){0,2}(?:product|platform|tool|relationship)[^.]{0,80}?(?:we\s+(?:earn|hold)|affiliate)|our only active affiliate[^.]{0,60}/gi;
-
-  // A claim is fine when it is scoped to what the reader is looking at. It is
-  // only unsafe when it speaks for the whole site, because the registry can
-  // gain a program without anyone opening this file.
-  const pageScoped = /\b(?:on this list|in this (?:article|review|comparison|list|guide)|compared here|on this page|of the (?:two )?products (?:compared here|in this review))\b/i;
+  // The first version of this test banned specific phrasings, which was the
+  // wrong shape: it missed "sole", "nothing else", "no other", "single", and
+  // even "the only one we earn a commission from", and it never actually
+  // evaluated the five sentences it was written to protect — it passed because
+  // it matched nothing at all.
+  //
+  // So it works the other way round now. Any sentence that pairs an
+  // exclusivity word with a commercial word is treated as a disclosure claim,
+  // and a disclosure claim must be scoped to what the reader is looking at.
+  // All three must hold. Without the first-person requirement the check fires on
+  // ordinary product prose — "the single biggest cost… paid subscriptions" is
+  // about a vendor's pricing, not about who pays us.
+  const EXCLUSIVITY = /\b(?:only|sole|solely|single|just one|no other|nothing else|none of the others)\b/i;
+  const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
+  const FIRST_PERSON = /\b(?:we|us|our|this site)\b/i;
+  const PAGE_SCOPED =
+    /\b(?:on this (?:list|page)|in this (?:article|review|comparison|list|guide|roundup)|compared here|of the (?:two )?products (?:compared here|in this (?:review|article|comparison))|on this list)\b/i;
 
   for (const article of articles()) {
     const body = read(`src/content/articles/${article.name}`).replace(/^---[\s\S]*?\n---/, "");
-    for (const [hit] of body.matchAll(exclusivity)) {
+    // Sentence-level, because scope and claim have to travel together to be read
+    // together. Markdown emphasis is stripped so **bold** claims are not missed.
+    const sentences = body
+      .replace(/\*\*/g, "")
+      .split(/(?<=[.!?])\s+/);
+
+    for (const sentence of sentences) {
+      if (!EXCLUSIVITY.test(sentence) || !COMMERCIAL.test(sentence) || !FIRST_PERSON.test(sentence)) continue;
       assert.ok(
-        pageScoped.test(hit),
-        `${article.name} claims affiliate exclusivity without scoping it to the page: "${hit.trim()}". ` +
-          "Say \"in this review\" / \"on this list\" instead — a site-wide claim goes false the moment a second program goes live."
+        PAGE_SCOPED.test(sentence),
+        `${article.name} makes an affiliate-exclusivity claim without scoping it to the page:\n  "${sentence.trim().slice(0, 160)}"\n` +
+          'Add "in this review" / "on this list" / "of the two products compared here". ' +
+          "A site-wide claim goes false the moment a second program goes live, and no one edits this file when the registry changes."
       );
     }
   }
@@ -216,6 +234,39 @@ test("a live affiliate URL cannot exist without an approved program", () => {
     /target\.status === "approved" && target\.affiliateUrl === null/,
     "an approved program with no URL must throw rather than silently disclose nothing"
   );
+  // The check runs once. Without freezing, the validated object stayed exported
+  // and mutable, so a later assignment could restore the exact contradiction the
+  // invariant exists to prevent.
+  assert.match(registry, /Object\.freeze\(target\)/, "each target must be frozen after validation");
+  assert.match(registry, /Object\.freeze\(affiliateTargets\)/, "the registry itself must be frozen");
+});
+
+test("a referral URL cannot ship outside the affiliate registry", () => {
+  // A bare Markdown link is neither a CTA nor rel-tagged, so the built-output
+  // link check skipped it entirely and a raw referral URL pasted into an article
+  // shipped unlabelled and undisclosed.
+  const script = read("scripts/check-site.mjs");
+  assert.match(script, /function looksLikeReferral/, "check-site must detect referral-shaped URLs");
+  assert.match(
+    script,
+    /looks like a referral link but is not in the affiliate registry/,
+    "an unregistered referral URL must fail the build"
+  );
+
+  // And none may be sitting in article prose right now.
+  const referralShape = /https?:\/\/[^\s)"']*(?:[?&](?:via|ref|aff|affiliate|partner|fpr|rfsn)=|\/(?:ref|aff|affiliate|partner)\/)/i;
+  const registryUrls = new Set(
+    [...read("src/lib/affiliateLinks.ts").replace(/^\s*\/\/.*$/gm, " ").matchAll(/affiliateUrl:\s*"([^"]+)"/g)].map((m) => m[1])
+  );
+  for (const article of articles()) {
+    const body = read(`src/content/articles/${article.name}`);
+    for (const [url] of body.matchAll(new RegExp(referralShape, "gi"))) {
+      assert.ok(
+        registryUrls.has(url),
+        `${article.name} contains a referral-shaped URL that is not in the registry: ${url}`
+      );
+    }
+  }
 });
 
 test("the built-output link check derives affiliate URLs from the registry", () => {

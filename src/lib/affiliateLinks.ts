@@ -117,7 +117,15 @@ for (const [key, target] of Object.entries(affiliateTargets)) {
         `if the referral URL is not stored here, so the disclosure page can say so.`
     );
   }
+  // The check above runs once, and the object it checked was exported and
+  // mutable. `affiliateTargets.vidiq.status = "pending_review"` after load would
+  // have left the commission URL rendering as sponsored while the disclosure
+  // page reported no relationship — the exact contradiction this invariant
+  // exists to prevent, reintroduced after it passed. Freezing makes it hold for
+  // the life of the process rather than for the instant it was tested.
+  Object.freeze(target);
 }
+Object.freeze(affiliateTargets);
 
 export function getAffiliateHref(product: ProductKey): string {
   const target = affiliateTargets[product];

@@ -40,7 +40,7 @@ const pendingCount = programCount - linkedCount;
       {`We have affiliate relationships with ${programCount} ${programCount === 1 ? "product" : "products"}. ` +
         `${linkedCount === 1 ? "One of them has" : `${linkedCount} of them have`} a referral link live on this site; ` +
         `${pendingCount === 0 ? "there are no others waiting" : `${pendingCount} ${pendingCount === 1 ? "does" : "do"} not, and ${pendingCount === 1 ? "earns" : "earn"} us nothing here yet`}. ` +
-        "Live links are labeled where they appear and listed below."}
+        "Every product we have a relationship with is listed below, live link or not."}
     </p>
 
     <div class="prose">
@@ -71,9 +71,12 @@ const pendingCount = programCount - linkedCount;
     <div class="prose">
       <h2>How links are labeled</h2>
       <p>
-        Every outbound product link is labeled <strong>Affiliate link</strong> or
+        Every product button is labeled <strong>Affiliate link</strong> or
         <strong>Official site</strong> at the point you click it, so you do not have to come back to
         this page to know which is which. Only affiliate links carry <code>rel="sponsored"</code>.
+        A vendor mentioned in the body of an article links to that vendor's own site and is never a
+        referral link — a build check fails if a referral URL appears anywhere outside this
+        registry.
       </p>
 
       <h2>What commission does not buy</h2>

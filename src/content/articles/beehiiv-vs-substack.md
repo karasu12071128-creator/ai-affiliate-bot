@@ -40,7 +40,7 @@ On beehiiv, a paid plan bills you the same whether you earned $0 or $10,000.
 
 Now ask what happens the month you earn $5,000 from paid subscriptions.
 
-On Substack, roughly $500 goes to the platform, and card processing comes out on top of that. On beehiiv's Scale plan, the take rate on paid subscriptions is 0% — you pay the monthly fee and keep the subscription revenue.
+On Substack, roughly $500 goes to the platform, and card-processing fees are charged in addition. On beehiiv's Scale plan, the take rate on paid subscriptions is 0% — you pay the monthly fee and keep the subscription revenue.
 
 Neither is generous or greedy. They are two different bets on when you will make money.
 
@@ -61,7 +61,7 @@ The price rises as your list grows. Set the slider to your own subscriber count 
 
 Substack's model is a revenue share rather than a subscription. Its official page states that **"writers keep 90% of their revenue minus credit card fees"** — the platform's share is 10%, and card processing is charged separately by the payment processor.
 
-The page shows no publishing fee and no subscriber-priced plan tiers. Card fees vary by country and are set by the processor, not by Substack, so check the current rate for where you are rather than trusting any blog's number, including ours.
+The page shows no publishing fee and no subscriber-priced plan tiers. Card fees vary by country and are set by the processor, not by Substack, so check the current rate where you live, including against the numbers on this page.
 
 ### The break-even math
 
@@ -93,7 +93,7 @@ The cost of that advantage is that the growth is partly rented. Discovery happen
 
 beehiiv's growth tools are built into the publication itself: a recommendation network, referral mechanics, publication websites on your own domain, and paid recommendations on the Scale plan.
 
-That is more work. Nobody hands you readers because you exist. But the surface is yours, and the audience relationship is not mediated by a feed you do not own.
+That is more work: you will need to build your own distribution. In exchange, the surface is yours and the audience relationship is not mediated by a feed you do not own.
 
 ### Which engine suits you?
 
@@ -111,7 +111,7 @@ If your plan is sponsorships and ads rather than paid subscriptions, the break-e
 
 ## Ownership and portability
 
-Substack's page is explicit on this point: "Own all of your content and your subscriber list." We did not verify beehiiv's export terms on an official page, so we are not going to tell you what they are — check them yourself before you commit, on either platform.
+Substack's page is explicit on this point: "Own all of your content and your subscriber list." We could not verify beehiiv's export terms on an official page, so we make no claim about them. Check them yourself before committing, on either platform.
 
 What we can compare is what you leave behind even when the list moves cleanly. A publication built on your own domain with your own recommendation flows takes its growth with it. A publication built on network discovery, in-app readership, and platform-native subscriber relationships leaves some of that behind.
 
@@ -184,6 +184,6 @@ It is a reasonable third option: $0 up to 2,500 subscribers, on your own custom 
 
 ## Sources and methodology
 
-beehiiv pricing, plan features, and take-rate claims come from beehiiv's official pricing page, verified August 31, 2026 at the default 1,000-subscriber slider position. Substack's revenue-share model comes from Substack's official page, verified the same day; we quote its "keep 90% of their revenue minus credit card fees" wording rather than a third-party summary, and we do not publish a specific card-processing percentage because those rates are region-specific. The break-even table is arithmetic on those two verified figures and is labeled as such. Review-marketplace data reflects our last verified check on August 22, 2026. Community discussions are treated as anecdotal. No hands-on usage of either platform is claimed.
+beehiiv pricing, plan features, and take-rate claims come from beehiiv's official pricing page, verified August 31, 2026 at the default 1,000-subscriber slider position. Substack's revenue-share model comes from Substack's official page, verified the same day; we quote its "keep 90% of their revenue minus credit card fees" wording, not a third-party summary, and we do not publish a specific card-processing percentage because those rates are region-specific. The break-even table is arithmetic on those two verified figures and is labeled as such. Review-marketplace data reflects our last verified check on August 22, 2026. Community discussions are treated as anecdotal. No hands-on usage of either platform is claimed.
 
 Last verified: August 31, 2026.

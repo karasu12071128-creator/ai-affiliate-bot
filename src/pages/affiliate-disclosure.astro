@@ -12,8 +12,8 @@ const programs = (Object.entries(affiliateTargets) as [ProductKey, (typeof affil
     active: target.affiliateUrl !== null,
     note:
       target.affiliateUrl !== null
-        ? "Active affiliate relationship. Links to this product are labelled “Affiliate link” and carry rel=\"sponsored\"."
-        : "No affiliate relationship. Links to this product go to its own website and earn us nothing."
+        ? "Active affiliate relationship. Links are labeled “Affiliate link” and carry rel=\"sponsored\"."
+        : "No affiliate relationship. Links go to the product's own website."
   })
 );
 const activeCount = programs.filter((program) => program.active).length;
@@ -25,8 +25,8 @@ const activeCount = programs.filter((program) => program.active).length;
     <h1>Who pays us, and who does not.</h1>
     <p class="dek">
       {activeCount === 1
-        ? "Exactly one product on this site pays us a commission. Everything else earns us nothing, and the site says so on the page rather than only here."
-        : `${activeCount} products on this site pay us a commission. Everything else earns us nothing, and the site says so on the page rather than only here.`}
+        ? "We currently earn a commission from one product. Relevant links are labeled where they appear and listed below."
+        : `We currently earn a commission from ${activeCount} products. Relevant links are labeled where they appear and listed below.`}
     </p>
 
     <div class="prose">
@@ -55,21 +55,18 @@ const activeCount = programs.filter((program) => program.active).length;
     </div>
 
     <div class="prose">
-      <h2>How links are labelled</h2>
+      <h2>How links are labeled</h2>
       <p>
-        Every outbound product link on this site is labelled <strong>Affiliate link</strong> or
-        <strong>Official site</strong> at the point you click it, so you never have to come back to
-        this page to know which is which. Only real affiliate links carry
-        <code>rel="sponsored"</code>; marking an ordinary link as sponsored would misstate the
-        relationship to you and to search engines just as badly as hiding one.
+        Every outbound product link is labeled <strong>Affiliate link</strong> or
+        <strong>Official site</strong> at the point you click it, so you do not have to come back to
+        this page to know which is which. Only affiliate links carry <code>rel="sponsored"</code>.
       </p>
 
       <h2>What commission does not buy</h2>
       <p>
-        Affiliate relationships do not determine whether a product is included, where it ranks, or
-        what verdict it gets. Articles recommend tools we have no affiliate relationship with when
-        those tools fit the reader better — several currently do. Nobody can pay for placement, a
-        review, a link, or a change to a verdict. See <a href="/how-we-test/">how we test</a>.
+        Commission plays no part in whether a product is included, where it ranks, or what verdict
+        it gets, and placement cannot be bought. Several articles currently recommend tools we earn
+        nothing from. See <a href="/how-we-test/">how we test</a>.
       </p>
 
       <h2>Terms change</h2>

@@ -32,7 +32,7 @@ const copy: Record<EvidenceGrade, EvidenceCopy> = {
   "hands-on": {
     label: "Hands-on",
     meaning:
-      "We used the product in a real account and the article says which parts we exercised. Anything outside that scope is still sourced and labelled as such."
+      "We used the product in a real account and the article says which parts we exercised. Anything outside that scope is still sourced and labeled as such."
   },
   "not-yet-tested": {
     label: "Not yet tested",

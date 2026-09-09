@@ -30,7 +30,7 @@ We do not claim to have run a newsletter on beehiiv. This is a research review, 
 - **Review-marketplace consensus**: beehiiv held **4.5/5 from 40 reviews on G2** at our last verified check on **August 22, 2026**. We could not re-check that page on August 31, so we are dating it honestly rather than restating it as today's number.
 - **Community feedback**: treated as anecdotal and never converted into a platform-wide fact.
 
-One disclosure that belongs at the top rather than buried in a footer: **beehiiv is the only product on this site we have an active affiliate relationship with.** Kit and ActiveCampaign are not affiliate links here — our applications to those programs were not approved, so those links earn us nothing. We have kept that from deciding our conclusions, and you can hold us to it: this review tells you plainly when *not* to pay beehiiv, and our [Kit vs beehiiv comparison](/kit-vs-beehiiv/) recommends Kit for a large share of readers.
+A disclosure before we start: **beehiiv is currently our only active affiliate relationship.** Kit and ActiveCampaign links on this site are plain links to their websites. This review sets out the cases where paying for beehiiv is a mistake, and our [Kit vs beehiiv comparison](/kit-vs-beehiiv/) recommends Kit for a large share of readers.
 
 ## What beehiiv actually is
 
@@ -73,7 +73,7 @@ Most solo creators do not need Max. Two groups genuinely do: operators running s
 
 The headline numbers are a 1,000-subscriber snapshot. Both Scale and Max show a 100,000-subscriber ceiling, with Enterprise above that, and the price climbs on the way there.
 
-This is the same trap creators hit with every subscriber-priced platform: the plan you can afford today is not the plan you will be on in eighteen months. Before committing annually, put your realistic twelve-month subscriber target into the slider and look at *that* price. Compare the honest number, not the marketing number.
+This is the same trap creators hit with every subscriber-priced platform: the plan you can afford today is not the plan you will be on in eighteen months. Before committing annually, put your realistic twelve-month subscriber target into the slider and look at *that* price. Compare the price at your projected list size, not only the default slider position.
 
 ## What reviewers consistently praise
 
@@ -93,7 +93,7 @@ Two cautions are worth taking seriously.
 
 Our conclusion is not "the editor is bad." It is narrower and more actionable: **rebuild one real issue and run one test import before you migrate an established publication.** An hour of that will tell you more than any review, ours included.
 
-## Is beehiiv worth it? Four honest scenarios
+## Is beehiiv worth it? Four common scenarios
 
 ### You are under 2,500 subscribers and not yet earning — **use Launch, pay nothing**
 
@@ -101,7 +101,7 @@ You do not need Scale. You need publishing consistency and a growth habit. Launc
 
 ### Your newsletter is becoming the product — **yes, Scale is worth it**
 
-Paid subscriptions at a 0% take rate, the Ad Network, and paid recommendations are the whole reason to be here. If you will use two of those three within a quarter, Scale pays for itself faster than a generic email tool ever will.
+Paid subscriptions at a 0% take rate, the Ad Network, and paid recommendations are the whole reason to be here. Scale is worth considering if you expect to use two of those three within a quarter.
 
 ### You sell courses, coaching, or services and email supports the sale — **probably not**
 

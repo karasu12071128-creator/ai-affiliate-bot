@@ -138,6 +138,10 @@ a:hover {
   text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
+  /* Measured at 23px tall, a pixel under the 24px minimum target size. The
+     underline stays where it was; the extra height is above the text. */
+  display: inline-block;
+  padding-top: 3px;
   padding-bottom: 2px;
   border-bottom: 1px solid transparent;
 }

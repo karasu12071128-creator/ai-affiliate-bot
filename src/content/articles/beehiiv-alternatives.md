@@ -61,7 +61,7 @@ Ease of use and automation are recurring strengths. Pricing at larger subscriber
 
 ### Best reason to switch
 
-Your newsletter has become a sales channel for products and services rather than the thing you are monetizing directly.
+Your newsletter has become a sales channel for products and services, and not the thing you are monetizing directly.
 
 ## If beehiiv automation feels too shallow: choose ActiveCampaign
 
@@ -188,8 +188,8 @@ Not based on individual complaints alone. Test the specific editor and migration
 ## Related comparisons
 
 - [beehiiv review 2026](/beehiiv-review/) — before you switch, check whether the plan is the problem.
-- [beehiiv vs Substack](/beehiiv-vs-substack/) — the switch most beehiiv users actually consider.
-- [Best newsletter platforms for creators](/best-newsletter-platforms/) — the same field, ranked rather than organized by reason to leave.
+- [beehiiv vs Substack](/beehiiv-vs-substack/) — the switch most beehiiv users consider.
+- [Best newsletter platforms for creators](/best-newsletter-platforms/) — the same field, ranked instead of organized by reason to leave.
 - [Kit vs beehiiv](/kit-vs-beehiiv/) — the head-to-head in detail.
 
 ## Sources and methodology

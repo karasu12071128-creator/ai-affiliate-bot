@@ -122,7 +122,7 @@ const pillars = [
   {
     key: "build",
     name: "Build",
-    blurb: "The workflows these tools are actually assembled into.",
+    blurb: "The workflows these tools get assembled into.",
     href: null,
     state: "First workflow in progress"
   },
@@ -135,20 +135,20 @@ const pillars = [
   }
 ];
 
-// Why this site is different, stated as method rather than as a trust plea.
-// Kept to three: a longer list reads as protesting too much.
+// How the comparisons are built. Kept to three, and phrased as what we do
+// rather than as claims about how trustworthy we are.
 const method = [
   {
-    heading: "Verified, not repeated",
-    body: "Pricing and plan limits come from the vendor's own pages and carry the date we last checked them."
+    heading: "Source notes on every article",
+    body: "Pricing and plan limits come from the vendor's own pages, with the date we last checked them."
   },
   {
-    heading: "Evidence stated per article",
-    body: "Each comparison says on the page what its claims are built on. We never imply hands-on use we have not had."
+    heading: "Evidence grade at the top",
+    body: "Each comparison states what its claims are built on before the first verdict."
   },
   {
-    heading: "Unknowns stay unknown",
-    body: "What we have not checked is marked as such rather than filled in with a confident guess."
+    heading: "What we could not verify",
+    body: "Anything we have not checked is marked as unverified and stays out of the conclusion."
   }
 ];
 ---
@@ -334,7 +334,7 @@ const method = [
     {plannedTopics.length > 0 && (
       <p class="notice">
         Extending next into {plannedTopics.map((topic) => topic.name).join(", ")}.
-        Nothing is published in those yet, and <a href="/topics/">topics</a> says so rather than
+        Nothing is published in those yet, and <a href="/topics/">topics</a> says so instead of
         filling them with thin pages.
       </p>
     )}
@@ -373,7 +373,7 @@ const method = [
   <section class="band band-quiet">
     <p class="colophon-line">
       Published by <a href={operator.url} rel="noopener">{operator.name}</a>, an independent
-      one-person studio. Some outbound links are affiliate links, labelled where they appear and
+      one-person studio. Some outbound links are affiliate links, labeled where they appear and
       listed in full on <a href="/affiliate-disclosure/">affiliate disclosure</a>. Commission never
       decides a verdict. Questions and corrections:
       <a href={`mailto:${operator.email}`}>{operator.email}</a>.

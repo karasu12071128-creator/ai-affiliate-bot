@@ -961,6 +961,33 @@ h3 {
   font-variant-numeric: tabular-nums;
 }
 
+/* Evidence grades on /how-we-test/.
+   ----------------------------------------------------------------------------
+   These were laid out with `.entry`, whose first column is 3.2rem — sized for a
+   two-digit index. An evidence mark is a full label, so the widest one
+   ("Official sources reviewed") ran straight out of that column and printed on
+   top of the heading next to it. The mark is the term here, so it gets its own
+   line and the meaning sits under it. */
+.grades {
+  margin: 0;
+  padding: 0;
+}
+
+.grade {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.grade dt {
+  margin: 0 0 10px;
+}
+
+.grade dd {
+  margin: 0;
+  max-width: var(--measure);
+  color: var(--ink-soft);
+}
+
 .entry h3,
 .entry h2 {
   margin: 0 0 6px;

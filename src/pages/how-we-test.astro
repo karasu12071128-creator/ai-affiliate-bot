@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import EvidenceMark from "../components/EvidenceMark.astro";
-import { evidenceGrades, getEvidenceLabel, getEvidenceMeaning } from "../lib/evidence";
+import { evidenceGrades, getEvidenceMeaning } from "../lib/evidence";
 import { operator } from "../site";
 
 // The axes we score a tool against. These are the questions a creator is
@@ -82,17 +82,21 @@ const rules = [
       </p>
     </div>
 
-    <ul class="entries">
+    {/*
+      A term-and-definition list, not the numbered `entries` layout. That layout
+      sizes its first column at 3.2rem for a two-digit index; an evidence mark is
+      a full label ("Official sources reviewed"), so it overflowed the column and
+      printed on top of the heading beside it. It also duplicated itself, since
+      the mark and the heading rendered the same string.
+    */}
+    <dl class="grades">
       {evidenceGrades.map((grade) => (
-        <li class="entry">
-          <span class="entry-index" aria-hidden="true"><EvidenceMark grade={grade} /></span>
-          <div>
-            <h3>{getEvidenceLabel(grade)}</h3>
-            <p>{getEvidenceMeaning(grade)}</p>
-          </div>
-        </li>
+        <div class="grade">
+          <dt><EvidenceMark grade={grade} /></dt>
+          <dd>{getEvidenceMeaning(grade)}</dd>
+        </div>
       ))}
-    </ul>
+    </dl>
 
     <div class="prose">
       <h2>What "hands-on" requires</h2>

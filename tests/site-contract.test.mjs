@@ -106,7 +106,12 @@ test("only products with a real affiliate link are marked sponsored", () => {
 });
 
 test("the affiliate registry matches the affiliate program data file", () => {
-  const registry = read("src/lib/affiliateLinks.ts");
+  // Comments are stripped before any of the matching below. Reading them was a
+  // real hole: a target could carry a live commission URL while a nearby comment
+  // containing `affiliateUrl: null` satisfied every check in this test.
+  const registry = read("src/lib/affiliateLinks.ts")
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/^\s*\/\/.*$/gm, " ");
   const yaml = read("data/affiliate-programs.yaml");
 
   // Every product with an affiliate URL in the registry must be approved in the
@@ -159,6 +164,73 @@ test("the affiliate registry matches the affiliate program data file", () => {
     registryProducts.sort(),
     yamlProducts.sort(),
     "the registry and the program data file must cover the same products"
+  );
+});
+
+test("no article claims a site-wide affiliate exclusivity it cannot keep", () => {
+  // Five articles said beehiiv was "the only product on this site we earn a
+  // commission from". That was true with one program and became false the moment
+  // a second went live — a false disclosure, shipped by a registry change that
+  // never touched the articles. Page-scoped wording ("in this review", "on this
+  // list", "in this article") stays true as the program set changes; site-scoped
+  // wording cannot, so it is banned outright.
+  const exclusivity =
+    /(?:only|one)\s+(?:\w+\s+){0,2}(?:product|platform|tool|relationship)[^.]{0,80}?(?:we\s+(?:earn|hold)|affiliate)|our only active affiliate[^.]{0,60}/gi;
+
+  // A claim is fine when it is scoped to what the reader is looking at. It is
+  // only unsafe when it speaks for the whole site, because the registry can
+  // gain a program without anyone opening this file.
+  const pageScoped = /\b(?:on this list|in this (?:article|review|comparison|list|guide)|compared here|on this page|of the (?:two )?products (?:compared here|in this review))\b/i;
+
+  for (const article of articles()) {
+    const body = read(`src/content/articles/${article.name}`).replace(/^---[\s\S]*?\n---/, "");
+    for (const [hit] of body.matchAll(exclusivity)) {
+      assert.ok(
+        pageScoped.test(hit),
+        `${article.name} claims affiliate exclusivity without scoping it to the page: "${hit.trim()}". ` +
+          "Say \"in this review\" / \"on this list\" instead — a site-wide claim goes false the moment a second program goes live."
+      );
+    }
+  }
+});
+
+test("a live affiliate URL cannot exist without an approved program", () => {
+  // The registry splits "has a URL" (drives rel=sponsored) from "has a program"
+  // (drives disclosure copy). Nothing bound them, so a pending_review target with
+  // a URL would have rendered a sponsored link while the disclosure page told
+  // readers there was no relationship. The invariant is enforced at module load
+  // so a violation fails the build; this asserts the guard is still there.
+  const registry = read("src/lib/affiliateLinks.ts");
+  assert.match(
+    registry,
+    /for \(const \[key, target\] of Object\.entries\(affiliateTargets\)\)/,
+    "the registry must validate its own targets at module load"
+  );
+  assert.match(
+    registry,
+    /target\.affiliateUrl !== null && target\.status !== "approved"/,
+    "a non-approved program carrying an affiliate URL must throw"
+  );
+  assert.match(
+    registry,
+    /target\.status === "approved" && target\.affiliateUrl === null/,
+    "an approved program with no URL must throw rather than silently disclose nothing"
+  );
+});
+
+test("the built-output link check derives affiliate URLs from the registry", () => {
+  // These were hardcoded to beehiiv. A second live program would have had its
+  // correct sponsored link classified as a plain link and failed the build.
+  const script = read("scripts/check-site.mjs");
+  assert.match(
+    script,
+    /affiliateLinks\.ts/,
+    "check-site must read the affiliate registry rather than hardcode hosts"
+  );
+  assert.doesNotMatch(
+    script,
+    /const affiliateHosts = \[/,
+    "the hardcoded affiliate host list must not come back"
   );
 });
 

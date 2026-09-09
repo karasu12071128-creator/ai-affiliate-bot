@@ -28,7 +28,7 @@ Two products, two very different pricing pages. Every price and plan limit below
 - Review-marketplace consensus: MailerLite held **4.7/5 from 2,322 reviews on Capterra**, confirmed on the live page on **September 8, 2026** and unchanged from our August check. beehiiv held **4.5/5 from 40 reviews on G2** at our last verified check on **August 22, 2026**; we could not re-load that page since, so we date it rather than restate it as current. We do not have a comparable verified G2 figure for MailerLite and will not invent one.
 - We have not run a newsletter on either platform. Nothing here is presented as first-hand experience.
 
-Disclosure worth stating plainly: **beehiiv is the only product on this site we earn a commission from.** The MailerLite links below go to [mailerlite.com](https://www.mailerlite.com/) and earn us nothing. Read the recommendation with that in mind — and notice that the verdict below sends a large group of readers to MailerLite.
+Disclosure worth stating plainly: **of the two products compared here, beehiiv is the only one we earn a commission from.** The MailerLite links below go to [mailerlite.com](https://www.mailerlite.com/) and earn us nothing. Read the recommendation with that in mind — and notice that the verdict below sends a large group of readers to MailerLite.
 
 ## The biggest difference: a sender versus a growth engine
 

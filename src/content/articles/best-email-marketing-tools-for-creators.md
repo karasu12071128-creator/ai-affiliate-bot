@@ -23,7 +23,7 @@ For creators who mainly want something affordable and easy to operate, **MailerL
 
 The important part is not finding the tool with the longest feature list. It is choosing the operating model that matches how you plan to earn money.
 
-> **Prefer a newsletter-first platform?** If the publication itself is the product — grown through referrals and recommendations, and monetized directly — beehiiv is built for that. See our [beehiiv review](/beehiiv-review/). beehiiv is the one platform on this site we hold an affiliate link for; it did not change the Kit recommendation below.
+> **Prefer a newsletter-first platform?** If the publication itself is the product — grown through referrals and recommendations, and monetized directly — beehiiv is built for that. See our [beehiiv review](/beehiiv-review/). beehiiv is the only platform in this article we hold an affiliate link for; it did not change the Kit recommendation below.
 
 ## How we researched this guide
 

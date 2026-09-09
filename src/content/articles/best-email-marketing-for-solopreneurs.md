@@ -23,7 +23,7 @@ If budget and simplicity are the priority, **MailerLite** is hard to ignore. If 
 
 Do not buy software for the business you hope to have in three years. Buy the tool that removes work from the business you actually have during the next 90 days.
 
-> **Prefer a newsletter-first platform?** If the newsletter itself is the product, and not a channel for selling a service or course, beehiiv is built for that job — recommendation network, referrals, and publication monetization. See our [beehiiv review](/beehiiv-review/). beehiiv is the one platform on this site we hold an affiliate link for; it did not change the Kit recommendation below.
+> **Prefer a newsletter-first platform?** If the newsletter itself is the product, and not a channel for selling a service or course, beehiiv is built for that job — recommendation network, referrals, and publication monetization. See our [beehiiv review](/beehiiv-review/). beehiiv is the only platform in this article we hold an affiliate link for; it did not change the Kit recommendation below.
 
 ## How we evaluated these tools
 

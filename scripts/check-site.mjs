@@ -98,7 +98,27 @@ if (!existsSync(sitemapPath)) {
 
 // An affiliate link must be rel="sponsored ..."; a plain official-site link
 // must not be. Both errors are disclosure defects, in opposite directions.
-const affiliateHosts = [/beehiiv\.com\/\?via=/];
+//
+// The affiliate URLs are read out of the registry rather than hardcoded here.
+// They were hardcoded to beehiiv, so the moment a second program went live this
+// check would have classified its correct sponsored link as a plain link and
+// failed the build for the opposite of the real reason. Comments are stripped
+// first so a commented-out URL cannot register as live.
+const registrySource = readFileSync(
+  fileURLToPath(new URL("../src/lib/affiliateLinks.ts", import.meta.url)),
+  "utf8"
+)
+  .replace(/\/\*[\s\S]*?\*\//g, " ")
+  .replace(/^\s*\/\/.*$/gm, " ");
+
+const affiliateUrls = new Set(
+  [...registrySource.matchAll(/affiliateUrl:\s*"([^"]+)"/g)].map((match) => match[1])
+);
+
+if (affiliateUrls.size === 0) {
+  failures.push("no affiliate URL found in src/lib/affiliateLinks.ts — the labelling check would pass vacuously");
+}
+notes.push(`affiliate URLs in registry: ${affiliateUrls.size}`);
 let sponsored = 0;
 let plainOutbound = 0;
 
@@ -110,7 +130,7 @@ for (const path of htmlFiles) {
     const href = (attrs.match(/href="([^"]+)"/) ?? [])[1] ?? "";
     if (href.includes("hisholabs.com")) continue; // operator identity link
     const rel = (attrs.match(/rel="([^"]*)"/) ?? [])[1] ?? "";
-    const isAffiliate = affiliateHosts.some((pattern) => pattern.test(href));
+    const isAffiliate = affiliateUrls.has(href);
 
     if (isAffiliate) {
       sponsored += 1;

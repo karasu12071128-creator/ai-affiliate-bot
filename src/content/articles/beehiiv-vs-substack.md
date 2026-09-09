@@ -28,7 +28,7 @@ Two platforms, two very different pricing pages, so we anchored everything to of
 - Review-marketplace consensus: beehiiv held **4.5/5 from 40 reviews on G2** at our last verified check on **August 22, 2026**. We do not have a comparable verified review-marketplace figure for Substack, and we are not going to invent a rating so the table looks symmetrical.
 - We have not published a newsletter on either platform. Nothing here is presented as first-hand experience.
 
-Disclosure worth stating plainly: **beehiiv is the only product on this site we earn a commission from.** Substack pays us nothing. Read the recommendation with that in mind — and notice that the section below tells a large group of readers to pick Substack.
+Disclosure worth stating plainly: **of the two products compared here, beehiiv is the only one we earn a commission from.** Substack pays us nothing. Read the recommendation with that in mind — and notice that the section below tells a large group of readers to pick Substack.
 
 ## The biggest difference: what you are actually paying for
 

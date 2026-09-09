@@ -98,6 +98,26 @@ export const affiliateTargets: Record<ProductKey, AffiliateTarget> = {
 /** Single source for the content schema's product enum, so the two cannot drift. */
 export const productKeys = Object.keys(affiliateTargets) as [ProductKey, ...ProductKey[]];
 
+// Splitting "has a URL" from "has a relationship" made a contradiction expressible: a
+// target could carry a commission URL — which renders rel="sponsored" — while its status
+// told the disclosure page there was no relationship at all. Nothing bound the two fields,
+// so bind them here. This runs at module load, which means a violation fails the build
+// rather than reaching a reader.
+for (const [key, target] of Object.entries(affiliateTargets)) {
+  if (target.affiliateUrl !== null && target.status !== "approved") {
+    throw new Error(
+      `affiliateLinks: ${key} carries an affiliateUrl but its status is "${target.status}". ` +
+        `Only an approved program may have a live link, because a link is what marks a page sponsored.`
+    );
+  }
+  if (target.status === "approved" && target.affiliateUrl === null) {
+    throw new Error(
+      `affiliateLinks: ${key} is approved but has no affiliateUrl. Use "approved_link_pending" ` +
+        `if the referral URL is not stored here, so the disclosure page can say so.`
+    );
+  }
+}
+
 export function getAffiliateHref(product: ProductKey): string {
   const target = affiliateTargets[product];
   return target.affiliateUrl ?? target.officialUrl;

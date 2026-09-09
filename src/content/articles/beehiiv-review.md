@@ -30,7 +30,7 @@ We do not claim to have run a newsletter on beehiiv. This is a research review, 
 - **Review-marketplace consensus**: beehiiv held **4.5/5 from 40 reviews on G2** at our last verified check on **August 22, 2026**. We could not re-check that page on August 31, so we are dating it honestly rather than restating it as today's number.
 - **Community feedback**: treated as anecdotal and never converted into a platform-wide fact.
 
-A disclosure before we start: **beehiiv is currently our only active affiliate relationship.** Kit and ActiveCampaign links on this site are plain links to their websites. This review sets out the cases where paying for beehiiv is a mistake, and our [Kit vs beehiiv comparison](/kit-vs-beehiiv/) recommends Kit for a large share of readers.
+A disclosure before we start: **of the products in this review, beehiiv is the only one we earn a commission from.** Kit and ActiveCampaign links on this site are plain links to their websites. This review sets out the cases where paying for beehiiv is a mistake, and our [Kit vs beehiiv comparison](/kit-vs-beehiiv/) recommends Kit for a large share of readers.
 
 ## What beehiiv actually is
 

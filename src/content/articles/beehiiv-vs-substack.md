@@ -61,7 +61,7 @@ The price rises as your list grows. Set the slider to your own subscriber count 
 
 Substack's model is a revenue share rather than a subscription. Its official page states that **"writers keep 90% of their revenue minus credit card fees"** — the platform's share is 10%, and card processing is charged separately by the payment processor.
 
-The page shows no publishing fee and no subscriber-priced plan tiers. Card fees vary by country and are set by the processor, not by Substack, so check the current rate where you live, including against the numbers on this page.
+The page shows no publishing fee and no subscriber-priced plan tiers. Card fees vary by country and are set by the processor, not by Substack, so check the current rate for your country before you rely on any figure, including ours.
 
 ### The break-even math
 
@@ -113,7 +113,7 @@ If your plan is sponsorships and ads rather than paid subscriptions, the break-e
 
 Substack's page is explicit on this point: "Own all of your content and your subscriber list." We could not verify beehiiv's export terms on an official page, so we make no claim about them. Check them yourself before committing, on either platform.
 
-What we can compare is what you leave behind even when the list moves cleanly. A publication built on your own domain with your own recommendation flows takes its growth with it. A publication built on network discovery, in-app readership, and platform-native subscriber relationships leaves some of that behind.
+What we can compare is what you leave behind even if the list itself moves cleanly. A publication on your own domain keeps the address readers already know. A publication built on network discovery, in-app readership, and platform-native subscriber relationships leaves those behind, and platform-specific growth features do not follow you either way.
 
 If you expect to be on the same platform in five years, this does not matter. If you expect to outgrow it, it matters a lot.
 

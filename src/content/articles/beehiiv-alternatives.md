@@ -61,7 +61,7 @@ Ease of use and automation are recurring strengths. Pricing at larger subscriber
 
 ### Best reason to switch
 
-Your newsletter has become a sales channel for products and services, and not the thing you are monetizing directly.
+Your newsletter has become a sales channel for products and services, and is no longer the thing you monetize directly.
 
 ## If beehiiv automation feels too shallow: choose ActiveCampaign
 

@@ -31,7 +31,7 @@ This page is about **newsletter platforms** — software where the publication i
 
 Our [best email marketing tools for creators](/best-email-marketing-tools-for-creators/) list is about **email marketing tools** — software judged on sequences, tagging, segmentation, and how well email supports selling something else. Kit leads there for exactly that reason.
 
-If your newsletter is a channel and not the product, that list is the more useful one. If you want a comparison of only the two biggest newsletter-first options, see [beehiiv vs Substack](/beehiiv-vs-substack/).
+If your newsletter is a channel and not the product, that list is the more useful one. If you want a head-to-head between the two newsletter-first platforms on this list, see [beehiiv vs Substack](/beehiiv-vs-substack/).
 
 ## How we chose
 
@@ -139,7 +139,7 @@ Substack has built-in discovery surfaces that can help a new writer reach reader
 
 ### Do I need a newsletter platform if I already use an email marketing tool?
 
-Usually not. If your email tool sends what you need and the newsletter is not the product, migrating is a cost with no return. Switch when the publication needs to earn on its own — that is the point where the tooling gap becomes real.
+Usually not. If your email tool sends what you need and the newsletter is not the product, migrating costs time and money for capabilities you would not use. Switch when the publication needs to earn on its own — that is the point where the tooling gap becomes real.
 
 ### Can I move between these platforms later?
 

@@ -187,6 +187,12 @@ test("no article claims a site-wide affiliate exclusivity it cannot keep", () =>
   // ordinary product prose — "the single biggest cost… paid subscriptions" is
   // about a vendor's pricing, not about who pays us.
   const EXCLUSIVITY = /\b(?:only|sole|solely|single|just one|no other|nothing else|none of the others)\b/i;
+  // A sentence can make the same site-wide claim without any exclusivity word:
+  // "beehiiv earns us a commission; every other product pays us nothing." An
+  // adversarial review found the token list missed it, which is the same failure
+  // the phrase-banning version had — a list of words is not a claim detector.
+  const OTHERS_EARN_NOTHING =
+    /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no commission|zero|free of|unpaid|don't|do not|doesn't|does not|never)\b/i;
   const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
   const FIRST_PERSON = /\b(?:we|us|our|this site)\b/i;
   const PAGE_SCOPED =
@@ -201,7 +207,8 @@ test("no article claims a site-wide affiliate exclusivity it cannot keep", () =>
       .split(/(?<=[.!?])\s+/);
 
     for (const sentence of sentences) {
-      if (!EXCLUSIVITY.test(sentence) || !COMMERCIAL.test(sentence) || !FIRST_PERSON.test(sentence)) continue;
+      const claimsExclusivity = EXCLUSIVITY.test(sentence) || OTHERS_EARN_NOTHING.test(sentence);
+      if (!claimsExclusivity || !COMMERCIAL.test(sentence) || !FIRST_PERSON.test(sentence)) continue;
       assert.ok(
         PAGE_SCOPED.test(sentence),
         `${article.name} makes an affiliate-exclusivity claim without scoping it to the page:\n  "${sentence.trim().slice(0, 160)}"\n` +
@@ -241,30 +248,61 @@ test("a live affiliate URL cannot exist without an approved program", () => {
   assert.match(registry, /Object\.freeze\(affiliateTargets\)/, "the registry itself must be frozen");
 });
 
-test("a referral URL cannot ship outside the affiliate registry", () => {
-  // A bare Markdown link is neither a CTA nor rel-tagged, so the built-output
-  // link check skipped it entirely and a raw referral URL pasted into an article
-  // shipped unlabelled and undisclosed.
-  const script = read("scripts/check-site.mjs");
-  assert.match(script, /function looksLikeReferral/, "check-site must detect referral-shaped URLs");
-  assert.match(
-    script,
-    /looks like a referral link but is not in the affiliate registry/,
-    "an unregistered referral URL must fail the build"
+test("a link to a vendor we already do business with must be one we registered", async () => {
+  // The previous version of this test asserted that certain strings existed in
+  // check-site.mjs, so it would have stayed green if the detector had become
+  // dead code — and its own copy of the URL heuristic shared the detector's
+  // blind spot. It now imports the shipped predicates and runs them.
+  //
+  // The blind spot mattered: our real vidIQ affiliate URL is
+  // https://vidiq.com/hisholabs, a bare path on the vendor's own domain. Nothing
+  // about that string says "referral", so no shape heuristic can catch its
+  // unregistered twin. Knowing our own vendor hosts can.
+  const { registryIndex, unregisteredVendorLink, looksLikeReferral } = await import(
+    "../scripts/referral-guard.mjs"
+  );
+  const index = registryIndex(read("src/lib/affiliateLinks.ts"));
+
+  assert.ok(
+    unregisteredVendorLink("https://vidiq.com/anotherpartner", index),
+    "a different path on a registered vendor's domain must be refused — this is how a referral link ships undisclosed"
+  );
+  assert.ok(unregisteredVendorLink("https://www.beehiiv.com/?via=someoneelse", index));
+  assert.ok(unregisteredVendorLink("https://beehiiv.com/pricing", index));
+  assert.equal(
+    unregisteredVendorLink("https://vidiq.com/hisholabs", index),
+    null,
+    "our own registered affiliate URL must pass"
+  );
+  assert.equal(unregisteredVendorLink("https://vidiq.com/", index), null, "the registered official URL must pass");
+  assert.equal(
+    unregisteredVendorLink("https://mailerlite.com/pricing", index),
+    null,
+    "a vendor with no registry entry is out of this rule's scope"
   );
 
-  // And none may be sitting in article prose right now.
-  const referralShape = /https?:\/\/[^\s)"']*(?:[?&](?:via|ref|aff|affiliate|partner|fpr|rfsn)=|\/(?:ref|aff|affiliate|partner)\/)/i;
-  const registryUrls = new Set(
-    [...read("src/lib/affiliateLinks.ts").replace(/^\s*\/\/.*$/gm, " ").matchAll(/affiliateUrl:\s*"([^"]+)"/g)].map((m) => m[1])
+  // Rule 2 covers hosts we have never registered, and only by shape.
+  assert.ok(looksLikeReferral("https://someone.example/?via=abc"));
+  assert.ok(looksLikeReferral("https://go.vendor.example/xyz"));
+  assert.equal(
+    looksLikeReferral("https://vendor.example/creatorname"),
+    false,
+    "recorded, not fixed: a bare custom path on an unknown host is not decidable from its shape. " +
+      "If this ever returns true, the heuristic grew a rule that will also fire on ordinary links."
   );
+
+  // And nothing unregistered may be sitting in article prose right now.
   for (const article of articles()) {
     const body = read(`src/content/articles/${article.name}`);
-    for (const [url] of body.matchAll(new RegExp(referralShape, "gi"))) {
-      assert.ok(
-        registryUrls.has(url),
-        `${article.name} contains a referral-shaped URL that is not in the registry: ${url}`
+    for (const [, url] of body.matchAll(/\]\((https?:\/\/[^)\s]+)\)/g)) {
+      assert.equal(
+        unregisteredVendorLink(url, index),
+        null,
+        `${article.name} links to a registered vendor host with an unregistered URL: ${url}`
       );
+      if (looksLikeReferral(url)) {
+        assert.ok(index.affiliateUrls.has(url), `${article.name} contains an unregistered referral URL: ${url}`);
+      }
     }
   }
 });

@@ -16,6 +16,7 @@
 import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { registryIndex, unregisteredVendorLink, looksLikeReferral } from "./referral-guard.mjs";
 
 // `.pathname` returns "/C:/..." on Windows, so this resolved to a path that
 // never exists and the check exited "dist/ not found" immediately after a
@@ -120,15 +121,13 @@ if (affiliateUrls.size === 0) {
 }
 notes.push(`affiliate URLs in registry: ${affiliateUrls.size}`);
 
-/**
- * The shapes referral links actually take. This is a heuristic and cannot be
- * complete, but it catches the realistic accident: someone pastes a raw
- * referral URL into an article, where it renders as an ordinary anchor with no
- * label, no rel, and no disclosure.
- */
-function looksLikeReferral(url) {
-  return /[?&](via|ref|aff|affiliate|partner|fpr|rfsn|irclickid|utm_source=affiliate)=|\/(ref|aff|affiliate|partner)\/|^https?:\/\/(try|go|get|link|refer|partners?)\./i.test(url);
-}
+// Detection lives in referral-guard.mjs so the contract test can exercise the
+// same predicates this script runs. An adversarial review found the old
+// heuristic missed a bare custom path — the exact shape of our own vidIQ URL —
+// so a second, decidable rule now covers every host already in the registry.
+const vendorIndex = registryIndex(registrySource);
+notes.push(`registry vendor hosts: ${vendorIndex.byHost.size}`);
+
 let sponsored = 0;
 let plainOutbound = 0;
 
@@ -168,6 +167,12 @@ for (const path of htmlFiles) {
           `so it ships with no label and no rel. Register it or link the plain vendor URL.`
       );
     }
+
+    // Runs for every outbound link regardless of which branch above claimed it:
+    // a rel-tagged link to an unregistered path on a vendor's own domain is
+    // still an unregistered destination, and the shape heuristic cannot see it.
+    const vendorProblem = unregisteredVendorLink(href, vendorIndex);
+    if (vendorProblem && !isAffiliate) failures.push(`${from}: ${vendorProblem}`);
   }
 }
 notes.push(`outbound product links: ${sponsored} affiliate (sponsored), ${plainOutbound} plain`);

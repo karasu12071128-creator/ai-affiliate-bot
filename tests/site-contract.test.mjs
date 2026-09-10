@@ -596,8 +596,13 @@ test("the built-output checker actually runs the vendor rule and the affiliate r
         // Uppercase tag and single-quoted attribute: a browser follows it, the
         // double-quote-only matcher never saw it.
         "<A HREF='https://vidiq.com/hisholabs'>f</A>",
-        // A genuine operator link must still be exempt.
-        '<a href="https://hisholabs.com/about">g</a>',
+        // A genuine operator link must still be exempt. It carries
+        // rel="sponsored" deliberately: without the identity exemption it would
+        // fall into the plain-link branch and be reported as "marked sponsored
+        // but not an affiliate link", so the assertion below can actually fail.
+        // The previous fixture used a bare link, which produced no diagnostic
+        // whether the identity check worked or not — an unreachable assertion.
+        '<a href="https://hisholabs.com/about" rel="sponsored nofollow noopener">g</a>',
         "</body></html>"
       ].join("\n")
     );
@@ -651,8 +656,15 @@ test("the built-output checker actually runs the vendor rule and the affiliate r
     );
     assert.doesNotMatch(
       output,
-      /hisholabs\.com\/about/,
-      "a genuine operator-identity link must stay exempt"
+      /hisholabs\.com\/about is marked rel="sponsored"/,
+      "a genuine operator-identity link must stay exempt from the outbound rules"
+    );
+    // And the exemption must be observable rather than inferred: the operator
+    // link must not be counted among the outbound product links either.
+    assert.match(
+      output,
+      /outbound product links: 4 affiliate \(sponsored\), 0 plain/,
+      "the four vidiq anchors are affiliate links; the operator link is neither affiliate nor plain"
     );
     assert.match(output, /SITE_DIST override in effect/, "a redirected check must announce itself, never verify silently");
   } finally {

@@ -157,17 +157,23 @@ let plainOutbound = 0;
 for (const path of htmlFiles) {
   const html = readFileSync(path, "utf8");
   const from = routeOf(path);
-  // Case-insensitive, and single quotes count: `<A HREF='https://…'>` is a link
-  // a browser follows, and the double-quote-only matcher never saw it — an
-  // outbound link the checker cannot see is an outbound link it cannot enforce.
-  for (const match of html.matchAll(/<a\b([^>]*\bhref\s*=\s*["'](?:https?:)?\/\/[^"']+["'][^>]*)>/gi)) {
+  // Every spelling a browser follows: uppercase tags, single quotes, and an
+  // unquoted attribute value. An outbound link the checker cannot see is an
+  // outbound link it cannot enforce, and each of these was invisible in turn.
+  // Astro emits quoted attributes, so the unquoted form only reaches here via
+  // raw HTML in content — which is exactly the unreviewed path worth covering.
+  for (const match of html.matchAll(
+    /<a\b([^>]*\bhref\s*=\s*(?:["'](?:https?:)?\/\/[^"']+["']|(?:https?:)?\/\/[^\s>]+)[^>]*)>/gi
+  )) {
     const attrs = match[1];
-    const href = (attrs.match(/href\s*=\s*["']([^"']+)["']/i) ?? [])[1] ?? "";
+    const hrefMatch = attrs.match(/href\s*=\s*(?:["']([^"']+)["']|([^\s>]+))/i) ?? [];
+    const href = hrefMatch[1] ?? hrefMatch[2] ?? "";
     // Host-based, not substring. `includes("hisholabs.com")` also matched
     // https://vidiq.com/hisholabs#hisholabs.com, so an affiliate link could opt
     // itself out of every rule below by putting our own domain in its fragment.
     if (isOperatorIdentity(href)) continue;
-    const rel = (attrs.match(/rel\s*=\s*["']([^"']*)["']/i) ?? [])[1] ?? "";
+    const relMatch = attrs.match(/rel\s*=\s*(?:["']([^"']*)["']|([^\s>]+))/i) ?? [];
+    const rel = relMatch[1] ?? relMatch[2] ?? "";
     const isAffiliate = isRegisteredAffiliate(href, vendorIndex);
 
     if (isAffiliate) {

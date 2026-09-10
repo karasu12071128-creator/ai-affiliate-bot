@@ -596,6 +596,9 @@ test("the built-output checker actually runs the vendor rule and the affiliate r
         // Uppercase tag and single-quoted attribute: a browser follows it, the
         // double-quote-only matcher never saw it.
         "<A HREF='https://vidiq.com/hisholabs'>f</A>",
+        // Unquoted attribute value: valid HTML a browser follows, invisible to a
+        // matcher that required quotes.
+        "<a href=https://vidiq.com/unquotedpartner rel=nofollow>h</a>",
         // A genuine operator link must still be exempt. It carries
         // rel="sponsored" deliberately: without the identity exemption it would
         // fall into the plain-link branch and be reported as "marked sponsored
@@ -663,8 +666,13 @@ test("the built-output checker actually runs the vendor rule and the affiliate r
     // link must not be counted among the outbound product links either.
     assert.match(
       output,
-      /outbound product links: 4 affiliate \(sponsored\), 0 plain/,
-      "the four vidiq anchors are affiliate links; the operator link is neither affiliate nor plain"
+      /outbound product links: 4 affiliate \(sponsored\), 1 plain/,
+      "four affiliate anchors and one plain unquoted anchor; the operator link is counted as neither"
+    );
+    assert.match(
+      output,
+      /vidiq\.com\/unquotedpartner points at vidiq\.com, which is in the affiliate registry/,
+      "an unquoted href is valid HTML a browser follows, so it must be inspected like any other"
     );
     assert.match(output, /SITE_DIST override in effect/, "a redirected check must announce itself, never verify silently");
   } finally {

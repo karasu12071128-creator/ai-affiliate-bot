@@ -192,9 +192,12 @@ test("no article claims a site-wide affiliate exclusivity it cannot keep", () =>
   // adversarial review found the token list missed it, which is the same failure
   // the phrase-banning version had — a list of words is not a claim detector.
   const OTHERS_EARN_NOTHING =
-    /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no commission|zero|free of|unpaid|don't|do not|doesn't|does not|never)\b/i;
+    /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no (?:commission|compensation|payment|money|revenue|kickback)|zero|free of|unpaid|not paid|don't|do not|doesn't|does not|never)\b/i;
   const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
-  const FIRST_PERSON = /\b(?:we|us|our|this site)\b/i;
+  // "this publication" and friends are first person in everything but grammar:
+  // "Only beehiiv pays this publication a commission" is the same claim as
+  // "only beehiiv pays us", and the narrower list missed it.
+  const FIRST_PERSON = /\b(?:we|us|our|this (?:site|publication|newsletter|blog|review))\b/i;
   const PAGE_SCOPED =
     /\b(?:on this (?:list|page)|in this (?:article|review|comparison|list|guide|roundup)|compared here|of the (?:two )?products (?:compared here|in this (?:review|article|comparison))|on this list)\b/i;
 
@@ -512,5 +515,105 @@ test("every nav link points at a route the sitemap publishes", () => {
     for (const href of hrefs) {
       assert.ok(published.has(href), `${file} links to ${href}, which the sitemap does not publish`);
     }
+  }
+});
+
+test("the built-output checker actually runs the vendor rule and the affiliate rule", async () => {
+  // Codex's finding: the previous test imported the predicates and called them,
+  // which proves the predicates work but not that check-site.mjs still calls
+  // them. Deleting the runtime call left all 49 tests green. This runs the real
+  // script against a fixture directory and reads its failures, so the wiring is
+  // what is under test.
+  const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = await import("node:fs");
+  const { spawnSync } = await import("node:child_process");
+  const os = await import("node:os");
+  const path = await import("node:path");
+
+  const dist = mkdtempSync(path.join(os.tmpdir(), "site-check-fixture-"));
+  try {
+    mkdirSync(path.join(dist, "fixture"), { recursive: true });
+    writeFileSync(
+      path.join(dist, "fixture", "index.html"),
+      [
+        "<!doctype html><html><body><h1>Fixture</h1>",
+        // An unregistered path on a vendor host we do business with.
+        '<a href="https://vidiq.com/anotherpartner">a</a>',
+        // Our real affiliate URL with a trailing slash and no rel. Exact-string
+        // classification missed this and shipped it undisclosed.
+        '<a href="https://vidiq.com/hisholabs/">b</a>',
+        // Protocol-relative: a working link the old anchor matcher skipped.
+        '<a href="//vidiq.com/yetanother">c</a>',
+        "</body></html>"
+      ].join("\n")
+    );
+
+    const run = spawnSync(process.execPath, [join(root, "scripts", "check-site.mjs")], {
+      encoding: "utf8",
+      env: { ...process.env, SITE_DIST: dist }
+    });
+    const output = `${run.stdout ?? ""}${run.stderr ?? ""}`;
+
+    assert.notEqual(run.status, 0, "the checker must fail the build on these links");
+    assert.match(
+      output,
+      /vidiq\.com\/anotherpartner[\s\S]*?is in the affiliate registry, but is not one of/,
+      "the vendor-host rule must be reached from check-site.mjs, not merely exported"
+    );
+    assert.match(
+      output,
+      /hisholabs\/ is missing rel="sponsored"/,
+      "an equivalent form of our affiliate URL must still be classified as an affiliate link"
+    );
+    // Asserting the URL merely appears somewhere is not enough — the
+    // internal-link check also named it, wrongly, as a broken path, so this
+    // assertion passed even with the outbound matcher reverted. It must be the
+    // vendor rule that reports it.
+    assert.match(
+      output,
+      /\/\/vidiq\.com\/yetanother points at vidiq\.com, which is in the affiliate registry/,
+      "a protocol-relative href must reach the outbound checks, not be skipped as schemeless"
+    );
+    assert.doesNotMatch(
+      output,
+      /broken internal link -> \/\/vidiq\.com/,
+      "a protocol-relative href is external; calling it a broken internal path is a wrong diagnosis"
+    );
+  } finally {
+    rmSync(dist, { recursive: true, force: true });
+  }
+});
+
+test("the exclusivity detector covers the claim shapes a writer would actually produce", () => {
+  // Pinned as data so the detector's coverage is visible and reviewable rather
+  // than implied. Each of these is the same false site-wide claim in different
+  // clothes; a word list is not a claim detector, which is how the first two
+  // versions of this check failed.
+  const EXCLUSIVITY = /\b(?:only|sole|solely|single|just one|no other|nothing else|none of the others)\b/i;
+  const OTHERS_EARN_NOTHING =
+    /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no (?:commission|compensation|payment|money|revenue|kickback)|zero|free of|unpaid|not paid|don't|do not|doesn't|does not|never)\b/i;
+  const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
+  const FIRST_PERSON = /\b(?:we|us|our|this (?:site|publication|newsletter|blog|review))\b/i;
+  const caught = (s) =>
+    (EXCLUSIVITY.test(s) || OTHERS_EARN_NOTHING.test(s)) && COMMERCIAL.test(s) && FIRST_PERSON.test(s);
+
+  for (const claim of [
+    "beehiiv is the only product on this site we earn a commission from.",
+    "beehiiv earns us a commission; every other product pays us nothing.",
+    "beehiiv pays us a commission; all other products pay zero.",
+    "beehiiv is our sole affiliate partner.",
+    "beehiiv earns us a commission; every other product provides no compensation.",
+    "Only beehiiv pays this publication a commission."
+  ]) {
+    assert.ok(caught(claim), `an unscoped site-wide claim must be caught: "${claim}"`);
+  }
+
+  // And ordinary prose must not trip it, or the check gets switched off.
+  for (const ordinary of [
+    "The only way to move a list off Substack is to export it.",
+    "beehiiv's single biggest cost at scale is paid subscriptions.",
+    "We link to the official pricing page for every product in this review.",
+    "No other tool in this comparison publishes deliverability figures."
+  ]) {
+    assert.equal(caught(ordinary), false, `ordinary prose must not be flagged: "${ordinary}"`);
   }
 });

@@ -14,14 +14,25 @@
  */
 
 import { readdirSync, readFileSync, existsSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { registryIndex, unregisteredVendorLink, looksLikeReferral } from "./referral-guard.mjs";
+import {
+  registryIndex,
+  isRegisteredAffiliate,
+  unregisteredVendorLink,
+  looksLikeReferral
+} from "./referral-guard.mjs";
 
 // `.pathname` returns "/C:/..." on Windows, so this resolved to a path that
 // never exists and the check exited "dist/ not found" immediately after a
 // successful build — reporting nothing while appearing to run.
-const dist = fileURLToPath(new URL("../dist", import.meta.url));
+// SITE_DIST exists so the contract test can run this script against a fixture
+// directory. Without it the test could only assert that certain strings appear
+// in this file, which is what let a previous version stay green while the
+// detector it named was dead code.
+const dist = process.env.SITE_DIST
+  ? resolve(process.env.SITE_DIST)
+  : fileURLToPath(new URL("../dist", import.meta.url));
 
 if (!existsSync(dist)) {
   console.error("dist/ not found. Run `npm run build` first.");
@@ -61,7 +72,11 @@ for (const path of htmlFiles) {
   const from = routeOf(path);
   for (const match of html.matchAll(/href="([^"]+)"/g)) {
     const href = match[1];
-    if (/^(https?:|mailto:|#)/.test(href)) continue;
+    // "//host/path" is protocol-relative and therefore EXTERNAL. Treating it as
+    // an internal path reported it as a broken link, which is a wrong diagnosis
+    // for a link that resolves fine in a browser; the outbound checks below are
+    // the ones that should judge it.
+    if (/^(https?:|mailto:|#|\/\/)/.test(href)) continue;
     const target = href.split("#")[0].split("?")[0];
     if (!target.startsWith("/")) {
       failures.push(`${from}: relative href "${href}" — use an absolute path`);
@@ -134,12 +149,12 @@ let plainOutbound = 0;
 for (const path of htmlFiles) {
   const html = readFileSync(path, "utf8");
   const from = routeOf(path);
-  for (const match of html.matchAll(/<a\b([^>]*\bhref="https?:\/\/[^"]+"[^>]*)>/g)) {
+  for (const match of html.matchAll(/<a\b([^>]*\bhref="(?:https?:)?\/\/[^"]+"[^>]*)>/g)) {
     const attrs = match[1];
     const href = (attrs.match(/href="([^"]+)"/) ?? [])[1] ?? "";
     if (href.includes("hisholabs.com")) continue; // operator identity link
     const rel = (attrs.match(/rel="([^"]*)"/) ?? [])[1] ?? "";
-    const isAffiliate = affiliateUrls.has(href);
+    const isAffiliate = isRegisteredAffiliate(href, vendorIndex);
 
     if (isAffiliate) {
       sponsored += 1;

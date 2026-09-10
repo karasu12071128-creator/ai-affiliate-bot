@@ -12,8 +12,8 @@
  * Two rules are used instead, and only one of them is sound:
  *
  *   1. KNOWN VENDOR HOSTS — decidable. If a link points at a host that already
- *      appears in the registry, then it must be one of the URLs registered for
- *      that host. `https://vidiq.com/anotherpartner` is caught with certainty,
+ *      appears in the registry, it must be one of the URLs registered for that
+ *      host. `https://vidiq.com/anotherpartner` is caught with certainty,
  *      because we know what our vidiq.com links are supposed to be.
  *
  *   2. REFERRAL SHAPE — a heuristic, for hosts we have never registered. It
@@ -22,22 +22,42 @@
  *      `https://vendor.example/creatorname` is not distinguishable from any
  *      other link, and nothing here claims otherwise.
  *
- * This module is imported by both scripts/check-site.mjs and the contract test
- * so the test exercises the shipped predicates rather than asserting that
- * source strings exist — the previous test would have stayed green if the
- * detector had become dead code.
+ * WHY NORMALIZATION IS SHARED, NOT PRIVATE.
+ * The first version of this module normalized only for rule 1, while the
+ * built-output checker still classified affiliate links by exact string match.
+ * That gap was worse than the hole it was written to close: `.../hisholabs/`
+ * with a trailing slash normalized *equal* to the registered URL, so rule 1
+ * cleared it, and it was *unequal* as a string, so it was never classified as
+ * an affiliate link — it would have shipped with no `rel="sponsored"` and no
+ * disclosure. Both questions must be answered by the same comparison, so
+ * `isRegisteredAffiliate` lives here and the checker uses it.
+ *
+ * Port and userinfo are deliberately NOT discarded. `https://vidiq.com:444/…`
+ * and `https://user@vidiq.com/…` are different endpoints from the ones we
+ * registered; treating them as equal would let a link we never approved inherit
+ * our approval.
  */
 
-/** Normalize for comparison: lowercase host, no `www.`, no trailing slash. */
+/**
+ * Comparison key: lowercase host without `www.`, no trailing slash, fragment
+ * dropped (it never changes the destination), but port and userinfo preserved.
+ * Returns null for anything unparseable.
+ */
 function normalize(url) {
+  let u;
   try {
-    const u = new URL(url);
-    const host = u.hostname.toLowerCase().replace(/^www\./, "");
-    const pathname = u.pathname.replace(/\/$/, "");
-    return { host, key: `${u.protocol}//${host}${pathname}${u.search}` };
+    // A protocol-relative href ("//vendor.com/x") is a real link in a browser
+    // and must not be skipped just because it lacks a scheme.
+    u = new URL(url.startsWith("//") ? `https:${url}` : url);
   } catch {
     return null;
   }
+  if (!/^https?:$/.test(u.protocol)) return null;
+  const host = u.hostname.toLowerCase().replace(/^www\./, "");
+  const port = u.port && u.port !== (u.protocol === "https:" ? "443" : "80") ? `:${u.port}` : "";
+  const userinfo = u.username || u.password ? `${u.username}:${u.password}@` : "";
+  const pathname = u.pathname.replace(/\/$/, "");
+  return { host, key: `${u.protocol}//${userinfo}${host}${port}${pathname}${u.search}` };
 }
 
 /**
@@ -48,14 +68,28 @@ function normalize(url) {
 export function registryIndex(registrySource) {
   const byHost = new Map();
   const affiliateUrls = new Set();
+  const affiliateKeys = new Set();
   for (const [, field, url] of registrySource.matchAll(/(affiliateUrl|officialUrl):\s*"([^"]+)"/g)) {
-    if (field === "affiliateUrl") affiliateUrls.add(url);
     const n = normalize(url);
+    if (field === "affiliateUrl") {
+      affiliateUrls.add(url);
+      if (n) affiliateKeys.add(n.key);
+    }
     if (!n) continue;
     if (!byHost.has(n.host)) byHost.set(n.host, new Set());
     byHost.get(n.host).add(n.key);
   }
-  return { byHost, affiliateUrls };
+  return { byHost, affiliateUrls, affiliateKeys };
+}
+
+/**
+ * Is this link one of our affiliate URLs, in any equivalent form? This is what
+ * decides whether `rel="sponsored"` is required, so it must be permissive about
+ * spelling and strict about destination.
+ */
+export function isRegisteredAffiliate(href, index) {
+  const n = normalize(href);
+  return n !== null && index.affiliateKeys.has(n.key);
 }
 
 /**
@@ -70,8 +104,8 @@ export function unregisteredVendorLink(href, index) {
   if (known.has(n.key)) return null;
   return (
     `${href} points at ${n.host}, which is in the affiliate registry, but is not one of ` +
-    `the URLs registered for it. A different path on a vendor's own domain is how a ` +
-    `referral link ships with no label, no rel, and no disclosure.`
+    `the URLs registered for it. A different path, port, or credential on a vendor's own ` +
+    `domain is how a referral link ships with no label, no rel, and no disclosure.`
   );
 }
 
@@ -81,7 +115,7 @@ export function unregisteredVendorLink(href, index) {
  * not grown to chase bare custom paths, which it cannot decide.
  */
 export function looksLikeReferral(url) {
-  return /[?&](via|ref|aff|affiliate|partner|fpr|rfsn|irclickid|utm_source=affiliate)=|\/(ref|aff|affiliate|partner)\/|^https?:\/\/(try|go|get|link|refer|partners?)\./i.test(
+  return /[?&](via|ref|aff|affiliate|partner|fpr|rfsn|irclickid|utm_source=affiliate)=|\/(ref|aff|affiliate|partner)\/|^(?:https?:)?\/\/(try|go|get|link|refer|partners?)\./i.test(
     url
   );
 }

@@ -53,7 +53,9 @@ function normalize(url) {
     return null;
   }
   if (!/^https?:$/.test(u.protocol)) return null;
-  const host = u.hostname.toLowerCase().replace(/^www\./, "");
+  // A trailing dot makes it a fully-qualified name that resolves to the same
+  // host in a browser, so "vidiq.com." must not read as a different vendor.
+  const host = u.hostname.toLowerCase().replace(/\.$/, "").replace(/^www\./, "");
   const port = u.port && u.port !== (u.protocol === "https:" ? "443" : "80") ? `:${u.port}` : "";
   const userinfo = u.username || u.password ? `${u.username}:${u.password}@` : "";
   const pathname = u.pathname.replace(/\/$/, "");
@@ -80,6 +82,17 @@ export function registryIndex(registrySource) {
     byHost.get(n.host).add(n.key);
   }
   return { byHost, affiliateUrls, affiliateKeys };
+}
+
+/**
+ * Our own domain, judged by host rather than by substring. A substring test
+ * treated `https://vidiq.com/hisholabs#hisholabs.com` as an operator link, which
+ * let any outbound URL exempt itself from every rule by naming our domain in a
+ * fragment, query, or path.
+ */
+export function isOperatorIdentity(href) {
+  const n = normalize(href);
+  return n !== null && (n.host === "hisholabs.com" || n.host.endsWith(".hisholabs.com"));
 }
 
 /**

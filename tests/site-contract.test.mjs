@@ -8,6 +8,37 @@ import { fileURLToPath } from "node:url";
 // "C:\C:\..." and every test in this file threw ENOENT on the operator's PC
 // while passing in Linux CI. fileURLToPath is the portable conversion.
 const root = fileURLToPath(new URL("..", import.meta.url));
+
+// ---------------------------------------------------------------------------
+// The site-wide affiliate-exclusivity detector. Defined ONCE, because the
+// coverage test below duplicated it and would therefore have stayed green with
+// the real detector reverted — the third time a check in this file has proved
+// something about its own copy rather than about the shipped behavior.
+//
+// The first version banned specific phrasings and matched nothing at all. It
+// works the other way round now: a sentence that pairs an exclusivity claim
+// with a commercial word and first-person framing IS a disclosure claim, and a
+// disclosure claim must be scoped to what the reader is looking at. All three
+// must hold — without the first-person requirement it fires on ordinary product
+// prose, where "the single biggest cost" is about a vendor's pricing.
+const EXCLUSIVITY = /\b(?:only|sole|solely|single|just one|no other|nothing else|none of the others)\b/i;
+// A sentence can make the same claim with no exclusivity word at all:
+// "beehiiv earns us a commission; every other product pays us nothing."
+const OTHERS_EARN_NOTHING =
+  /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no (?:commission|compensation|payment|money|revenue|kickback)|zero|free of|unpaid|not paid|don't|do not|doesn't|does not|never)\b/i;
+const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
+// "this publication" is first person in everything but grammar.
+const FIRST_PERSON = /\b(?:we|us|our|this (?:site|publication|newsletter|blog|review))\b/i;
+const PAGE_SCOPED =
+  /\b(?:on this (?:list|page)|in this (?:article|review|comparison|list|guide|roundup)|compared here|of the (?:two )?products (?:compared here|in this (?:review|article|comparison))|on this list)\b/i;
+
+function claimsSiteWideExclusivity(sentence) {
+  return (
+    (EXCLUSIVITY.test(sentence) || OTHERS_EARN_NOTHING.test(sentence)) &&
+    COMMERCIAL.test(sentence) &&
+    FIRST_PERSON.test(sentence)
+  );
+}
 const read = (relative) => readFileSync(join(root, relative), "utf8");
 
 /**
@@ -186,20 +217,6 @@ test("no article claims a site-wide affiliate exclusivity it cannot keep", () =>
   // All three must hold. Without the first-person requirement the check fires on
   // ordinary product prose — "the single biggest cost… paid subscriptions" is
   // about a vendor's pricing, not about who pays us.
-  const EXCLUSIVITY = /\b(?:only|sole|solely|single|just one|no other|nothing else|none of the others)\b/i;
-  // A sentence can make the same site-wide claim without any exclusivity word:
-  // "beehiiv earns us a commission; every other product pays us nothing." An
-  // adversarial review found the token list missed it, which is the same failure
-  // the phrase-banning version had — a list of words is not a claim detector.
-  const OTHERS_EARN_NOTHING =
-    /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no (?:commission|compensation|payment|money|revenue|kickback)|zero|free of|unpaid|not paid|don't|do not|doesn't|does not|never)\b/i;
-  const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
-  // "this publication" and friends are first person in everything but grammar:
-  // "Only beehiiv pays this publication a commission" is the same claim as
-  // "only beehiiv pays us", and the narrower list missed it.
-  const FIRST_PERSON = /\b(?:we|us|our|this (?:site|publication|newsletter|blog|review))\b/i;
-  const PAGE_SCOPED =
-    /\b(?:on this (?:list|page)|in this (?:article|review|comparison|list|guide|roundup)|compared here|of the (?:two )?products (?:compared here|in this (?:review|article|comparison))|on this list)\b/i;
 
   for (const article of articles()) {
     const body = read(`src/content/articles/${article.name}`).replace(/^---[\s\S]*?\n---/, "");
@@ -210,8 +227,7 @@ test("no article claims a site-wide affiliate exclusivity it cannot keep", () =>
       .split(/(?<=[.!?])\s+/);
 
     for (const sentence of sentences) {
-      const claimsExclusivity = EXCLUSIVITY.test(sentence) || OTHERS_EARN_NOTHING.test(sentence);
-      if (!claimsExclusivity || !COMMERCIAL.test(sentence) || !FIRST_PERSON.test(sentence)) continue;
+      if (!claimsSiteWideExclusivity(sentence)) continue;
       assert.ok(
         PAGE_SCOPED.test(sentence),
         `${article.name} makes an affiliate-exclusivity claim without scoping it to the page:\n  "${sentence.trim().slice(0, 160)}"\n` +
@@ -261,10 +277,39 @@ test("a link to a vendor we already do business with must be one we registered",
   // https://vidiq.com/hisholabs, a bare path on the vendor's own domain. Nothing
   // about that string says "referral", so no shape heuristic can catch its
   // unregistered twin. Knowing our own vendor hosts can.
-  const { registryIndex, unregisteredVendorLink, looksLikeReferral } = await import(
+  const { registryIndex, isRegisteredAffiliate, unregisteredVendorLink, looksLikeReferral } = await import(
     "../scripts/referral-guard.mjs"
   );
   const index = registryIndex(read("src/lib/affiliateLinks.ts"));
+
+  // Spelling equivalence, pinned. Every one of these reaches the same page in a
+  // browser as our registered vidIQ affiliate URL, so every one must require
+  // rel="sponsored". A trailing-slash form once cleared both rules at once and
+  // would have shipped undisclosed.
+  for (const equivalent of [
+    "https://vidiq.com/hisholabs",
+    "https://vidiq.com/hisholabs/",
+    "https://www.vidiq.com/hisholabs",
+    "https://VIDIQ.com/hisholabs",
+    "https://vidiq.com./hisholabs",
+    "https://vidiq.com:443/hisholabs",
+    "https://vidiq.com/hisholabs#anything",
+    "//vidiq.com/hisholabs"
+  ]) {
+    assert.ok(isRegisteredAffiliate(equivalent, index), `${equivalent} is our affiliate link and must be disclosed as one`);
+  }
+
+  // Different destinations that must NOT inherit that approval.
+  for (const other of [
+    "https://vidiq.com/hisholabs2",
+    "https://vidiq.com/hisholabs/extra",
+    "https://vidiq.com:444/hisholabs",
+    "https://user@vidiq.com/hisholabs",
+    "https://vidiq.com./anotherpartner"
+  ]) {
+    assert.equal(isRegisteredAffiliate(other, index), false, `${other} is a different destination`);
+    assert.ok(unregisteredVendorLink(other, index), `${other} must be flagged as an unregistered vendor URL`);
+  }
 
   assert.ok(
     unregisteredVendorLink("https://vidiq.com/anotherpartner", index),
@@ -543,6 +588,16 @@ test("the built-output checker actually runs the vendor rule and the affiliate r
         '<a href="https://vidiq.com/hisholabs/">b</a>',
         // Protocol-relative: a working link the old anchor matcher skipped.
         '<a href="//vidiq.com/yetanother">c</a>',
+        // Trailing-dot FQDN: same host in a browser, different string.
+        '<a href="https://vidiq.com./hisholabs">d</a>',
+        // The operator-identity skip was a substring test, so naming our own
+        // domain in a fragment exempted a link from every rule below it.
+        '<a href="https://vidiq.com/hisholabs#hisholabs.com">e</a>',
+        // Uppercase tag and single-quoted attribute: a browser follows it, the
+        // double-quote-only matcher never saw it.
+        "<A HREF='https://vidiq.com/hisholabs'>f</A>",
+        // A genuine operator link must still be exempt.
+        '<a href="https://hisholabs.com/about">g</a>',
         "</body></html>"
       ].join("\n")
     );
@@ -578,6 +633,28 @@ test("the built-output checker actually runs the vendor rule and the affiliate r
       /broken internal link -> \/\/vidiq\.com/,
       "a protocol-relative href is external; calling it a broken internal path is a wrong diagnosis"
     );
+    for (const [pattern, why] of [
+      [/https:\/\/vidiq\.com\.\/hisholabs is missing rel="sponsored"/, "a trailing-dot FQDN reaches the same host and must be disclosed"],
+      [
+        /https:\/\/vidiq\.com\/hisholabs#hisholabs\.com is missing rel="sponsored"/,
+        "naming our own domain in a fragment must not exempt a link from every rule"
+      ]
+    ]) {
+      assert.match(output, pattern, why);
+    }
+    // The uppercase single-quoted anchor is the same URL as the plain one, so
+    // count the reports rather than matching a distinct string.
+    assert.equal(
+      (output.match(/https:\/\/vidiq\.com\/hisholabs is missing rel="sponsored"/g) ?? []).length,
+      1,
+      "<A HREF='...'> is a link a browser follows and must be inspected like any other"
+    );
+    assert.doesNotMatch(
+      output,
+      /hisholabs\.com\/about/,
+      "a genuine operator-identity link must stay exempt"
+    );
+    assert.match(output, /SITE_DIST override in effect/, "a redirected check must announce itself, never verify silently");
   } finally {
     rmSync(dist, { recursive: true, force: true });
   }
@@ -588,13 +665,9 @@ test("the exclusivity detector covers the claim shapes a writer would actually p
   // than implied. Each of these is the same false site-wide claim in different
   // clothes; a word list is not a claim detector, which is how the first two
   // versions of this check failed.
-  const EXCLUSIVITY = /\b(?:only|sole|solely|single|just one|no other|nothing else|none of the others)\b/i;
-  const OTHERS_EARN_NOTHING =
-    /\b(?:every other|all other|any other|the others|the rest|everything else)\b[^.!?]*\b(?:nothing|not a (?:cent|penny)|no (?:commission|compensation|payment|money|revenue|kickback)|zero|free of|unpaid|not paid|don't|do not|doesn't|does not|never)\b/i;
-  const COMMERCIAL = /\b(?:commission|affiliate|earns?\s+us|we\s+earn|pays?\s+us|sponsored|referral link)\b/i;
-  const FIRST_PERSON = /\b(?:we|us|our|this (?:site|publication|newsletter|blog|review))\b/i;
-  const caught = (s) =>
-    (EXCLUSIVITY.test(s) || OTHERS_EARN_NOTHING.test(s)) && COMMERCIAL.test(s) && FIRST_PERSON.test(s);
+  // Calls the shipped detector. A private copy here would keep this test green
+  // while the real one was narrowed back, which is exactly what a reviewer found.
+  const caught = claimsSiteWideExclusivity;
 
   for (const claim of [
     "beehiiv is the only product on this site we earn a commission from.",

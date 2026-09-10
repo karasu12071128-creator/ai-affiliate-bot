@@ -18,6 +18,7 @@ import { join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   registryIndex,
+  isOperatorIdentity,
   isRegisteredAffiliate,
   unregisteredVendorLink,
   looksLikeReferral
@@ -30,9 +31,16 @@ import {
 // directory. Without it the test could only assert that certain strings appear
 // in this file, which is what let a previous version stay green while the
 // detector it named was dead code.
-const dist = process.env.SITE_DIST
-  ? resolve(process.env.SITE_DIST)
-  : fileURLToPath(new URL("../dist", import.meta.url));
+//
+// A gate that silently verifies the wrong directory is worse than no gate: a
+// stale SITE_DIST inherited from the environment would let `check:site` report
+// PASS for output nobody is shipping. So the override always announces itself,
+// and the directory actually inspected is printed on every run.
+const defaultDist = fileURLToPath(new URL("../dist", import.meta.url));
+const dist = process.env.SITE_DIST ? resolve(process.env.SITE_DIST) : defaultDist;
+if (dist !== defaultDist) {
+  console.warn(`  NOTE: SITE_DIST override in effect — checking ${dist}, NOT the repository's dist/.`);
+}
 
 if (!existsSync(dist)) {
   console.error("dist/ not found. Run `npm run build` first.");
@@ -149,11 +157,17 @@ let plainOutbound = 0;
 for (const path of htmlFiles) {
   const html = readFileSync(path, "utf8");
   const from = routeOf(path);
-  for (const match of html.matchAll(/<a\b([^>]*\bhref="(?:https?:)?\/\/[^"]+"[^>]*)>/g)) {
+  // Case-insensitive, and single quotes count: `<A HREF='https://…'>` is a link
+  // a browser follows, and the double-quote-only matcher never saw it — an
+  // outbound link the checker cannot see is an outbound link it cannot enforce.
+  for (const match of html.matchAll(/<a\b([^>]*\bhref\s*=\s*["'](?:https?:)?\/\/[^"']+["'][^>]*)>/gi)) {
     const attrs = match[1];
-    const href = (attrs.match(/href="([^"]+)"/) ?? [])[1] ?? "";
-    if (href.includes("hisholabs.com")) continue; // operator identity link
-    const rel = (attrs.match(/rel="([^"]*)"/) ?? [])[1] ?? "";
+    const href = (attrs.match(/href\s*=\s*["']([^"']+)["']/i) ?? [])[1] ?? "";
+    // Host-based, not substring. `includes("hisholabs.com")` also matched
+    // https://vidiq.com/hisholabs#hisholabs.com, so an affiliate link could opt
+    // itself out of every rule below by putting our own domain in its fragment.
+    if (isOperatorIdentity(href)) continue;
+    const rel = (attrs.match(/rel\s*=\s*["']([^"']*)["']/i) ?? [])[1] ?? "";
     const isAffiliate = isRegisteredAffiliate(href, vendorIndex);
 
     if (isAffiliate) {
@@ -309,6 +323,7 @@ if (existsSync(homepage)) {
 // ------------------------------------------------------------------- report
 
 notes.push(`pages checked: ${htmlFiles.length}`);
+notes.push(`directory verified: ${relative(process.cwd(), dist) || dist}`);
 
 for (const note of notes) console.log(`  ${note}`);
 

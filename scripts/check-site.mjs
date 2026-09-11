@@ -148,8 +148,18 @@ notes.push(`affiliate URLs in registry: ${affiliateUrls.size}`);
 // same predicates this script runs. An adversarial review found the old
 // heuristic missed a bare custom path — the exact shape of our own vidIQ URL —
 // so a second, decidable rule now covers every host already in the registry.
-const vendorIndex = registryIndex(registrySource);
+// Declared citations are read the same way and stripped the same way, so a
+// commented-out source cannot silently permit a vendor-host link.
+const sourceLinksSource = readFileSync(
+  fileURLToPath(new URL("../src/lib/sourceLinks.ts", import.meta.url)),
+  "utf8"
+)
+  .replace(/\/\*[\s\S]*?\*\//g, " ")
+  .replace(/^\s*\/\/.*$/gm, " ");
+
+const vendorIndex = registryIndex(registrySource, sourceLinksSource);
 notes.push(`registry vendor hosts: ${vendorIndex.byHost.size}`);
+notes.push(`declared source links: ${vendorIndex.citationKeys.size}`);
 
 let sponsored = 0;
 let plainOutbound = 0;

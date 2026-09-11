@@ -280,7 +280,7 @@ test("a link to a vendor we already do business with must be one we registered",
   const { registryIndex, isRegisteredAffiliate, unregisteredVendorLink, looksLikeReferral } = await import(
     "../scripts/referral-guard.mjs"
   );
-  const index = registryIndex(read("src/lib/affiliateLinks.ts"));
+  const index = registryIndex(read("src/lib/affiliateLinks.ts"), read("src/lib/sourceLinks.ts"));
 
   // Spelling equivalence, pinned. Every one of these reaches the same page in a
   // browser as our registered vidIQ affiliate URL, so every one must require
@@ -346,7 +346,7 @@ test("a link to a vendor we already do business with must be one we registered",
       assert.equal(
         unregisteredVendorLink(url, index),
         null,
-        `${article.name} links to a registered vendor host with an unregistered URL: ${url}`
+        `${article.name} links to ${url} on a registry host. Register it, declare it in src/lib/sourceLinks.ts, or remove it.`
       );
       if (looksLikeReferral(url)) {
         assert.ok(index.affiliateUrls.has(url), `${article.name} contains an unregistered referral URL: ${url}`);
@@ -709,4 +709,43 @@ test("the exclusivity detector covers the claim shapes a writer would actually p
   ]) {
     assert.equal(caught(ordinary), false, `ordinary prose must not be flagged: "${ordinary}"`);
   }
+});
+
+test("a declared source link is a citation, never an earning link", async () => {
+  // The vendor-host rule refuses any unregistered URL on a registry host. That
+  // caught something legitimate — citing a vendor's own pricing or help page,
+  // which an `official-sources` article has to do to keep its promise that facts
+  // are quoted or linked. Citations are therefore permitted by declaration.
+  //
+  // The risk that creates is obvious: the declaration list becomes a way to ship
+  // an unlabelled referral URL past the guard. These assertions close it.
+  const { sourceLinks, sourceLinkUrls } = await import("../src/lib/sourceLinks.ts");
+  const { affiliateTargets } = await import("../src/lib/affiliateLinks.ts");
+
+  assert.ok(sourceLinks.length > 0, "the list must not be empty, or this test passes vacuously");
+
+  const affiliateUrls = new Set(
+    Object.values(affiliateTargets)
+      .map((target) => target.affiliateUrl)
+      .filter(Boolean)
+  );
+
+  for (const link of sourceLinks) {
+    assert.ok(
+      !affiliateUrls.has(link.url),
+      `${link.url} is an affiliate URL and must not be declared as a source — a citation must never earn`
+    );
+    assert.match(
+      link.readOn,
+      /^\d{4}-\d{2}-\d{2}$/,
+      `${link.url} needs an ISO date it was read; a vendor page is only evidence as of a date`
+    );
+    assert.ok(
+      Object.hasOwn(affiliateTargets, link.product),
+      `${link.url} names product "${link.product}", which is not in the affiliate registry`
+    );
+    assert.ok(link.title.trim().length > 0, `${link.url} needs a title a human can recognize`);
+  }
+
+  assert.equal(sourceLinkUrls.size, sourceLinks.length, "duplicate source URLs are a sign of a merge mistake");
 });

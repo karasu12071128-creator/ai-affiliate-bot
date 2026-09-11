@@ -67,21 +67,39 @@ function normalize(url) {
  * Both affiliate and official URLs count: an official vendor URL is an approved
  * destination even though it carries no commission.
  */
-export function registryIndex(registrySource) {
+export function registryIndex(registrySource, sourceLinksSource = "") {
   const byHost = new Map();
   const affiliateUrls = new Set();
   const affiliateKeys = new Set();
-  for (const [, field, url] of registrySource.matchAll(/(affiliateUrl|officialUrl):\s*"([^"]+)"/g)) {
+  const citationKeys = new Set();
+  const add = (url) => {
     const n = normalize(url);
+    if (!n) return null;
+    if (!byHost.has(n.host)) byHost.set(n.host, new Set());
+    byHost.get(n.host).add(n.key);
+    return n;
+  };
+
+  for (const [, field, url] of registrySource.matchAll(/(affiliateUrl|officialUrl):\s*"([^"]+)"/g)) {
+    const n = add(url);
     if (field === "affiliateUrl") {
       affiliateUrls.add(url);
       if (n) affiliateKeys.add(n.key);
     }
-    if (!n) continue;
-    if (!byHost.has(n.host)) byHost.set(n.host, new Set());
-    byHost.get(n.host).add(n.key);
   }
-  return { byHost, affiliateUrls, affiliateKeys };
+
+  // Declared citations. An `official-sources` article promises its facts are
+  // quoted or linked, and the only honest way to link a vendor's pricing or help
+  // page is to link that vendor's own domain on a path that is not a referral.
+  // Permitting them by declaration keeps the host rule's teeth — nothing
+  // undeclared reaches a vendor host — while making the evidence trail checkable
+  // instead of a promise in prose. See src/lib/sourceLinks.ts.
+  for (const [, url] of sourceLinksSource.matchAll(/url:\s*"([^"]+)"/g)) {
+    const n = add(url);
+    if (n) citationKeys.add(n.key);
+  }
+
+  return { byHost, affiliateUrls, affiliateKeys, citationKeys };
 }
 
 /**

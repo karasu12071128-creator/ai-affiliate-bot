@@ -71,7 +71,9 @@ export function registryIndex(registrySource, sourceLinksSource = "") {
   const byHost = new Map();
   const affiliateUrls = new Set();
   const affiliateKeys = new Set();
+  const affiliateHosts = new Set();
   const citationKeys = new Set();
+  const citationConflicts = [];
   const add = (url) => {
     const n = normalize(url);
     if (!n) return null;
@@ -84,7 +86,10 @@ export function registryIndex(registrySource, sourceLinksSource = "") {
     const n = add(url);
     if (field === "affiliateUrl") {
       affiliateUrls.add(url);
-      if (n) affiliateKeys.add(n.key);
+      if (n) {
+        affiliateKeys.add(n.key);
+        affiliateHosts.add(n.host);
+      }
     }
   }
 
@@ -94,12 +99,34 @@ export function registryIndex(registrySource, sourceLinksSource = "") {
   // Permitting them by declaration keeps the host rule's teeth — nothing
   // undeclared reaches a vendor host — while making the evidence trail checkable
   // instead of a promise in prose. See src/lib/sourceLinks.ts.
+  //
+  // YOU MAY NOT CITE A HOST YOU EARN FROM.
+  // Two reviewers found the same escape: declaring `try.elevenlabs.io/other` as
+  // a source would let a *different* referral path on our own commission domain
+  // ship as a plain link, with no `sponsored` and no disclosure. Blocking the
+  // exact registered URL was not enough, and "does this path look like a
+  // referral" is the shape question that has already been shown undecidable.
+  //
+  // What IS decidable is the host. A commission domain is one we have declared
+  // ourselves, so any link to it must be a registered URL — never a citation.
+  // Cite the vendor's ordinary domain instead, or register the page as an
+  // officialUrl. The cost of that rule is real and small; the cost of the hole
+  // was an undisclosed affiliate link.
   for (const [, url] of sourceLinksSource.matchAll(/url:\s*"([^"]+)"/g)) {
+    const probe = normalize(url);
+    if (probe && affiliateHosts.has(probe.host)) {
+      citationConflicts.push(
+        `${url} is declared as a source, but ${probe.host} is a host we earn commission from. ` +
+          "A citation may not live on a commission domain — register the page as an officialUrl, " +
+          "or cite a different host. Declaring it here would ship it with no rel=\"sponsored\" and no disclosure."
+      );
+      continue;
+    }
     const n = add(url);
     if (n) citationKeys.add(n.key);
   }
 
-  return { byHost, affiliateUrls, affiliateKeys, citationKeys };
+  return { byHost, affiliateUrls, affiliateKeys, affiliateHosts, citationKeys, citationConflicts };
 }
 
 /**

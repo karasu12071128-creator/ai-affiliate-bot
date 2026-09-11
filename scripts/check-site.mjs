@@ -161,6 +161,13 @@ const vendorIndex = registryIndex(registrySource, sourceLinksSource);
 notes.push(`registry vendor hosts: ${vendorIndex.byHost.size}`);
 notes.push(`declared source links: ${vendorIndex.citationKeys.size}`);
 
+// A citation on a commission domain is refused rather than silently dropped:
+// the declaration was written by someone who expected it to work, and a rule
+// that quietly ignores input is how a hole reopens.
+for (const conflict of vendorIndex.citationConflicts) {
+  failures.push(`src/lib/sourceLinks.ts: ${conflict}`);
+}
+
 let sponsored = 0;
 let plainOutbound = 0;
 

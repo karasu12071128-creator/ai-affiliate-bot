@@ -120,7 +120,7 @@ If, after that, the specific thing standing between you and publishing more is t
 
 If you get there, the $6 Starter tier is the honest starting point rather than the $22 one. On the arithmetic above, thirty thousand characters is roughly fifty-plus Shorts' worth of finished narration before retakes — do that sum against your own publishing rate rather than taking our word for the size of it. The rollover ceiling gives you room for an uneven schedule. Move up when you hit the limit, not in anticipation of it.
 
-If you are not sure the recording session is your bottleneck, it probably is not. Fix the script first. That costs nothing and it is the change more likely to show up in your retention graph.
+If you are not sure the recording session is your bottleneck, the cheap move is to assume it is not and test that first. Rewriting a script costs nothing, and an unmeasured change that costs nothing is a better first experiment than an unmeasured change that costs $6 a month. We are not claiming to know which one moves your retention — only which one is cheaper to be wrong about.
 
 ## What we checked, and what we did not
 

@@ -280,7 +280,12 @@ test("a link to a vendor we already do business with must be one we registered",
   const { registryIndex, isRegisteredAffiliate, unregisteredVendorLink, looksLikeReferral } = await import(
     "../scripts/referral-guard.mjs"
   );
-  const index = registryIndex(read("src/lib/affiliateLinks.ts"), read("src/lib/sourceLinks.ts"));
+  // Comments are stripped exactly as scripts/check-site.mjs strips them. Reading
+  // the raw file here would let a commented-out declaration permit a link in the
+  // test that the real checker would refuse — the two must agree on what counts.
+  const strip = (relative) =>
+    read(relative).replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^\s*\/\/.*$/gm, " ");
+  const index = registryIndex(strip("src/lib/affiliateLinks.ts"), strip("src/lib/sourceLinks.ts"));
 
   // Spelling equivalence, pinned. Every one of these reaches the same page in a
   // browser as our registered vidIQ affiliate URL, so every one must require
@@ -748,4 +753,47 @@ test("a declared source link is a citation, never an earning link", async () => 
   }
 
   assert.equal(sourceLinkUrls.size, sourceLinks.length, "duplicate source URLs are a sign of a merge mistake");
+});
+
+test("a citation may not live on a host we earn commission from", async () => {
+  // Both reviewers found the same escape: declaring a DIFFERENT referral path on
+  // our own commission domain — try.elevenlabs.io/anotherpartner — would ship it
+  // as a plain link with no rel="sponsored" and no disclosure. Blocking the exact
+  // registered URL was not enough, and "does this path look like a referral" is
+  // the shape question already shown to be undecidable.
+  //
+  // The host is decidable. A commission domain is one we declared ourselves, so
+  // every link to it must be a registered URL, never a citation.
+  const { registryIndex, unregisteredVendorLink, isRegisteredAffiliate, looksLikeReferral } = await import(
+    "../scripts/referral-guard.mjs"
+  );
+  const registry = read("src/lib/affiliateLinks.ts");
+  const sources = read("src/lib/sourceLinks.ts");
+
+  const clean = registryIndex(registry, sources);
+  assert.deepEqual(clean.citationConflicts, [], "the declared sources must not sit on a commission host");
+  assert.ok(clean.citationKeys.size > 0, "there must be declared citations, or this test passes vacuously");
+  assert.ok(clean.affiliateHosts.size > 0, "there must be affiliate hosts, or the rule has nothing to protect");
+
+  const smuggled = "https://try.elevenlabs.io/anotherpartner";
+  const attacked = registryIndex(
+    registry,
+    sources.replace(
+      "export const sourceLinks: SourceLink[] = [",
+      `export const sourceLinks: SourceLink[] = [\n  { url: "${smuggled}", product: "elevenlabs", title: "x", readOn: "2026-09-11" },`
+    )
+  );
+
+  assert.equal(attacked.citationConflicts.length, 1, "declaring a source on a commission host must be refused");
+  assert.match(attacked.citationConflicts[0], /commission/);
+  assert.ok(
+    !attacked.citationKeys.has(smuggled),
+    "a refused citation must not be added to the permitted set"
+  );
+  assert.ok(
+    isRegisteredAffiliate(smuggled, attacked) ||
+      unregisteredVendorLink(smuggled, attacked) ||
+      looksLikeReferral(smuggled),
+    "even if declared, the URL itself must still be caught by one of the outbound rules"
+  );
 });

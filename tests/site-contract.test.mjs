@@ -797,3 +797,35 @@ test("a citation may not live on a host we earn commission from", async () => {
     "even if declared, the URL itself must still be caught by one of the outbound rules"
   );
 });
+
+test("the citation list cannot be widened by a subdomain or by a stray url property", async () => {
+  // Two gate weaknesses found in the final review, closed here because a guard
+  // whose job is to prevent an undisclosed affiliate link should not ship with a
+  // known way around it.
+  const { registryIndex } = await import("../scripts/referral-guard.mjs");
+  const registry = read("src/lib/affiliateLinks.ts");
+  const sources = read("src/lib/sourceLinks.ts");
+  const declare = (url) =>
+    sources.replace(
+      "export const sourceLinks: SourceLink[] = [",
+      `export const sourceLinks: SourceLink[] = [\n  { url: "${url}", product: "elevenlabs", title: "x", readOn: "2026-09-11" },`
+    );
+
+  const baseline = registryIndex(registry, sources);
+  assert.ok(baseline.citationKeys.size > 0, "there must be declared citations, or this test proves nothing");
+
+  // A subdomain of a commission host is still the commission domain.
+  const sub = registryIndex(registry, declare("https://docs.try.elevenlabs.io/anotherpartner"));
+  assert.equal(sub.citationConflicts.length, 1, "a subdomain of a commission host must be refused");
+  assert.match(sub.citationConflicts[0], /sits under/);
+  assert.equal(sub.citationKeys.size, baseline.citationKeys.size, "a refused citation must not widen the permitted set");
+
+  // Only the exported array is a declaration. An unrelated object literal is not.
+  const stray = registryIndex(registry, `${sources}\nconst unrelated = { url: "https://elevenlabs.io/unrelated" };\n`);
+  assert.equal(
+    stray.citationKeys.size,
+    baseline.citationKeys.size,
+    "a url property outside the sourceLinks array must not authorize a vendor destination"
+  );
+  assert.deepEqual(stray.citationConflicts, [], "an out-of-array url is ignored, not reported as a conflict");
+});

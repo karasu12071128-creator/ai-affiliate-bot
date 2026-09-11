@@ -102,7 +102,7 @@ We build our own short-form with burned-in subtitles and no voice track — a de
 
 Before subscribing to anything, try the cheaper diagnosis: **publish the next three videos with clean burned-in subtitles and a tighter script, and look at retention.**
 
-Where the drop-off sits is a cheap hypothesis to start from, not a diagnosis: an early exit points more often at the hook than at the audio, and a slump in the middle points more often at pacing or over-explanation. Neither is a rule, and we have not measured either. Both are free to test, which is the only reason to test them first.
+Where the drop-off sits tells you which cheap change to try first, not what is wrong. If viewers leave in the first seconds, the hook is the thing you can rewrite for free; if they stay and then drift, pacing and over-explanation are. Those are the free experiments, not diagnoses — audio quality, subject matter and a dozen other things can produce the same shape, and we have measured none of it.
 
 If, after that, the specific thing standing between you and publishing more is the recording session itself, then narration is solving a real bottleneck and $6 is a reasonable price for it.
 

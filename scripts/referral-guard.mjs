@@ -112,11 +112,22 @@ export function registryIndex(registrySource, sourceLinksSource = "") {
   // Cite the vendor's ordinary domain instead, or register the page as an
   // officialUrl. The cost of that rule is real and small; the cost of the hole
   // was an undisclosed affiliate link.
-  for (const [, url] of sourceLinksSource.matchAll(/url:\s*"([^"]+)"/g)) {
+  // Only the exported array counts. Matching every `url: "..."` in the file
+  // meant an unrelated object literal — `const note = { url: "..." }` — silently
+  // authorized a vendor destination that is not a SourceLink at all.
+  const arrayBody = sourceLinksSource.match(/sourceLinks:\s*SourceLink\[\]\s*=\s*\[([\s\S]*?)\n\];/);
+  const declarations = arrayBody ? arrayBody[1] : "";
+
+  for (const [, url] of declarations.matchAll(/url:\s*"([^"]+)"/g)) {
     const probe = normalize(url);
-    if (probe && affiliateHosts.has(probe.host)) {
+    // A subdomain of a commission host is still the commission domain:
+    // docs.try.elevenlabs.io belongs to try.elevenlabs.io, and exact-host
+    // matching let it through as a citation.
+    const onCommissionDomain =
+      probe && [...affiliateHosts].some((host) => probe.host === host || probe.host.endsWith(`.${host}`));
+    if (onCommissionDomain) {
       citationConflicts.push(
-        `${url} is declared as a source, but ${probe.host} is a host we earn commission from. ` +
+        `${url} is declared as a source, but ${probe.host} is, or sits under, a host we earn commission from. ` +
           "A citation may not live on a commission domain — register the page as an officialUrl, " +
           "or cite a different host. Declaring it here would ship it with no rel=\"sponsored\" and no disclosure."
       );

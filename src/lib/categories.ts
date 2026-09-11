@@ -52,7 +52,7 @@ export const categories = [
     key: "ai-voice",
     name: "AI voice",
     description: "Text-to-speech and voice tooling used in narration and short-form video.",
-    state: "planned"
+    state: "live"
   },
   {
     key: "creator-automation",

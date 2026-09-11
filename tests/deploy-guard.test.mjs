@@ -68,9 +68,14 @@ test("KNOWN BYPASSES: these reach production and are not fixed", () => {
   //
   // If any of these starts being refused, the guard grew a pattern: update the
   // threat model in deploy-guard.mjs rather than assuming it became a boundary.
+  // Anything whose arguments do not literally contain main/master gets
+  // through, which is most of the ways a push to main is actually spelled.
   const knownBypasses = [
     "git push",
-    "B=main; git push origin $B",
+    "git push origin",
+    "git push origin HEAD",
+    "git -c push.default=current push origin",
+    "B=main; git push origin $B"
   ];
   // git push origin HEAD:main and sh -c "git push origin main" are both refused — the word `main` appears in the
   // refspec — so it is asserted in the refused set above, not here. Checked by

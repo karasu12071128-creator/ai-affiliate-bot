@@ -14,8 +14,11 @@
  * follow aliases, evaluate subshells, or understand git. Every one of these
  * walks straight past it:
  *
+ *     git push                                  # when the branch tracks origin/main
+ *     git push origin                           # same, with the remote named
+ *     git push origin HEAD
+ *     git -c push.default=current push origin
  *     B=main; git push origin $B
- *     git push            # when the branch already tracks origin/main
  *
  * The last one matters most, because it is the one an ordinary person types.
  * A guard that stops `git push origin main` and waves through `git push` is
@@ -25,7 +28,8 @@
  * The binding protection is, and remains, OWNER approval. If real enforcement is
  * wanted, it belongs in GitHub branch protection on `main`, which this file
  * cannot substitute for. That is a deliberate gap, recorded rather than papered
- * over: see docs/AUTOMATION_RUNBOOK.md.
+ * over: see HISHO_OS/Runtime/AUTOMATION_RUNBOOK.md in the company repo
+ * (karasu12071128-creator/ai-staff-box-house-cleaning) — it is not in this one.
  *
  * Reads are never blocked. Exit 0 always; the decision travels as JSON on stdout.
  */

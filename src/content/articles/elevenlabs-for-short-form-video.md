@@ -13,11 +13,13 @@ primaryProduct: "elevenlabs"
 
 ## The short answer
 
-If your short-form video is monetized — a YouTube Shorts channel in the Partner Program, a TikTok with a brand deal, a Reel that sends people to something you sell — **ElevenLabs' free plan is not a legal option for it.** The free tier carries no commercial license, and anything you publish from it has to credit ElevenLabs in the title.
+**ElevenLabs' free plan carries no commercial license**, and anything you publish from it has to credit ElevenLabs in the title. Both of those are the vendor's own words, quoted below.
+
+If your short-form video earns — a YouTube Shorts channel in the Partner Program, a TikTok with a brand deal, a Reel that sends people to something you sell — that rule is the first thing to check, because ElevenLabs decides what counts as a "commercial purpose" and we cannot decide it for them. Where your own case sits is a question for their terms and, if it matters to you, for their support team.
 
 That single rule decides most of the plan question. Paid access starts at **$6 a month**, which is small enough that the interesting question is not "can I afford it" but "do I need narration at all". A lot of creators reach for an AI voice to fix a problem that is actually a script problem, and pay a monthly fee to keep doing it.
 
-This article is about that decision: what the license actually says, how much narration the cheap tier really buys, and when to skip voice entirely.
+This article is about that decision: what the license actually says, how much narration the cheap tier really buys, and when to skip voice entirely. Where the terms are ambiguous, this article says so rather than resolving them for you.
 
 ## Who this is for
 
@@ -37,7 +39,9 @@ And on attribution:
 
 Two practical consequences:
 
-**Monetized video is a commercial purpose.** If your channel earns — ad revenue, sponsorship, affiliate links, driving traffic to a product — free-tier audio does not have a license covering that use. This is not a technical limit you will bump into. Nothing blocks the export. You simply will not have the rights.
+**"Commercial purpose" is their term, and they have not defined it here.** A channel earning ad revenue or running a brand deal is the obvious case to worry about; an informational video that happens to carry one affiliate link is genuinely less clear, and the quoted page does not settle it. We are not lawyers and this is not advice — the point is that the question exists and is worth resolving before you publish, not after.
+
+**It is not a technical limit.** Nothing blocks the export, so you will not discover this by bumping into it. That is precisely why it is worth reading the terms rather than assuming the product would stop you.
 
 **The attribution requirement is on the title.** Not the description, not the end card. If you are testing on the free plan, "elevenlabs.io" belongs in the video title.
 
@@ -112,7 +116,7 @@ If, after that, the specific thing standing between you and publishing more is t
 
 ## Verdict
 
-**ElevenLabs is worth paying for when the recording session is the thing blocking you from publishing, and not before.** The free plan is fine for evaluating the voices, and for anything you are not doing commercially — but the moment the video earns, its license does not cover you.
+**ElevenLabs is worth paying for when the recording session is the thing blocking you from publishing, and not before.** The free plan is fine for evaluating the voices and for use that is clearly not commercial. Once a video earns, you are relying on a term ElevenLabs defines and we have not seen defined — and the paid tier that removes the question starts at $6.
 
 If you get there, the $6 Starter tier is the honest starting point rather than the $22 one. On the arithmetic above, thirty thousand characters is roughly fifty-plus Shorts' worth of finished narration before retakes — do that sum against your own publishing rate rather than taking our word for the size of it. The rollover ceiling gives you room for an uneven schedule. Move up when you hit the limit, not in anticipation of it.
 

@@ -41,6 +41,15 @@ function claimsSiteWideExclusivity(sentence) {
 }
 const read = (relative) => readFileSync(join(root, relative), "utf8");
 
+test("the shared head includes the OWNER-provided Google Search Console verification tag", () => {
+  const layout = read("src/layouts/BaseLayout.astro");
+  assert.match(
+    layout,
+    /<meta name="google-site-verification" content="M3hlz4Qoo4_ac4_uPkzqRXUC3k6G9bX6WCjesMdv-xA" \/>/,
+    "the Search Console URL-prefix property depends on the exact OWNER-provided verification value"
+  );
+});
+
 /**
  * These tests protect the contracts that make the site's trust claims true.
  * They read source, not the build output, so they run without a build step

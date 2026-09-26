@@ -272,7 +272,9 @@ for (const path of htmlFiles) {
   }
 
   for (const match of html.matchAll(/<img\b([^>]*)>/g)) {
-    if (!/\balt="/.test(match[1])) failures.push(`${from}: <img> without alt text`);
+    // A bare `alt` (how Astro serialises alt="") is a valid empty alt: the image
+    // is marked decorative. Only a missing attribute fails.
+    if (!/(?:^|\s)alt(?:=|\s|\/|$)/.test(match[1])) failures.push(`${from}: <img> without alt text`);
   }
 
   if (!/lang="[a-z]{2}/.test(html)) failures.push(`${from}: <html> has no lang attribute`);

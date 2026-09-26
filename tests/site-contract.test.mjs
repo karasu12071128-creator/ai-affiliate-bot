@@ -397,7 +397,17 @@ test("the homepage ships no fabricated media, metrics, or social proof", () => {
   // the one permitted <video> may not name a file: its src and poster must be
   // bound from the approved registry, so media cannot reach the page without
   // passing the checks asserted in the next test.
-  assert.doesNotMatch(home, /<img|<picture/, "homepage must ship no image stand-ins");
+  // vNext: the homepage now carries approved stills. Raw tags stay banned; the
+  // only image element allowed is astro:assets <Picture> bound to a registry
+  // entry, so an image cannot reach the page without approval and provenance.
+  assert.doesNotMatch(home, /<img|<picture/, "homepage must ship no raw image tags");
+  const pictures = home.match(/<Picture[\s\S]*?\/>/g) ?? [];
+  for (const tag of pictures) {
+    assert.match(tag, /src=\{heroStill\.image\}/, "a homepage <Picture> must come from the hero still registry");
+  }
+  if (pictures.length > 0) {
+    assert.match(home, /activeHeroStill\(\)/, "the hero still must be gated on approval");
+  }
 
   const videoTags = home.match(/<video[\s\S]*?\/>/g) ?? [];
   assert.ok(videoTags.length <= 1, "homepage may carry at most one media layer");
@@ -553,11 +563,20 @@ test("homepage editorial cards reference real articles and gate images on approv
   assert.doesNotMatch(media, /src:\s*"https?:/, "card images are served from the site, never hotlinked");
 
   const card = read("src/components/ArticleCard.astro");
-  const imgs = card.match(/<img[\s\S]*?\/>/g) ?? [];
-  for (const tag of imgs) {
-    assert.match(tag, /src=\{image\.src\}/, "card image src must come from the approved manifest");
-    assert.match(tag, /width=\{image\.width\}[\s\S]*height=\{image\.height\}/, "card images declare their size");
+  assert.doesNotMatch(card, /<img/, "card images go through astro:assets, which emits width and height");
+  const pictures = card.match(/<Picture[\s\S]*?\/>/g) ?? [];
+  assert.equal(pictures.length, 1, "a card renders at most one picture");
+  for (const tag of pictures) {
+    assert.match(tag, /src=\{media\.image\}/, "card image must come from the approved manifest");
     assert.match(tag, /loading="lazy"/, "card images below the fold load lazily");
+  }
+
+  // Every registered still is imported from the approved vNext folder and exists.
+  for (const file of ["src/lib/editorialMedia.ts", "src/lib/shiori.ts", "src/lib/heroMedia.ts"]) {
+    for (const [, path] of read(file).matchAll(/from "\.\.\/\.\.\/(public\/media\/[^"]+)"/g)) {
+      assert.match(path, /^public\/media\/vnext\//, `${file} imports ${path} outside the approved vNext folder`);
+      assert.doesNotThrow(() => readFileSync(join(root, path)), `${file} imports ${path}, which does not exist`);
+    }
   }
 
   const shiori = read("src/lib/shiori.ts");

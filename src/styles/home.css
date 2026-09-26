@@ -112,21 +112,29 @@
   position: relative;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 72px 24px 40px;
+  padding: 64px 24px 36px;
   display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
-  gap: 56px;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+  grid-template-areas:
+    "copy visual"
+    "points visual";
+  grid-template-rows: auto 1fr;
+  gap: 26px 52px;
   align-items: center;
 }
+
+.hero-copy { grid-area: copy; align-self: end; }
+.hero-visual { grid-area: visual; }
+.hero-points { grid-area: points; align-self: start; }
 
 .hero-title {
   font-family: var(--ui);
   font-weight: 800;
-  font-size: clamp(2.6rem, 5.3vw, 4.5rem);
-  line-height: 1.01;
+  font-size: clamp(2.6rem, 4.4vw, 3.9rem);
+  line-height: 1.02;
   letter-spacing: -0.045em;
   margin: 0 0 22px;
-  max-width: 13ch;
+  max-width: 14ch;
   text-wrap: balance;
 }
 
@@ -148,7 +156,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 30px;
 }
 
 .hero-points {
@@ -202,27 +209,31 @@
 
 /* --------------------------------------------------------- hero visual */
 
-/* The frame reserves its box before anything inside it paints, so neither the
-   static scene nor a future video can shift the layout. */
+/* The frame reserves the key visual's own 16:10 box before anything paints,
+   so neither the still nor a future clip can shift the layout. The copy never
+   sits on the image; the image carries no overlaid text from us. */
 .hero-visual {
   position: relative;
-  aspect-ratio: 16 / 12.5;
+  aspect-ratio: 16 / 10;
   border-radius: 28px;
-  background-color: var(--white);
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(20, 23, 25, 0.07) 1px, transparent 0),
-    linear-gradient(155deg, var(--cyan-soft), var(--mint-soft) 70%);
-  background-size: 22px 22px, 100% 100%;
-  border: 1px solid var(--line);
-  box-shadow: 0 30px 60px -40px rgba(20, 23, 25, 0.35);
+  background: var(--paper-deep);
+  box-shadow:
+    0 0 0 1px rgba(20, 23, 25, 0.06),
+    0 40px 70px -46px rgba(20, 23, 25, 0.45);
   overflow: hidden;
   isolation: isolate;
 }
 
-.hero-visual[data-media="true"] {
-  background-image: var(--hero-poster);
-  background-size: cover;
-  background-position: center;
+.hero-visual picture,
+.hero-still {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-still {
+  object-fit: cover;
+  object-position: 50% 50%;
 }
 
 .stage-media {
@@ -231,162 +242,43 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -1;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .stage-media { display: none; }
 }
 
-.hv-scene {
-  position: absolute;
-  inset: 0;
-}
-
-/* "Too many tools": loose question cards, dimmed and scattered. */
-.hv-noise {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.hv-noise li {
-  position: absolute;
-  padding: 8px 14px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid var(--line);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--muted);
-  white-space: nowrap;
-  box-shadow: 0 8px 18px -14px rgba(20, 23, 25, 0.4);
-}
-
-.hv-noise li:nth-child(1) { top: 9%; left: 6%; transform: rotate(-4deg); }
-.hv-noise li:nth-child(2) { top: 24%; left: 22%; transform: rotate(3deg); }
-.hv-noise li:nth-child(3) { top: 7%; left: 50%; transform: rotate(2deg); }
-.hv-noise li:nth-child(4) { top: 40%; left: 4%; transform: rotate(-2deg); opacity: 0.8; }
-.hv-noise li:nth-child(5) { top: 16%; right: 5%; transform: rotate(-3deg); opacity: 0.85; }
-
-/* "Clearer decisions": one calm panel. */
-.hv-panel {
-  position: absolute;
-  right: 6%;
-  bottom: 8%;
-  width: min(58%, 320px);
-  padding: 18px 18px 16px;
-  border-radius: 20px;
-  background: var(--white);
-  border: 1px solid var(--line);
-  box-shadow: 0 24px 48px -28px rgba(20, 23, 25, 0.45);
-}
-
-.hv-panel-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 12px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.hv-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px var(--mint);
-}
-
-.hv-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 8px;
-}
-
-.hv-list li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 10px;
-  border-radius: 12px;
-  background: var(--paper);
-  font-size: 0.9rem;
-  font-weight: 650;
-  color: var(--ink);
-  line-height: 1.25;
-}
-
-.hv-list li::before {
-  content: "";
-  flex: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-  background: var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5.5 10.2 3 3 6-6.2' fill='none' stroke='%230b625f' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 20px no-repeat;
-}
-
-.hv-panel-foot {
-  display: block;
-  margin: 12px 2px 0;
-  height: 6px;
-  border-radius: 6px;
-  background: linear-gradient(90deg, var(--accent) 0 72%, var(--line) 72%);
-  opacity: 0.7;
-}
-
 /* ---------------------------------------------------------------- Shiori */
 
-/* The slot is a fixed box: the fallback mark and a future illustration
-   occupy the same footprint. */
-/* Bubble above, figure below, both left-aligned, so Shiori stays in the
-   frame's free corner and never covers the panel or the copy. */
+/* A supporting navigator beside the decision cards: small, bubble to her
+   left, transparent PNG sitting straight on the paper. */
 .shiori {
   display: flex;
-  flex-direction: column-reverse;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: center;
+  gap: 4px;
+  flex: none;
 }
 
 .shiori-figure {
   flex: none;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--shiori);
-  border: 3px solid var(--white);
-  box-shadow: 0 10px 22px -14px rgba(20, 23, 25, 0.5);
-  overflow: hidden;
+  width: 96px;
+  aspect-ratio: 2 / 3;
+  display: block;
 }
 
-.shiori-figure svg {
-  width: 30px;
-  height: 30px;
-  fill: var(--white);
-  stroke: #c98e9a;
-  stroke-width: 1.6;
-  stroke-linejoin: round;
-}
-
+.shiori-figure picture,
 .shiori-figure img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .shiori-bubble {
   position: relative;
-  margin: 0;
+  margin: 0 0 38px;
   padding: 8px 14px;
-  border-radius: 14px 14px 14px 4px;
+  border-radius: 14px 14px 4px 14px;
   background: var(--white);
   border: 1px solid var(--shiori);
   font-size: 0.88rem;
@@ -396,10 +288,15 @@
   box-shadow: 0 10px 22px -16px rgba(20, 23, 25, 0.45);
 }
 
-.hero-shiori {
-  position: absolute;
-  left: 5%;
-  bottom: 7%;
+.decide-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.decide-head .section-title {
+  margin-bottom: 4px;
 }
 
 /* --------------------------------------------------------------- sections */
@@ -637,93 +534,6 @@
   color: var(--paper);
 }
 
-/* ARTICLE_CARD_IMAGE_REQUIRED — CSS compositions that stand in until approved
-   editorial images exist. Abstract, on-palette, zero requests. */
-.story-art {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle at 1px 1px, rgba(20, 23, 25, 0.08) 1px, transparent 0);
-  background-size: 18px 18px;
-}
-
-.story-art span {
-  position: absolute;
-  display: block;
-  border-radius: 14px;
-}
-
-/* Alternatives: one route forking into three. */
-[data-motif="alternatives"] { background: var(--mint-soft); }
-[data-motif="alternatives"] .story-art span {
-  left: 16%;
-  top: 50%;
-  height: 14px;
-  width: 58%;
-  transform-origin: left center;
-  background: var(--white);
-  border: 1px solid var(--line);
-}
-[data-motif="alternatives"] .story-art span:nth-child(1) { transform: rotate(-18deg); }
-[data-motif="alternatives"] .story-art span:nth-child(2) { background: var(--ink); border-color: var(--ink); width: 64%; }
-[data-motif="alternatives"] .story-art span:nth-child(3) { transform: rotate(18deg); }
-
-/* Versus: two platforms, face to face. */
-[data-motif="versus"] { background: var(--cyan-soft); }
-[data-motif="versus"] .story-art span:nth-child(1),
-[data-motif="versus"] .story-art span:nth-child(2) {
-  top: 20%;
-  bottom: 20%;
-  width: 26%;
-  border-radius: 16px;
-}
-[data-motif="versus"] .story-art span:nth-child(1) { left: 18%; background: var(--ink); }
-[data-motif="versus"] .story-art span:nth-child(2) { right: 18%; background: var(--white); border: 1px solid var(--line); }
-[data-motif="versus"] .story-art span:nth-child(3) {
-  left: 50%;
-  top: 50%;
-  width: 34px;
-  height: 34px;
-  margin: -17px 0 0 -17px;
-  border-radius: 50%;
-  background: var(--mint);
-  border: 3px solid var(--white);
-}
-
-/* Scale: a small sender next to a growing stack. */
-[data-motif="scale"] { background: var(--paper-deep); }
-[data-motif="scale"] .story-art span {
-  bottom: 22%;
-  width: 18%;
-  background: var(--white);
-  border: 1px solid var(--line);
-}
-[data-motif="scale"] .story-art span:nth-child(1) { left: 16%; height: 22%; }
-[data-motif="scale"] .story-art span:nth-child(2) { left: 41%; height: 40%; background: var(--mint); border-color: var(--mint); }
-[data-motif="scale"] .story-art span:nth-child(3) { left: 66%; height: 58%; background: var(--ink); border-color: var(--ink); }
-
-/* Voice: a waveform. */
-[data-motif="voice"] { background: var(--shiori-soft); }
-[data-motif="voice"] .story-art span:nth-child(1) {
-  left: 14%;
-  right: 14%;
-  top: 30%;
-  bottom: 30%;
-  border-radius: 0;
-  background: repeating-linear-gradient(90deg, var(--ink) 0 5px, transparent 5px 13px);
-  -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 50%, #000 40%, rgba(0, 0, 0, 0.25) 100%);
-  mask: radial-gradient(ellipse 50% 50% at 50% 50%, #000 40%, rgba(0, 0, 0, 0.25) 100%);
-  clip-path: polygon(0 45%, 12% 30%, 25% 40%, 38% 5%, 50% 20%, 62% 0, 75% 35%, 88% 25%, 100% 45%, 100% 55%, 88% 75%, 75% 65%, 62% 100%, 50% 80%, 38% 95%, 25% 60%, 12% 70%, 0 55%);
-}
-[data-motif="voice"] .story-art span:nth-child(2) {
-  right: 10%;
-  bottom: 14%;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--white);
-  border: 3px solid var(--shiori);
-}
-
 /* ------------------------------------------------------------- method */
 
 .section-method .method-grid {
@@ -818,14 +628,7 @@
     animation-delay: 90ms;
   }
 
-  .hv-noise li {
-    animation: home-drift 7s ease-in-out infinite alternate;
-    animation-delay: calc(var(--i) * -1.3s);
-  }
 
-  .hero-shiori .shiori-bubble {
-    animation: home-bob 3.2s ease-in-out infinite alternate;
-  }
 
   .decision,
   .story,
@@ -848,18 +651,6 @@
   }
 }
 
-/* `translate` composes with each chip's own rotate transform. */
-@keyframes home-drift {
-  to {
-    translate: 0 -6px;
-  }
-}
-
-@keyframes home-bob {
-  to {
-    translate: 0 -3px;
-  }
-}
 
 /* ----------------------------------------------------------------- tablet */
 
@@ -876,7 +667,12 @@
 @media (max-width: 900px) {
   .hero-inner {
     grid-template-columns: 1fr;
-    gap: 36px;
+    grid-template-areas:
+      "copy"
+      "visual"
+      "points";
+    grid-template-rows: auto;
+    gap: 28px;
     padding-top: 48px;
   }
 
@@ -894,8 +690,8 @@
 
 @media (max-width: 620px) {
   .hero-inner {
-    padding: 32px 16px 28px;
-    gap: 28px;
+    padding: 24px 16px 24px;
+    gap: 22px;
   }
 
   .hero-title {
@@ -906,14 +702,13 @@
 
   .hero-dek {
     font-size: 1.06rem;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .hero-actions {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
-    margin-bottom: 22px;
   }
 
   .hero-points {
@@ -921,58 +716,38 @@
     font-size: 0.86rem;
   }
 
+  /* A 4:3 crop keeps Shiori and the checked decision card together; the
+     scattered-questions cloud is trimmed rather than shrunk to noise. */
   .hero-visual {
-    aspect-ratio: 1 / 0.92;
-    border-radius: 24px;
+    aspect-ratio: 4 / 3;
+    border-radius: 22px;
   }
 
-  .hv-noise li {
-    font-size: 0.74rem;
-    padding: 6px 10px;
+  .hero-still {
+    object-position: 68% 50%;
   }
 
-  /* Fewer, unclipped questions at phone width. */
-  .hv-noise li:nth-child(2),
-  .hv-noise li:nth-child(3),
-  .hv-noise li:nth-child(4) { display: none; }
-  .hv-noise li:nth-child(1) { top: 6%; left: 5%; }
-  .hv-noise li:nth-child(5) { top: 5%; left: auto; right: 5%; }
-
-  .hv-panel {
-    width: 66%;
-    right: 4%;
-    bottom: 6%;
-    padding: 14px 12px 12px;
+  /* The heading keeps the full width; Shiori tucks in under it, right-aligned,
+     pointing toward the cards. */
+  .decide-head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
   }
 
-  .hv-list {
-    gap: 6px;
-  }
-
-  .hv-list li {
-    font-size: 0.8rem;
-    padding: 7px 8px;
-    gap: 8px;
-  }
-
-  .hero-shiori {
-    left: 4%;
-    bottom: 6%;
+  .decide-shiori {
+    align-self: flex-end;
+    margin: -4px 0 -18px;
   }
 
   .shiori-figure {
-    width: 48px;
-    height: 48px;
-  }
-
-  .shiori-figure svg {
-    width: 22px;
-    height: 22px;
+    width: 56px;
   }
 
   .shiori-bubble {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     padding: 6px 10px;
+    margin-bottom: 22px;
   }
 
   .hero-line {

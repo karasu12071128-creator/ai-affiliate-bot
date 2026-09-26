@@ -1,16 +1,17 @@
 ---
 import { getCollection } from "astro:content";
+import { Picture } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ShioriGuide from "../components/ShioriGuide.astro";
 import ArticleCard from "../components/ArticleCard.astro";
 import { categoryPath } from "../lib/categories";
-import { activeHeroMedia } from "../lib/heroMedia";
+import { activeHeroMedia, activeHeroStill } from "../lib/heroMedia";
 import { editorialCards } from "../lib/editorialMedia";
 import "../styles/home.css";
 
-// Rendered inside the hero's visual frame when an approved asset framed for it
-// exists. Until then the frame is the static decision visual below
-// (HERO_VIDEO_ASSET_REQUIRED; see src/lib/heroMedia.ts).
+// The hero frame shows the approved key visual. A motion clip framed for it
+// would layer over the still (HERO_VIDEO_ASSET_REQUIRED; see src/lib/heroMedia.ts).
+const heroStill = activeHeroStill();
 const heroMedia = activeHeroMedia("hero-visual");
 
 const articles = await getCollection("articles");
@@ -70,11 +71,6 @@ const method = [
           <a class="btn btn-primary" href="#decide">Find my fit</a>
           <a class="btn btn-quiet" href="/articles/">Browse comparisons</a>
         </div>
-        <ul class="hero-points">
-          <li>Independent research</li>
-          <li>Practical decision guides</li>
-          <li>Built for real creators</li>
-        </ul>
       </div>
 
       <div
@@ -82,6 +78,20 @@ const method = [
         data-media={heroMedia ? "true" : "false"}
         style={heroMedia ? `--hero-poster: url("${heroMedia.poster}")` : undefined}
       >
+        {heroStill && (
+          <Picture
+            class="hero-still"
+            src={heroStill.image}
+            formats={["avif", "webp"]}
+            fallbackFormat="jpg"
+            widths={[480, 800, 1200, 1600]}
+            sizes="(max-width: 900px) calc(100vw - 32px), 640px"
+            alt={heroStill.alt}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        )}
         {heroMedia && (
           <video
             class="stage-media"
@@ -98,35 +108,26 @@ const method = [
             tabindex="-1"
           />
         )}
-        <div class="hv-scene" aria-hidden="true">
-          <ul class="hv-noise">
-            <li style="--i:0">Newsletter?</li>
-            <li style="--i:1">AI voice?</li>
-            <li style="--i:2">Automation?</li>
-            <li style="--i:3">Analytics?</li>
-            <li style="--i:4">Which is better?</li>
-          </ul>
-          <div class="hv-panel">
-            <p class="hv-panel-head"><span class="hv-dot"></span>Your decision</p>
-            <ol class="hv-list">
-              <li>Right tool for your goals</li>
-              <li>Side-by-side comparisons</li>
-              <li>Real creator use cases</li>
-              <li>Honest pros and cons</li>
-            </ol>
-            <span class="hv-panel-foot"></span>
-          </div>
-        </div>
-        <ShioriGuide message="Start here." class="hero-shiori" />
       </div>
+
+      <ul class="hero-points">
+        <li>Independent research</li>
+        <li>Practical decision guides</li>
+        <li>Built for real creators</li>
+      </ul>
     </div>
     <p class="hero-line"><span>Choose by fit, not hype.</span></p>
   </section>
 
   <section class="section" id="decide" aria-labelledby="decide-title">
     <div class="section-inner">
-      <p class="kicker">Start with a question</p>
-      <h2 id="decide-title" class="section-title">What are you trying to decide?</h2>
+      <div class="decide-head">
+        <div>
+          <p class="kicker">Start with a question</p>
+          <h2 id="decide-title" class="section-title">What are you trying to decide?</h2>
+        </div>
+        <ShioriGuide message="Start here." class="decide-shiori" />
+      </div>
       <ul class="decisions">
         {decisions.map((item) => (
           <li>

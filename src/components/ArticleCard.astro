@@ -1,4 +1,5 @@
 ---
+import { Picture } from "astro:assets";
 import { approvedCardImage, type EditorialCard } from "../lib/editorialMedia";
 
 type Props = {
@@ -9,7 +10,7 @@ type Props = {
 };
 
 const { card, title, updated, readingMinutes } = Astro.props;
-const image = approvedCardImage(card);
+const media = approvedCardImage(card);
 const href = `/${card.slug}/`;
 const updatedIso = updated.toISOString().slice(0, 10);
 const updatedLabel = updated.toLocaleDateString("en-US", {
@@ -21,20 +22,19 @@ const updatedLabel = updated.toLocaleDateString("en-US", {
 ---
 
 <article class="story">
-  <div class="story-media" data-motif={card.motif}>
-    {image ? (
-      <img
-        src={image.src}
-        width={image.width}
-        height={image.height}
+  <div class="story-media">
+    {media && (
+      <Picture
+        src={media.image}
+        formats={["avif", "webp"]}
+        fallbackFormat="jpg"
+        widths={[480, 640, 800, 1200]}
+        sizes="(max-width: 620px) calc(100vw - 32px), (max-width: 1100px) 45vw, 290px"
         alt=""
         loading="lazy"
         decoding="async"
+        style={media.focus ? `object-position: ${media.focus}` : undefined}
       />
-    ) : (
-      <div class="story-art" aria-hidden="true" data-asset-required="ARTICLE_CARD_IMAGE_REQUIRED">
-        <span></span><span></span><span></span>
-      </div>
     )}
   </div>
   <div class="story-body">

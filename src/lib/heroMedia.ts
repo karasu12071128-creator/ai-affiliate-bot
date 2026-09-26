@@ -1,3 +1,5 @@
+import heroKeyVisual from "../../public/media/vnext/hero-key-visual.png";
+
 /**
  * Hero media layer.
  *
@@ -92,6 +94,35 @@ export const heroMediaLibrary: HeroMedia[] = [
     placement: "full-bleed-stage"
   }
 ];
+
+/**
+ * The hero's approved still: the key visual the frame shows on every device.
+ * It is also what reduced motion and slow links see once a clip exists.
+ *
+ * The source file in `public/media/vnext/` is never altered. It is imported so
+ * Astro's build (sharp, already an Astro dependency) emits right-sized AVIF and
+ * WebP derivatives; the page never ships the 1.3 MB PNG.
+ */
+
+export type HeroStill = {
+  image: ImageMetadata;
+  /** The still carries Shiori and her "Start here." bubble, so it is content, not decoration. */
+  alt: string;
+  provenance: string;
+  approved: boolean;
+};
+
+export const heroStill: HeroStill = {
+  image: heroKeyVisual,
+  alt: "Shiori, the site's guide, points past a cloud of scattered tool questions toward one clear, checked decision card.",
+  provenance:
+    "hero-key-visual.png, 1600x1000, added by OWNER as an approved vNext visual asset in commit 156f278 (2026-09-26).",
+  approved: true
+};
+
+export function activeHeroStill(): HeroStill | null {
+  return heroStill.approved ? heroStill : null;
+}
 
 /*
  * HERO_VIDEO_ASSET_REQUIRED

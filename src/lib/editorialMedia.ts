@@ -2,28 +2,27 @@
  * Editorial card images for the homepage "Decisions creators are making now"
  * rail.
  *
- * ARTICLE_CARD_IMAGE_REQUIRED
- * ---------------------------
- * No approved editorial image exists for any article yet. The Pinterest pins in
- * `public/pinterest/pins/` are text-led distribution graphics, not editorial
- * art, and are not reused here. Until an image is approved, each card renders
- * a CSS composition keyed by `motif` (no request, no copyright exposure) and
- * carries `data-asset-required="ARTICLE_CARD_IMAGE_REQUIRED"` in the built
- * HTML so the gap is greppable before production.
+ * Every image is an approved vNext asset in `public/media/vnext/` (OWNER,
+ * commit 156f278). Sources are never altered; they are imported so the build
+ * emits right-sized AVIF/WebP. Nothing is hotlinked. The card's media box is a
+ * fixed 16:10, the images' own ratio, so there is no layout shift.
  *
- * To ship an image: add `image` to the entry with its intrinsic size,
- * provenance, and `approved: true`. Images are served from `public/`, never
- * hotlinked. The card's media box is a fixed 16:10, so the swap causes no
- * layout shift.
+ * Mapping note: the site has no YouTube-growth article. The creator-growth
+ * image goes on beehiiv vs MailerLite, whose question is literally "growth
+ * platform or low-cost sender?"; the AI voice image goes on the ElevenLabs
+ * guide.
  */
+import newsletter01 from "../../public/media/vnext/article-newsletter-01.jpg";
+import newsletter02 from "../../public/media/vnext/article-newsletter-02.jpg";
+import aiVoice from "../../public/media/vnext/article-ai-voice.jpg";
+import creatorGrowth from "../../public/media/vnext/article-creator-growth.jpg";
 
-export type CardMotif = "alternatives" | "versus" | "scale" | "voice";
+const vnextProvenance = "Approved vNext editorial asset added by OWNER in commit 156f278 (2026-09-26).";
 
 export type EditorialImage = {
-  /** Path under `public/`. */
-  src: string;
-  width: number;
-  height: number;
+  image: ImageMetadata;
+  /** CSS object-position, so a crop can keep the subject at every breakpoint. */
+  focus?: string;
   /** Where the image came from, on the record. */
   provenance: string;
   /** OWNER sign-off. Nothing renders without this. */
@@ -37,7 +36,6 @@ export type EditorialCard = {
   kicker: string;
   /** The decision the article settles, in one line. Replaces the SEO description on the card. */
   decision: string;
-  motif: CardMotif;
   image?: EditorialImage;
 };
 
@@ -46,25 +44,25 @@ export const editorialCards: EditorialCard[] = [
     slug: "beehiiv-alternatives",
     kicker: "Newsletter",
     decision: "Leaving beehiiv? Start from the reason you want to switch, then pick the tool built for it.",
-    motif: "alternatives"
+    image: { image: newsletter01, focus: "40% 50%", provenance: `article-newsletter-01.jpg. ${vnextProvenance}`, approved: true }
   },
   {
     slug: "beehiiv-vs-substack",
     kicker: "Newsletter",
     decision: "Who owns your growth, and what the revenue share costs once readers start paying.",
-    motif: "versus"
+    image: { image: newsletter02, provenance: `article-newsletter-02.jpg. ${vnextProvenance}`, approved: true }
   },
   {
     slug: "beehiiv-vs-mailerlite",
-    kicker: "Email",
+    kicker: "Audience growth",
     decision: "A newsletter you want to grow and monetize, or a simple sender that stays cheap.",
-    motif: "scale"
+    image: { image: creatorGrowth, focus: "45% 50%", provenance: `article-creator-growth.jpg. ${vnextProvenance}`, approved: true }
   },
   {
     slug: "elevenlabs-for-short-form-video",
     kicker: "AI voice",
     decision: "The license rule that decides which plan you need once a Short is monetized.",
-    motif: "voice"
+    image: { image: aiVoice, focus: "40% 50%", provenance: `article-ai-voice.jpg. ${vnextProvenance}`, approved: true }
   }
 ];
 

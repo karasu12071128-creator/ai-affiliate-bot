@@ -409,7 +409,7 @@ test("the homepage ships no fabricated media, metrics, or social proof", () => {
   if (videoTags.length === 1) {
     assert.match(
       home,
-      /activeHeroMedia\(\)/,
+      /activeHeroMedia\(/,
       "the media layer must be gated on the approved-asset lookup"
     );
   }
@@ -435,7 +435,7 @@ test("hero media can only ship as an approved, attributed asset", () => {
   // Rendering is gated on the approval flag, not merely on an asset existing.
   assert.match(
     media,
-    /heroMediaLibrary\.find\(\(asset\) => asset\.approved\)/,
+    /heroMediaLibrary\.find\(\(asset\) => asset\.approved\b/,
     "only an approved asset may be selected for render"
   );
 
@@ -451,7 +451,8 @@ test("hero media can only ship as an approved, attributed asset", () => {
 
   // The stage must stay legible with the footage gone: the copy contrast comes
   // from the scrim, and reduced motion drops the video entirely.
-  const css = read("src/styles/global.css");
+  // vNext: the hero styles live in home.css, loaded by the homepage only.
+  const css = read("src/styles/home.css");
   assert.match(css, /prefers-reduced-motion: reduce\)[\s\S]{0,200}\.stage-media\s*\{\s*display:\s*none/,
     "reduced motion must drop the hero video and leave the poster");
 });
@@ -525,15 +526,53 @@ test("lab entries state a status and claim no results", () => {
   );
 });
 
-test("a pillar with nothing published is not presented as a destination", () => {
+// vNext superseded the four-pillar rail (and its "href: null" rule) with
+// decision cards. The rule it protected is kept in its new shape: a decision
+// card must lead to a page the build actually generates, never an invented route.
+test("every homepage decision card points at a page that exists", () => {
   const home = read("src/pages/index.astro");
-  // The v0.1 failure was shipping structure that led nowhere. A pillar without
-  // a href must render as a plain element, never as a link.
-  assert.match(home, /href:\s*null/, "an unpublished pillar must carry href: null");
-  assert.match(
+  const slugs = new Set(articles().map((article) => article.name.replace(/\.md$/, "")));
+  const block = home.slice(home.indexOf("const decisions = ["), home.indexOf("];", home.indexOf("const decisions = [")));
+  const literal = [...block.matchAll(/href:\s*"\/([a-z0-9-]+)\/"/g)].map((m) => m[1]);
+  const topical = [...block.matchAll(/href:\s*categoryPath\("([a-z-]+)"\)/g)].map((m) => m[1]);
+  assert.equal(literal.length + topical.length, 5, "the homepage carries five decision cards");
+  for (const slug of literal) assert.ok(slugs.has(slug), `decision card links to /${slug}/, which is not an article`);
+  const populated = new Set(
+    articles().map((article) => read(`src/content/articles/${article.name}`).match(/^category:\s*"([^"]+)"/m)?.[1] ?? "newsletter-email")
+  );
+  for (const key of topical) assert.ok(populated.has(key), `decision card links to topic ${key}, which has no articles`);
+});
+
+test("homepage editorial cards reference real articles and gate images on approval", () => {
+  const media = read("src/lib/editorialMedia.ts");
+  const slugs = new Set(articles().map((article) => article.name.replace(/\.md$/, "")));
+  const cardSlugs = [...media.matchAll(/^\s{4}slug:\s*"([^"]+)"/gm)].map((m) => m[1]);
+  assert.ok(cardSlugs.length >= 3 && cardSlugs.length <= 4, "the rail shows three or four articles");
+  for (const slug of cardSlugs) assert.ok(slugs.has(slug), `editorial card ${slug} has no article`);
+  assert.match(media, /card\.image\?\.approved \? card\.image : null/, "card images render only when approved");
+  assert.doesNotMatch(media, /src:\s*"https?:/, "card images are served from the site, never hotlinked");
+
+  const card = read("src/components/ArticleCard.astro");
+  const imgs = card.match(/<img[\s\S]*?\/>/g) ?? [];
+  for (const tag of imgs) {
+    assert.match(tag, /src=\{image\.src\}/, "card image src must come from the approved manifest");
+    assert.match(tag, /width=\{image\.width\}[\s\S]*height=\{image\.height\}/, "card images declare their size");
+    assert.match(tag, /loading="lazy"/, "card images below the fold load lazily");
+  }
+
+  const shiori = read("src/lib/shiori.ts");
+  assert.match(shiori, /shioriMascot\?\.approved \? shioriMascot : null/, "the mascot renders only when approved");
+});
+
+test("the homepage exposes no internal lab, pipeline, or program-status language", () => {
+  const home = read("src/pages/index.astro")
+    .replace(/\/\*[\s\S]*?\*\//g, " ")
+    .replace(/^\s*\/\/.*$/gm, " ");
+  assert.doesNotMatch(home, /labEntries|lib\/lab|Current lab/i, "the lab belongs in internal SSOT, not the homepage");
+  assert.doesNotMatch(
     home,
-    /pillar\.href \?/,
-    "the pillar must branch on href so an empty pillar is not a link"
+    /not (yet )?validated|not yet verified|pipeline|Active, not yet linked|rel="sponsored"|pending program|rejected/i,
+    "the homepage must not expose internal status or implementation language"
   );
 });
 

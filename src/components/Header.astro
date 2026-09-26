@@ -1,18 +1,69 @@
 ---
 import { site } from "../site";
+import { categoryPath } from "../lib/categories";
+
+const path = Astro.url.pathname;
+// Category routes come from the registry so a nav item cannot point at a
+// topic page the build does not generate.
+const links = [
+  { href: "/articles/", label: "Decision Guides" },
+  { href: categoryPath("newsletter-email"), label: "Newsletter" },
+  { href: categoryPath("ai-voice"), label: "AI Voice" },
+  { href: "/topics/", label: "Creator Growth" },
+  { href: "/how-we-test/", label: "How We Review" }
+];
+const current = (href: string) => (path === href ? "page" : undefined);
 ---
 
-<header class="site-header">
-  <a class="brand" href="/" aria-label={`${site.name} home`}>
-    <span class="brand-mark" aria-hidden="true">CG</span>
-    <span class="brand-name">{site.name}</span>
-  </a>
-  <nav class="site-nav" aria-label="Primary navigation">
-    <a href="/articles/">Articles</a>
-    <a href="/topics/">Topics</a>
-    <a href="/how-we-test/">How we test</a>
-    <a href="/about/">About</a>
-    <a href="/contact/">Contact</a>
-    <a href="/affiliate-disclosure/">Disclosure</a>
-  </nav>
+<header class="site-header" data-open="false">
+  <div class="site-header-inner">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">CG</span>
+      <span class="brand-name">{site.name}</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" hidden>
+      <span class="nav-toggle-bars" aria-hidden="true"></span>
+      <span>Menu</span>
+    </button>
+    <nav id="primary-nav" class="site-nav" aria-label="Primary navigation">
+      {links.map((link) => (
+        <a href={link.href} aria-current={current(link.href)}>{link.label}</a>
+      ))}
+      <a class="nav-search" href="/articles/#search">
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
+          <circle cx="8.5" cy="8.5" r="5.5" />
+          <path d="m13 13 4.5 4.5" />
+        </svg>
+        <span>Search</span>
+      </a>
+    </nav>
+  </div>
 </header>
+
+<script is:inline>
+  // Progressive enhancement: without JS the nav simply wraps. With JS, narrow
+  // screens get a one-tap menu button.
+  (function () {
+    var header = document.querySelector(".site-header");
+    var button = header && header.querySelector(".nav-toggle");
+    if (!header || !button) return;
+    header.setAttribute("data-js", "true");
+    button.hidden = false;
+    function set(open) {
+      header.setAttribute("data-open", open ? "true" : "false");
+      button.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    button.addEventListener("click", function () {
+      set(button.getAttribute("aria-expanded") !== "true");
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && button.getAttribute("aria-expanded") === "true") {
+        set(false);
+        button.focus();
+      }
+    });
+    header.querySelectorAll(".site-nav a").forEach(function (link) {
+      link.addEventListener("click", function () { set(false); });
+    });
+  })();
+</script>

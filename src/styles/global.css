@@ -1,5 +1,5 @@
 /* ============================================================================
-   Creator Growth Tools — editorial design system v0.1
+   Creator Growth Tools — editorial design system vNext
    ----------------------------------------------------------------------------
    Direction: a small print review section, not a SaaS landing page.
 
@@ -20,34 +20,31 @@
 :root {
   color-scheme: light;
 
-  /* Paper and ink */
-  --paper: #faf8f3;
-  --paper-deep: #f2eee4;
+  /* Paper and ink. vNext: a brighter warm-white canvas and a charcoal ink,
+     so the page reads as a publication in daylight rather than a green desk. */
+  --paper: #fbfaf6;
+  --paper-deep: #f3f1ea;
   --white: #ffffff;
-  --ink: #16201c;
-  --ink-soft: #35423c;
-  --muted: #66756e;
+  --ink: #141719;
+  --ink-soft: #363c40;
+  --muted: #5d6569;
 
   /* Hairlines */
-  --line: #ded8ca;
-  --line-strong: #b6ae99;
+  --line: #e3e0d7;
+  --line-strong: #c2bdb0;
 
-  /* Rationed colour */
-  --accent: #1f5f48;
-  --accent-hot: #164835;
+  /* Rationed colour. The link/action colour is a deep teal that clears 4.5:1
+     on paper; mint and cyan are surface tints only and never carry text. The
+     pale pink belongs to Shiori and nothing else. */
+  --accent: #0b625f;
+  --accent-hot: #07403e;
+  --mint: #cdeee3;
+  --mint-soft: #e9f7f1;
+  --cyan: #c4e9ef;
+  --cyan-soft: #e7f5f7;
+  --shiori: #f5d6dc;
+  --shiori-soft: #fcedf0;
   --mark: #7d5a10;
-
-  /* The stage: one high-contrast moment at the top of the site. The ink is the
-     body ink pushed to near-black in the same green family, so the dark slab
-     reads as the same publication rather than a bolted-on hero. The signal is
-     warm gold — an editorial/print accent. Mint or violet on black is the
-     current generated-landing-page default and is deliberately avoided. */
-  --stage-ink: #0c1411;
-  --stage-ink-lift: #16241e;
-  --stage-paper: #f4f2ec;
-  --stage-muted: #9aa8a1;
-  --stage-line: #2a3a33;
-  --signal: #e3bd7a;
 
   /* Type voices */
   --display: "Iowan Old Style", "Palatino Linotype", Palatino, Charter, Georgia,
@@ -86,74 +83,99 @@ a:hover {
 /* ---------------------------------------------------------------- masthead */
 
 .site-header {
-  max-width: var(--max);
+  position: relative;
+  z-index: 20;
+  background: color-mix(in srgb, var(--paper) 92%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+
+.site-header-inner {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 22px 24px 18px;
+  padding: 14px 24px;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   gap: 24px;
-  border-bottom: 1px solid var(--line);
 }
 
 .brand {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   text-decoration: none;
   color: var(--ink);
+  min-height: 44px;
 }
 
-/* A typographic monogram. A gradient chip here would say "AI startup" before
-   a single word of the site was read. */
+/* A typographic monogram on a soft square. A gradient chip here would say
+   "AI startup" before a single word of the site was read. */
 .brand-mark {
-  font-family: var(--display);
-  font-size: 1.05rem;
-  font-weight: 700;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  font-family: var(--ui);
+  font-size: 0.8rem;
+  font-weight: 800;
   letter-spacing: 0.02em;
   color: var(--paper);
   background: var(--ink);
-  padding: 3px 7px 4px;
-  line-height: 1;
+  box-shadow: inset 0 -3px 0 var(--mint);
 }
 
 .brand-name {
-  font-family: var(--display);
-  font-size: 1.22rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--ui);
+  font-size: 1.02rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
 }
 
 .site-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 20px;
-  align-items: baseline;
+  gap: 2px 6px;
+  align-items: center;
 }
 
 .site-nav a {
-  font-family: var(--mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 550;
+  color: var(--ink-soft);
   text-decoration: none;
-  /* Measured at 23px tall, a pixel under the 24px minimum target size. The
-     underline stays where it was; the extra height is above the text. */
-  display: inline-block;
-  padding-top: 3px;
-  padding-bottom: 2px;
-  border-bottom: 1px solid transparent;
+  padding: 10px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.site-nav a:hover {
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
   color: var(--ink);
-  border-bottom-color: var(--ink);
+  background: var(--paper-deep);
+}
+
+.nav-search {
+  border: 1px solid var(--line);
+  margin-left: 4px;
+}
+
+.nav-search svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.nav-toggle {
+  display: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .site-nav a {
-    transition: color 140ms ease, border-color 140ms ease;
+    transition: color 140ms ease, background-color 140ms ease;
   }
 }
 
@@ -170,371 +192,6 @@ a:hover {
 
 .band + .band {
   padding-top: 0;
-}
-
-/* ------------------------------------------------------------------ stage */
-
-/* The stage is the site's single contrast moment: a dark slab carrying the
-   question the site exists to answer, plus the one instrument that shows the
-   site is a comparison desk rather than a blog. Everything below it returns to
-   paper. No image, no web font, no gradient wash — the impact is scale,
-   inversion, and one rationed signal colour. */
-.stage {
-  position: relative;
-  isolation: isolate;
-  background: var(--stage-ink);
-  color: var(--stage-paper);
-  border-bottom: 1px solid var(--stage-line);
-  overflow: hidden;
-}
-
-/* Hero media layer.
-   ----------------------------------------------------------------------------
-   Sits behind the hairline field, so the field stops being the background and
-   becomes a scrim over footage. Nothing here changes the stage when no asset
-   is registered: without `data-media="true"` none of these rules apply and the
-   field renders exactly as designed.
-
-   The poster is painted on the section itself, so `prefers-reduced-motion` can
-   drop the video element and leave a still frame rather than a black box. */
-.stage[data-media="true"] {
-  background-color: var(--stage-ink);
-  background-image: var(--stage-poster, none);
-  background-size: cover;
-  background-position: center;
-}
-
-.stage-media {
-  position: absolute;
-  inset: 0;
-  z-index: -3;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Frame the subject's head rather than the middle of the plate: the source is
-     composed with her high and right, so a centred cover crop clips the top of
-     the head on tall containers. */
-  object-position: 62% 12%;
-  filter: saturate(0.74) contrast(1.03);
-  pointer-events: none;
-}
-
-/* Directional scrim.
-   ----------------------------------------------------------------------------
-   This is its own layer rather than `.stage-field::after`, which is where it
-   started. `.stage-field` carries `opacity: 0.5` and a bottom mask for the
-   hairline grid; a scrim nested inside it inherited both and rendered at half
-   strength, leaving the headline on mid-grey instead of near-solid ink.
-
-   Copy sits opposite the subject, and that side is taken almost to the stage
-   ink so the headline's contrast never depends on what the footage is doing. */
-.stage[data-media="true"]::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-  background: linear-gradient(
-    to right,
-    var(--stage-ink) 0%,
-    rgba(12, 20, 17, 0.97) 30%,
-    rgba(12, 20, 17, 0.86) 52%,
-    rgba(12, 20, 17, 0.58) 78%,
-    rgba(12, 20, 17, 0.46) 100%
-  );
-}
-
-.stage[data-media="true"]:has(.stage-media[data-subject="left"])::before {
-  background: linear-gradient(
-    to left,
-    var(--stage-ink) 0%,
-    rgba(12, 20, 17, 0.97) 30%,
-    rgba(12, 20, 17, 0.86) 52%,
-    rgba(12, 20, 17, 0.58) 78%,
-    rgba(12, 20, 17, 0.46) 100%
-  );
-}
-
-/* On a phone the stage is narrow and very tall. Filling it with `cover` keeps
-   only about a fifth of the plate's width: at the desktop framing that fifth
-   lands on empty wall and the subject falls off the edge entirely, and tracking
-   her instead magnifies her into a face the headline then has to sit on.
-   Neither is the composition that was shot.
-
-   So the media becomes a band across the top. The shorter box halves the
-   magnification — she reads as a figure in a room again — and the mask
-   dissolves the band into the ink before the copy starts. */
-@media (max-width: 860px) {
-  .stage-media {
-    height: 46%;
-    bottom: auto;
-    object-position: 74% 14%;
-    mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 100%);
-  }
-
-  .stage[data-media="true"]::before,
-  .stage[data-media="true"]:has(.stage-media[data-subject="left"])::before {
-    background: linear-gradient(
-      to bottom,
-      rgba(12, 20, 17, 0.28) 0%,
-      rgba(12, 20, 17, 0.62) 20%,
-      rgba(12, 20, 17, 0.9) 38%,
-      var(--stage-ink) 56%
-    );
-  }
-}
-
-.stage[data-media="true"]:has(.stage-media[data-subject="left"]) .stage-media {
-  object-position: 38% 12%;
-}
-
-@media (max-width: 860px) {
-  .stage[data-media="true"]:has(.stage-media[data-subject="left"]) .stage-media {
-    object-position: 20% 6%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stage-media {
-    display: none;
-  }
-}
-
-/* Hairline field: a faint engineering grid with a single soft pool of light
-   behind the headline. Drawn in CSS, so it costs no request and no layout. */
-.stage-field {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    radial-gradient(80ch 46ch at 18% 8%, rgba(227, 189, 122, 0.13), transparent 68%),
-    linear-gradient(to right, var(--stage-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--stage-line) 1px, transparent 1px);
-  background-size: auto, 104px 104px, 104px 104px;
-  opacity: 0.5;
-  mask-image: linear-gradient(to bottom, #000 0%, #000 72%, rgba(0, 0, 0, 0.25) 100%);
-}
-
-.stage-inner {
-  position: relative;
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 72px 24px 68px;
-  display: grid;
-  grid-template-columns: minmax(0, 1.32fr) minmax(288px, 0.68fr);
-  gap: 56px;
-  align-items: end;
-}
-
-.stage-eyebrow {
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-  margin: 0 0 22px;
-}
-
-.stage-title {
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: clamp(2.6rem, 6.6vw, 4.5rem);
-  line-height: 1.02;
-  letter-spacing: -0.032em;
-  color: var(--stage-paper);
-  margin: 0 0 24px;
-  max-width: 15ch;
-  text-wrap: balance;
-}
-
-/* The one word the whole proposition turns on. */
-.stage-title em {
-  font-style: italic;
-  color: var(--signal);
-}
-
-.stage-dek {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #cdd7d1;
-  margin: 0 0 32px;
-  max-width: 52ch;
-}
-
-.stage-actions {
-  display: flex;
-  align-items: center;
-  gap: 26px;
-  flex-wrap: wrap;
-}
-
-/* Paper on ink: the highest-contrast action on the site, and the only place
-   the inversion is used. Specificity is raised deliberately because the shared
-   .button rule is defined later in this file. */
-.stage .button.button-lead {
-  background: var(--stage-paper);
-  border-color: var(--stage-paper);
-  color: var(--stage-ink);
-}
-
-.stage .button.button-lead:hover {
-  background: var(--signal);
-  border-color: var(--signal);
-  color: var(--stage-ink);
-}
-
-.stage-secondary {
-  font-family: var(--mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-  text-decoration-color: var(--stage-line);
-}
-
-.stage-secondary:hover {
-  color: var(--signal);
-}
-
-/* ---------------------------------------------------------------- matchup */
-
-/* The instrument. Every value in it is counted from the article collection at
-   build time — it is the site's real coverage, not an illustration of it. */
-.matchup {
-  border: 1px solid var(--stage-line);
-  background: linear-gradient(var(--stage-ink-lift), rgba(12, 20, 17, 0.6));
-  padding: 24px 24px 20px;
-}
-
-.matchup-kicker {
-  font-family: var(--mono);
-  font-size: 0.64rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-  margin: 0 0 16px;
-}
-
-.matchup-pair {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 10px;
-  font-family: var(--display);
-  font-size: clamp(1.5rem, 3.4vw, 1.95rem);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--stage-paper);
-  text-decoration: none;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--stage-line);
-}
-
-.matchup-pair:hover {
-  color: var(--signal);
-}
-
-.matchup-pair:hover .matchup-versus {
-  border-color: var(--signal);
-  color: var(--signal);
-}
-
-.matchup-versus {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-  border: 1px solid var(--stage-line);
-  border-radius: 999px;
-  padding: 3px 9px;
-  transform: translateY(-0.22em);
-}
-
-.matchup-meta {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin: 16px 0 20px;
-}
-
-.matchup-meta dt {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  line-height: 1.3;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-  /* Two lines' worth, so a wrapping label cannot push its reading out of line
-     with the one beside it. */
-  min-height: 2.6em;
-  margin-bottom: 4px;
-}
-
-.matchup-meta dd {
-  margin: 0;
-  font-family: var(--mono);
-  font-size: 1.02rem;
-  color: var(--stage-paper);
-}
-
-.coverage {
-  border-top: 1px solid var(--stage-line);
-  padding-top: 16px;
-}
-
-.coverage-head {
-  font-family: var(--mono);
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-  margin: 0 0 12px;
-}
-
-.coverage ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 22px;
-}
-
-.coverage li {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-}
-
-.coverage-count {
-  font-family: var(--mono);
-  font-size: 1.15rem;
-  color: var(--signal);
-  line-height: 1;
-}
-
-.coverage-name {
-  font-size: 0.86rem;
-  color: #c2cec8;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .stage-lede,
-  .matchup {
-    animation: rise 560ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
-  }
-
-  .matchup {
-    animation-delay: 110ms;
-  }
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
 }
 
 /* ------------------------------------------------------------------- type */
@@ -608,330 +265,6 @@ h3 {
   letter-spacing: 0.07em;
   text-transform: uppercase;
   white-space: nowrap;
-}
-
-/* ----------------------------------------------------------- pillars */
-
-/* The four ways in, as a ruled rail rather than four bordered cards. The rail
-   sits directly under the stage and inherits its ink, so the dark region reads
-   as one masthead block instead of a hero with a strip bolted beneath it. */
-.pillars {
-  background: var(--stage-ink);
-  border-bottom: 1px solid var(--line);
-}
-
-.pillars ul {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 0 24px 30px;
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1px;
-  background: var(--stage-line);
-  border-top: 1px solid var(--stage-line);
-}
-
-.pillar {
-  background: var(--stage-ink);
-  padding: 20px 18px 18px;
-}
-
-.pillar a,
-.pillar > div {
-  display: block;
-  text-decoration: none;
-  height: 100%;
-}
-
-.pillar-name {
-  display: flex;
-  align-items: baseline;
-  gap: 10px;
-  font-family: var(--display);
-  font-size: 1.22rem;
-  letter-spacing: -0.015em;
-  color: var(--stage-paper);
-  margin-bottom: 6px;
-}
-
-/* Four equal columns imply four destinations. A pillar with nothing behind it
-   says so on its own name, so the rail reads as a roadmap with one item still
-   closed rather than as a nav with a broken link. */
-.pillar-flag {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  /* The parent is dimmed as a group, and a child cannot opt out of group
-     opacity — so the flag is built on the lightest ground available to survive
-     that compositing and still clear 4.5:1 against the stage. */
-  color: var(--stage-ink);
-  background: var(--signal);
-  border-radius: 2px;
-  padding: 2px 7px;
-  white-space: nowrap;
-}
-
-.pillar a:hover .pillar-name {
-  color: var(--signal);
-}
-
-.pillar-blurb {
-  display: block;
-  font-size: 0.83rem;
-  line-height: 1.5;
-  color: #b3c0b9;
-  margin-bottom: 12px;
-}
-
-.pillar-state {
-  display: block;
-  font-family: var(--mono);
-  font-size: 0.63rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-}
-
-.pillar a .pillar-state::after {
-  content: " \2192";
-  color: var(--signal);
-}
-
-/* A pillar with nothing published is dimmed and is not a link. It is shown
-   because the shape of the site is honest information; it is not dressed up
-   as a destination that exists. */
-/* Dimmed enough to read as "not open", not so far that its own text drops
-   below contrast once the group is composited over the stage. */
-.pillar[data-open="false"] {
-  opacity: 0.78;
-}
-
-/* --------------------------------------------------------------- lab */
-
-/* The proof section: what the studio is actually building. Dark again, so the
-   page reads ink -> paper -> ink and the Lab lands as the second event rather
-   than another band of text. */
-.lab {
-  background: var(--stage-ink);
-  color: var(--stage-paper);
-  border-top: 1px solid var(--stage-line);
-}
-
-.lab-inner {
-  max-width: var(--max);
-  margin: 0 auto;
-  padding: 52px 24px 56px;
-}
-
-.section-head-dark {
-  border-bottom-color: var(--stage-line);
-}
-
-.section-head-dark h2 {
-  color: var(--stage-paper);
-}
-
-.lab-note {
-  font-family: var(--mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--stage-muted);
-}
-
-.lab-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 34px;
-}
-
-.lab-entry {
-  border-top: 1px solid var(--stage-line);
-  padding-top: 18px;
-}
-
-.lab-entry-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 14px;
-  margin-bottom: 10px;
-}
-
-.lab-entry h3 {
-  font-family: var(--display);
-  font-size: 1.28rem;
-  letter-spacing: -0.018em;
-  color: var(--stage-paper);
-  margin: 0;
-}
-
-/* The status is the honest part of this section and is typed as evidence, not
-   styled as a badge. `unverified` is deliberately the loudest of the three. */
-.lab-status {
-  flex: none;
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border: 1px solid var(--stage-line);
-  color: var(--stage-muted);
-  white-space: nowrap;
-}
-
-.lab-status[data-status="running"] {
-  color: var(--signal);
-  border-color: rgba(227, 189, 122, 0.45);
-}
-
-.lab-status[data-status="unverified"] {
-  color: #e8b6a0;
-  border-color: rgba(232, 182, 160, 0.45);
-}
-
-.lab-premise {
-  margin: 0 0 16px;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #cdd7d1;
-}
-
-/* The workflow chain. Stages are separated by a drawn arrow rather than a
-   character, so it survives wrapping on a phone. */
-.chain {
-  list-style: none;
-  margin: 0 0 16px;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 6px;
-  counter-reset: stage;
-}
-
-.chain li {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--stage-paper);
-  border: 1px solid var(--stage-line);
-  background: var(--stage-ink-lift);
-  padding: 5px 9px;
-}
-
-.chain li:not(:last-child)::after {
-  content: "";
-  width: 12px;
-  height: 1px;
-  background: var(--signal);
-  opacity: 0.7;
-}
-
-.lab-status-note {
-  margin: 0;
-  font-size: 0.86rem;
-  line-height: 1.6;
-  color: var(--stage-muted);
-}
-
-/* -------------------------------------------------------- method band */
-
-/* Deliberately not a three-card grid: the columns are separated by a rule that
-   runs to the top of each, so the band reads as a printed page's standfirst
-   row. A uniform bordered-card triptych is the strongest generated-site tell. */
-.band-method {
-  background: var(--paper-deep);
-  border-bottom: 1px solid var(--line);
-  padding-top: 46px;
-  padding-bottom: 44px;
-}
-
-.band-method + .band {
-  padding-top: 52px;
-}
-
-.method {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 34px;
-}
-
-.method li {
-  border-top: 2px solid var(--ink);
-  padding-top: 14px;
-}
-
-.method li:nth-child(2) {
-  border-top-color: var(--accent);
-}
-
-.method li:nth-child(3) {
-  border-top-color: var(--mark);
-}
-
-.method h3 {
-  font-family: var(--ui);
-  font-size: 0.82rem;
-  font-weight: 650;
-  letter-spacing: 0.02em;
-  margin: 0 0 8px;
-}
-
-.method p {
-  margin: 0;
-  font-size: 0.94rem;
-  color: var(--ink-soft);
-  line-height: 1.6;
-}
-
-.method-stamp {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-end;
-  gap: 10px;
-  margin: 26px 0 0;
-  font-family: var(--mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.method-stamp strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-
-/* --------------------------------------------------------- quiet band */
-
-/* Disclosure lives here — present, complete, and linked, but at the foot of
-   the page rather than in the hero. Compliance is unchanged; only its visual
-   dominance is. The per-article label and /affiliate-disclosure/ are the
-   binding surfaces and neither is weakened. */
-.band-quiet {
-  border-top: 1px solid var(--line);
-  padding-top: 30px;
-  padding-bottom: 46px;
-}
-
-.colophon-line {
-  margin: 0;
-  max-width: 76ch;
-  font-size: 0.88rem;
-  line-height: 1.6;
-  color: var(--muted);
 }
 
 /* -------------------------------------------------------------- entries */
@@ -1384,14 +717,14 @@ th {
 
 .site-footer {
   border-top: 1px solid var(--line);
-  margin-top: 40px;
+  margin-top: 0;
   background: var(--paper-deep);
 }
 
 .colophon {
-  max-width: var(--max);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 34px 24px 40px;
+  padding: 44px 24px 48px;
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: 28px 40px;
@@ -1401,51 +734,88 @@ th {
 
 .colophon p {
   margin: 0 0 8px;
-  max-width: 52ch;
+  max-width: 56ch;
 }
 
-.colophon-operator {
+.colophon-brand {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.colophon-line {
   color: var(--ink-soft);
+  margin-bottom: 16px !important;
 }
 
 .colophon nav {
   display: grid;
-  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 4px 28px;
   align-content: start;
 }
 
 .colophon nav a {
-  font-family: var(--mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 550;
+  color: var(--ink-soft);
   text-decoration: none;
+  padding: 8px 0;
   width: fit-content;
-  border-bottom: 1px solid transparent;
 }
 
 .colophon nav a:hover {
   color: var(--ink);
-  border-bottom-color: var(--ink);
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------- guide search */
+
+.guide-search {
+  margin: 28px 0 8px;
+  max-width: 520px;
+}
+
+.guide-search label {
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 650;
+  margin-bottom: 6px;
+}
+
+.guide-search input {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  padding: 12px 16px;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--ink);
+}
+
+.guide-search input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.guide-search input:disabled {
+  opacity: 0.6;
+}
+
+.guide-search-status {
+  margin: 6px 0 0;
+  min-height: 1.4em;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
 /* --------------------------------------------------------------- a11y */
 
-:where(a, .button, summary):focus-visible {
+:where(a, button, .button, summary):focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
-}
-
-/* The default ring is body ink. On the two dark sections that is near-black on
-   near-black — a focus indicator you cannot see is the same as not having one.
-   Both ink sections therefore invert the ring to the signal colour, which
-   clears 3:1 against --stage-ink. */
-.stage :where(a, .button, summary):focus-visible,
-.pillars :where(a, .button, summary):focus-visible,
-.lab :where(a, .button, summary):focus-visible {
-  outline-color: var(--signal);
-  outline-offset: 4px;
 }
 
 .skip-link {
@@ -1464,26 +834,74 @@ th {
 
 /* -------------------------------------------------------------- mobile */
 
-@media (max-width: 860px) {
-  .stage-inner {
-    grid-template-columns: 1fr;
-    gap: 34px;
-    padding: 54px 24px 48px;
-    align-items: start;
+@media (max-width: 960px) {
+  /* With JS the nav collapses behind a full-width menu button; without JS it
+     simply wraps under the brand. */
+  .site-header[data-js="true"] .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 16px;
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 650;
+    color: var(--ink);
+    background: var(--white);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    cursor: pointer;
   }
 
-  .stage-title {
-    max-width: 18ch;
+  .nav-toggle-bars,
+  .nav-toggle-bars::before,
+  .nav-toggle-bars::after {
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 2px;
+    position: relative;
   }
 
-  .lab-list {
-    grid-template-columns: 1fr;
-    gap: 30px;
+  .nav-toggle-bars::before,
+  .nav-toggle-bars::after {
+    content: "";
+    position: absolute;
+    left: 0;
   }
 
-  .method {
+  .nav-toggle-bars::before { top: -5px; }
+  .nav-toggle-bars::after { top: 5px; }
+
+  .site-header[data-open="true"] .nav-toggle-bars { background: transparent; }
+  .site-header[data-open="true"] .nav-toggle-bars::before { top: 0; transform: rotate(45deg); }
+  .site-header[data-open="true"] .nav-toggle-bars::after { top: 0; transform: rotate(-45deg); }
+
+  .site-header-inner {
+    flex-wrap: wrap;
+  }
+
+  .site-header[data-js="true"] .site-nav {
+    display: none;
+  }
+
+  .site-header[data-js="true"][data-open="true"] .site-nav {
+    display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 26px;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 0 12px;
+  }
+
+  .site-header[data-open="true"] .site-nav a {
+    min-height: 52px;
+    padding: 12px 14px;
+    font-size: 1rem;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    margin: 0;
   }
 
   .colophon {
@@ -1496,75 +914,16 @@ th {
   .article,
   .article-list,
   .band {
-    padding: 34px 20px;
+    padding: 34px 16px;
   }
 
-  /* Tighter on phones, which is the width we design for first, where
-     the primary action needs to be reachable without a long scroll. The stage
-     keeps its scale — the headline is the reason the page works on a phone —
-     but loses vertical padding so the CTA stays close to the fold. */
-  .stage-inner {
-    padding: 34px 20px 36px;
-    gap: 26px;
+  .site-header-inner {
+    padding: 10px 16px;
+    gap: 8px 12px;
   }
 
-  .stage-title {
-    font-size: clamp(2.15rem, 10.4vw, 2.9rem);
-    max-width: 14ch;
-  }
-
-  .stage-dek {
-    font-size: 1rem;
-  }
-
-  .stage-actions {
-    gap: 16px;
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .stage-secondary {
-    text-align: center;
-  }
-
-  .matchup {
-    padding: 20px 18px 18px;
-  }
-
-  /* Two columns at phone width squeezed the blurb to 0.79rem and gave each
-     pillar a cramped tap area. One column per row restores readable copy and
-     a full-width target. */
-  .pillars ul {
-    grid-template-columns: 1fr;
-    padding: 0 20px 24px;
-  }
-
-  .pillar {
-    padding: 14px 14px 13px;
-  }
-
-  .pillar-blurb {
-    font-size: 0.9rem;
-  }
-
-  .lab-inner {
-    padding: 40px 20px 44px;
-  }
-
-  .lab-list {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  /* Three columns at 390px gave one to two words per line. The method reads as
-     a stacked list on a phone. */
-  .method {
-    grid-template-columns: 1fr;
-    gap: 22px;
-  }
-
-  .method-stamp {
-    justify-content: flex-start;
+  .colophon {
+    padding: 36px 16px 40px;
   }
 
   .section-head {
@@ -1574,30 +933,11 @@ th {
 
   h1 {
     font-size: clamp(1.9rem, 8.4vw, 2.35rem);
+    max-width: none;
   }
 
   .dek {
     font-size: 1.02rem;
-  }
-
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 16px 20px 12px;
-  }
-
-  /* Six nav links at 0.72rem with 2px of padding computed well under a 24px
-     tap target. The type stays small so the row still fits, but each link now
-     carries its own vertical padding so the target is finger-sized. */
-  .site-nav {
-    gap: 4px 16px;
-  }
-
-  .site-nav a {
-    font-size: 0.78rem;
-    padding-block: 9px;
-    display: inline-block;
   }
 
   .verification-list {
@@ -1617,10 +957,6 @@ th {
 
   .entry-index {
     padding-top: 0;
-  }
-
-  h1 {
-    max-width: none;
   }
 
   .cta {

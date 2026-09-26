@@ -1,0 +1,26 @@
+---
+import { activeShioriMascot } from "../lib/shiori";
+
+type Props = {
+  /** What Shiori says. Short: two to four words. */
+  message: string;
+  class?: string;
+};
+
+const { message, class: className } = Astro.props;
+// SHIORI_MASCOT_ASSET_REQUIRED until an illustration is approved; see src/lib/shiori.ts.
+const mascot = activeShioriMascot();
+---
+
+<div class:list={["shiori", className]} data-mascot={mascot ? "image" : "fallback"}>
+  <p class="shiori-bubble">{message}</p>
+  <span class="shiori-figure" aria-hidden="true">
+    {mascot ? (
+      <img src={mascot.src} width={mascot.width} height={mascot.height} alt="" decoding="async" />
+    ) : (
+      <svg viewBox="0 0 40 40" width="40" height="40" focusable="false">
+        <path d="M13 8h14a2 2 0 0 1 2 2v22l-9-5.5L11 32V10a2 2 0 0 1 2-2Z" />
+      </svg>
+    )}
+  </span>
+</div>

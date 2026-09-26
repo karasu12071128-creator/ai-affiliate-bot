@@ -1,0 +1,50 @@
+---
+import { approvedCardImage, type EditorialCard } from "../lib/editorialMedia";
+
+type Props = {
+  card: EditorialCard;
+  title: string;
+  updated: Date;
+  readingMinutes: number;
+};
+
+const { card, title, updated, readingMinutes } = Astro.props;
+const image = approvedCardImage(card);
+const href = `/${card.slug}/`;
+const updatedIso = updated.toISOString().slice(0, 10);
+const updatedLabel = updated.toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC"
+});
+---
+
+<article class="story">
+  <div class="story-media" data-motif={card.motif}>
+    {image ? (
+      <img
+        src={image.src}
+        width={image.width}
+        height={image.height}
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class="story-art" aria-hidden="true" data-asset-required="ARTICLE_CARD_IMAGE_REQUIRED">
+        <span></span><span></span><span></span>
+      </div>
+    )}
+  </div>
+  <div class="story-body">
+    <p class="story-kicker">{card.kicker}</p>
+    <h3 class="story-title"><a href={href}>{title}</a></h3>
+    <p class="story-decision">{card.decision}</p>
+    <p class="story-meta">
+      <span>Updated <time datetime={updatedIso}>{updatedLabel}</time></span>
+      <span>{readingMinutes} min read</span>
+      <span class="story-arrow" aria-hidden="true">→</span>
+    </p>
+  </div>
+</article>

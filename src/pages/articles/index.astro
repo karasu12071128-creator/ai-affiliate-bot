@@ -20,9 +20,20 @@ const articles = (await getCollection("articles")).sort(
       A deliberately small library. Every entry carries the evidence it was built on and the date
       its facts were last checked.
     </p>
-    <ol class="entries">
+    <div class="guide-search" id="search">
+      <label for="guide-search-input">Search guides</label>
+      <input
+        id="guide-search-input"
+        type="search"
+        placeholder="Try beehiiv, Substack, voice…"
+        autocomplete="off"
+        disabled
+      />
+      <p class="guide-search-status" role="status" aria-live="polite"></p>
+    </div>
+    <ol class="entries" id="guide-list">
       {articles.map((article, index) => (
-        <li class="entry">
+        <li class="entry" data-search={`${article.data.title} ${article.data.description} ${getCategory(article.data.category).name}`.toLowerCase()}>
           <span class="entry-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
           <div>
             <p class="eyebrow">
@@ -43,3 +54,28 @@ const articles = (await getCollection("articles")).sort(
     </ol>
   </section>
 </BaseLayout>
+
+<script is:inline>
+  // Client-side filter over the guides already on this page. No index file,
+  // no request, no dependency. Without JS the input stays disabled and the
+  // full list is shown.
+  (function () {
+    var input = document.getElementById("guide-search-input");
+    var status = document.querySelector(".guide-search-status");
+    var items = Array.prototype.slice.call(document.querySelectorAll("#guide-list > li"));
+    if (!input || !status) return;
+    input.disabled = false;
+    if (location.hash === "#search") input.focus({ preventScroll: true });
+    input.addEventListener("input", function () {
+      var terms = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      var shown = 0;
+      items.forEach(function (item) {
+        var text = item.getAttribute("data-search") || "";
+        var match = terms.every(function (term) { return text.indexOf(term) !== -1; });
+        item.hidden = !match;
+        if (match) shown += 1;
+      });
+      status.textContent = terms.length ? shown + " of " + items.length + " guides" : "";
+    });
+  })();
+</script>

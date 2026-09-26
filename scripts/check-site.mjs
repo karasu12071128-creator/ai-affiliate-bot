@@ -333,11 +333,14 @@ if (existsSync(homepage)) {
       }
     }
   }
-  // The stage must declare its own state honestly: media present iff flagged.
-  const flagged = /<section class="stage" data-media="true"/.test(home);
+  // The hero visual must declare its own state honestly: media present iff flagged.
+  const flagged = /<div class="hero-visual" data-media="true"/.test(home);
+  if (!/<div class="hero-visual" data-media="(true|false)"/.test(home)) {
+    failures.push("/: hero visual frame is missing, so its media state cannot be verified");
+  }
   if (flagged !== stageMedia.length > 0) {
     failures.push(
-      `/: stage data-media flag (${flagged}) disagrees with the media actually shipped (${stageMedia.length})`
+      `/: hero data-media flag (${flagged}) disagrees with the media actually shipped (${stageMedia.length})`
     );
   }
   notes.push(`hero media shipped: ${stageMedia.length}`);

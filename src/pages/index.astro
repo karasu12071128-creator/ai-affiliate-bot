@@ -1,382 +1,218 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import EvidenceMark from "../components/EvidenceMark.astro";
-import { categories, categoryPath } from "../lib/categories";
-import { labEntries, labStatusLabel } from "../lib/lab";
+import ShioriGuide from "../components/ShioriGuide.astro";
+import ArticleCard from "../components/ArticleCard.astro";
+import { categoryPath } from "../lib/categories";
 import { activeHeroMedia } from "../lib/heroMedia";
-import { operator } from "../site";
+import { editorialCards } from "../lib/editorialMedia";
+import "../styles/home.css";
 
-// Behind the stage's CSS field, when an approved asset exists. The stage is a
-// finished design without it; see src/lib/heroMedia.ts.
-const heroMedia = activeHeroMedia();
+// Rendered inside the hero's visual frame when an approved asset framed for it
+// exists. Until then the frame is the static decision visual below
+// (HERO_VIDEO_ASSET_REQUIRED; see src/lib/heroMedia.ts).
+const heroMedia = activeHeroMedia("hero-visual");
 
-const articles = (await getCollection("articles")).sort(
-  (a, b) => b.data.updatedDate.valueOf() - a.data.updatedDate.valueOf()
-);
-const lastVerified = articles
-  .map((article) => article.data.lastVerifiedDate)
-  .sort()
-  .at(-1);
-
+const articles = await getCollection("articles");
 const bySlug = new Map(articles.map((article) => [article.slug, article]));
 
-// The entry route into the site, ordered by how a reader actually decides:
-// what am I choosing between, then which one, then is it worth the money.
-const startHere = [
-  {
-    slug: "best-email-marketing-tools-for-creators",
-    context: "If you are still narrowing the field"
-  },
-  {
-    slug: "kit-vs-beehiiv",
-    context: "If it is down to a straight head-to-head"
-  },
-  {
-    slug: "beehiiv-review",
-    context: "If you want one platform examined in detail"
-  }
-]
-  .map((item) => ({ ...item, article: bySlug.get(item.slug) }))
-  .filter((item) => item.article !== undefined);
+// Reading time is derived from the article body at build time, never typed.
+const readingMinutes = (body: string) =>
+  Math.max(1, Math.round(body.split(/\s+/).filter(Boolean).length / 230));
 
-const primaryRead = bySlug.get("best-email-marketing-tools-for-creators") ?? articles[0];
+// Only cards whose article exists are shown; a card cannot outlive its page.
+const stories = editorialCards
+  .map((card) => ({ card, article: bySlug.get(card.slug) }))
+  .filter((item) => item.article !== undefined)
+  .map(({ card, article }) => ({
+    card,
+    title: article!.data.title,
+    updated: article!.data.updatedDate,
+    minutes: readingMinutes(article!.body)
+  }));
 
-// ---------------------------------------------------------------------------
-// The hero's visual hook is the site's own coverage, rendered as an instrument
-// rather than described in a sentence. Every figure below is counted from the
-// article collection at build time, so it cannot drift from what we publish and
-// nothing here is a hand-typed marketing number.
-// ---------------------------------------------------------------------------
-const productNames: Record<string, string> = {
-  kit: "Kit",
-  beehiiv: "beehiiv",
-  activecampaign: "ActiveCampaign",
-  hubspot: "HubSpot"
-};
+// Every decision card points at a page that exists today. A decision with no
+// dedicated guide goes to the nearest real one, and the mapping is stated here
+// so it can be reviewed: "Grow on YouTube" lands on the ElevenLabs guide
+// because it is the page that covers monetized YouTube Shorts.
+const decisions = [
+  { key: "start", label: "Start a newsletter", hint: "Pick your first platform", href: "/best-newsletter-platforms/", accent: "mint" },
+  { key: "leave", label: "Leave beehiiv", hint: "Alternatives by reason", href: "/beehiiv-alternatives/", accent: "cyan" },
+  { key: "compare", label: "Compare two platforms", hint: "Kit vs beehiiv, head to head", href: "/kit-vs-beehiiv/", accent: "mint" },
+  { key: "voice", label: "Add AI voice", hint: "AI voice guides", href: categoryPath("ai-voice"), accent: "pink" },
+  { key: "youtube", label: "Grow on YouTube", hint: "Narration for Shorts", href: "/elevenlabs-for-short-form-video/", accent: "cyan" }
+].filter((item) => item.href.startsWith("/topics/") || bySlug.has(item.href.replace(/\//g, "")));
 
-const coverageCount = new Map<string, number>();
-for (const article of articles) {
-  for (const product of article.data.products) {
-    coverageCount.set(product, (coverageCount.get(product) ?? 0) + 1);
-  }
-}
-const coverage = [...coverageCount.entries()]
-  .map(([key, count]) => ({ key, name: productNames[key] ?? key, count }))
-  .sort((a, b) => b.count - a.count);
-
-// The headline matchup is a real article, not a constructed pairing: it appears
-// only because kit-vs-beehiiv exists and covers exactly these two products.
-//
-// The panel makes no popularity claim. `public/analytics.js` dispatches a local
-// event and persists nothing, so there is no readership data to rank by. It
-// also makes no "most covered" claim: `products` tracks only the four keys in
-// the affiliate registry, while the articles discuss more tools than that, so a
-// superlative drawn from these counts would describe the registry rather than
-// our coverage. The kicker states a plain derived count instead.
-const matchupArticle = bySlug.get("kit-vs-beehiiv");
-const matchupPair = matchupArticle?.data.products.map((p) => productNames[p] ?? p) ?? [];
-const matchupCovered = matchupArticle
-  ? articles.filter((article) =>
-      matchupArticle.data.products.every((product) => article.data.products.includes(product))
-    ).length
-  : 0;
-
-const articleCountByCategory = new Map<string, number>();
-for (const article of articles) {
-  articleCountByCategory.set(
-    article.data.category,
-    (articleCountByCategory.get(article.data.category) ?? 0) + 1
-  );
-}
-
-// The homepage shows the topics we actually publish in. Planned topics are
-// named in one line underneath rather than given equal visual weight — four
-// empty blocks reading "nothing published yet" would make an honest roadmap
-// look like an empty site. The full list, with status, lives on /topics/.
-const liveTopics = categories
-  .map((category) => ({ ...category, count: articleCountByCategory.get(category.key) ?? 0 }))
-  .filter((category) => category.count > 0);
-const plannedTopics = categories.filter(
-  (category) => (articleCountByCategory.get(category.key) ?? 0) === 0
-);
-
-// The four ways into the site. Each one states its real state: a pillar with
-// nothing published says so and does not become a link, because a nav item
-// leading to an empty room is the same mistake as an empty component.
-const pillars = [
-  {
-    key: "explore",
-    name: "Explore",
-    blurb: "Tools by category, and what we have not covered yet.",
-    href: "/topics/",
-    state: `${liveTopics.length} live \u00b7 ${plannedTopics.length} planned`
-  },
-  {
-    key: "compare",
-    name: "Compare",
-    blurb: "Head-to-head decisions between the tools we cover.",
-    href: "/articles/",
-    state: `${articles.length} comparisons`
-  },
-  {
-    key: "build",
-    name: "Build",
-    blurb: "How these tools fit together in a working setup.",
-    href: null,
-    state: "First workflow in progress"
-  },
-  {
-    key: "lab",
-    name: "Lab",
-    blurb: "What the studio is building and testing right now.",
-    href: "#lab",
-    state: `${labEntries.length} open`
-  }
-];
-
-// How the comparisons are built. Kept to three, and phrased as what we do
-// rather than as claims about how trustworthy we are.
 const method = [
-  {
-    heading: "Source notes on every article",
-    body: "Pricing and plan limits come from the vendor's own pages, with the date we last checked them."
-  },
-  {
-    heading: "Evidence grade at the top",
-    body: "Each comparison states what its claims are built on before the first verdict."
-  },
-  {
-    heading: "What we could not verify",
-    body: "Anything we have not checked is marked as unverified and stays out of the conclusion."
-  }
+  { step: "01", title: "Start with the workflow.", body: "What you publish, how often, and what you need the tool to do." },
+  { step: "02", title: "Identify the tradeoffs.", body: "Price, ownership, and effort move together. We name which one you give up." },
+  { step: "03", title: "Verify material facts.", body: "Pricing and plan limits are checked against the vendor's own pages and dated." },
+  { step: "04", title: "Show where each option fits.", body: "A clear rule for who each tool suits, including tools we earn nothing from." }
 ];
 ---
 
 <BaseLayout
-  title="Which newsletter tool is worth paying for?"
-  description="Independent newsletter and email platform comparisons for creators and one-person businesses — checked against the vendors' own pricing, with the evidence behind every verdict stated on the page."
+  title="Find the tool that fits how you actually work"
+  description="Independent decision guides for newsletter, audience growth, AI voice, and creator workflows. Choose by fit, not hype."
 >
-  <section
-    class="stage"
-    data-media={heroMedia ? "true" : "false"}
-    style={heroMedia ? `--stage-poster: url("${heroMedia.poster}")` : undefined}
-  >
-    {heroMedia && (
-      <video
-        class="stage-media"
-        src={heroMedia.src}
-        poster={heroMedia.poster}
-        width={heroMedia.width}
-        height={heroMedia.height}
-        data-subject={heroMedia.subjectSide}
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="metadata"
-        aria-hidden="true"
-        tabindex="-1"
-      />
-    )}
-    <div class="stage-field" aria-hidden="true"></div>
-    <div class="stage-inner">
-      <div class="stage-lede">
-        <p class="stage-eyebrow">
-          Independent &middot; Creator tool comparisons
-          {plannedTopics.length > 0 && ` · ${plannedTopics.length} more categories in progress`}
-        </p>
-        <h1 class="stage-title">
-          Which newsletter tool is <em>actually</em> worth paying for?
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="kicker">Independent guides for creators</p>
+        <h1 id="hero-title" class="hero-title">
+          Find the tool that fits how you <span class="hero-em">actually</span> work.
         </h1>
-        <p class="stage-dek">
-          We take one category at a time and finish it properly. Newsletter and email
-          first — checked against the vendors' own pricing, with the evidence behind
-          every verdict stated on the page.
+        <p class="hero-dek">
+          Independent decision guides for newsletter, audience growth, AI voice, and creator
+          workflows.
         </p>
-        <div class="stage-actions">
-          {primaryRead && (
-            <a class="button button-lead" href={`/${primaryRead.slug}/`}>
-              Start with the field guide
-            </a>
-          )}
-          <a class="stage-secondary" href="/articles/">
-            All {articles.length} comparisons
-          </a>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#decide">Find my fit</a>
+          <a class="btn btn-quiet" href="/articles/">Browse comparisons</a>
         </div>
+        <ul class="hero-points">
+          <li>Independent research</li>
+          <li>Practical decision guides</li>
+          <li>Built for real creators</li>
+        </ul>
       </div>
 
-      {matchupArticle && matchupPair.length === 2 && (
-        <aside class="matchup" aria-label="Coverage summary">
-          <p class="matchup-kicker">
-            Both covered in {matchupCovered} of our {articles.length} articles
-          </p>
-          <a
-            class="matchup-pair"
-            href={`/${matchupArticle.slug}/`}
-            aria-label={`${matchupPair[0]} versus ${matchupPair[1]} — read the comparison`}
-          >
-            <span class="matchup-name">{matchupPair[0]}</span>
-            <span class="matchup-versus" aria-hidden="true">vs</span>
-            <span class="matchup-name">{matchupPair[1]}</span>
-          </a>
-          <dl class="matchup-meta">
-            <div>
-              <dt>Articles covering both</dt>
-              <dd>{matchupCovered}</dd>
-            </div>
-            <div>
-              <dt>Facts last verified</dt>
-              <dd>{matchupArticle.data.lastVerifiedDate}</dd>
-            </div>
-          </dl>
-          <div class="coverage">
-            <p class="coverage-head">Products we track across articles</p>
-            <ul>
-              {coverage.map((item) => (
-                <li>
-                  <span class="coverage-count">{item.count}</span>
-                  <span class="coverage-name">{item.name}</span>
-                </li>
-              ))}
-            </ul>
+      <div
+        class="hero-visual"
+        data-media={heroMedia ? "true" : "false"}
+        style={heroMedia ? `--hero-poster: url("${heroMedia.poster}")` : undefined}
+      >
+        {heroMedia && (
+          <video
+            class="stage-media"
+            src={heroMedia.src}
+            poster={heroMedia.poster}
+            width={heroMedia.width}
+            height={heroMedia.height}
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-hidden="true"
+            tabindex="-1"
+          />
+        )}
+        <div class="hv-scene" aria-hidden="true">
+          <ul class="hv-noise">
+            <li style="--i:0">Newsletter?</li>
+            <li style="--i:1">AI voice?</li>
+            <li style="--i:2">Automation?</li>
+            <li style="--i:3">Analytics?</li>
+            <li style="--i:4">Which is better?</li>
+          </ul>
+          <div class="hv-panel">
+            <p class="hv-panel-head"><span class="hv-dot"></span>Your decision</p>
+            <ol class="hv-list">
+              <li>Right tool for your goals</li>
+              <li>Side-by-side comparisons</li>
+              <li>Real creator use cases</li>
+              <li>Honest pros and cons</li>
+            </ol>
+            <span class="hv-panel-foot"></span>
           </div>
-        </aside>
-      )}
+        </div>
+        <ShioriGuide message="Start here." class="hero-shiori" />
+      </div>
     </div>
+    <p class="hero-line"><span>Choose by fit, not hype.</span></p>
   </section>
 
-  <nav class="pillars" aria-label="Ways into the site">
-    <ul>
-      {pillars.map((pillar) => (
-        <li class="pillar" data-open={pillar.href ? "true" : "false"}>
-          {pillar.href ? (
-            <a href={pillar.href}>
-              <span class="pillar-name">{pillar.name}</span>
-              <span class="pillar-blurb">{pillar.blurb}</span>
-              <span class="pillar-state">{pillar.state}</span>
+  <section class="section" id="decide" aria-labelledby="decide-title">
+    <div class="section-inner">
+      <p class="kicker">Start with a question</p>
+      <h2 id="decide-title" class="section-title">What are you trying to decide?</h2>
+      <ul class="decisions">
+        {decisions.map((item) => (
+          <li>
+            <a class="decision" href={item.href} data-accent={item.accent}>
+              <span class="decision-icon" aria-hidden="true">
+                {item.key === "start" && (
+                  <svg viewBox="0 0 24 24"><path d="M4 6.5h16v11H4z" /><path d="m4 7 8 6 8-6" /></svg>
+                )}
+                {item.key === "leave" && (
+                  <svg viewBox="0 0 24 24"><path d="M14 5h5v14h-5" /><path d="M4 12h10" /><path d="m10 8 4 4-4 4" /></svg>
+                )}
+                {item.key === "compare" && (
+                  <svg viewBox="0 0 24 24"><path d="M4 5h6v14H4zM14 5h6v14h-6z" /></svg>
+                )}
+                {item.key === "voice" && (
+                  <svg viewBox="0 0 24 24"><path d="M5 10v4M9 7v10M13 4v16M17 8v8M21 11v2" /></svg>
+                )}
+                {item.key === "youtube" && (
+                  <svg viewBox="0 0 24 24"><path d="M3 7.5a2.5 2.5 0 0 1 2.5-2.5h13A2.5 2.5 0 0 1 21 7.5v9a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 16.5z" /><path d="m10 9 5 3-5 3z" /></svg>
+                )}
+              </span>
+              <span class="decision-text">
+                <span class="decision-label">{item.label}</span>
+                <span class="decision-hint">{item.hint}</span>
+              </span>
+              <span class="decision-arrow" aria-hidden="true">→</span>
             </a>
-          ) : (
-            <div>
-              <span class="pillar-name">
-                {pillar.name}
-                <span class="pillar-flag">Not open yet</span>
-              </span>
-              <span class="pillar-blurb">{pillar.blurb}</span>
-              <span class="pillar-state">{pillar.state}</span>
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
-  </nav>
-
-  <section class="band band-method" aria-label="How this site works">
-    <div class="section-head">
-      <h2>Why these comparisons are different</h2>
-      <a href="/how-we-test/">Our review criteria</a>
-    </div>
-    <ul class="method">
-      {method.map((item) => (
-        <li>
-          <h3>{item.heading}</h3>
-          <p>{item.body}</p>
-        </li>
-      ))}
-    </ul>
-    {lastVerified && (
-      <p class="method-stamp">
-        <span>Most recent fact check</span>
-        <strong>{lastVerified}</strong>
-      </p>
-    )}
-  </section>
-
-  <section class="band">
-    <div class="section-head">
-      <h2>Where to start</h2>
-      <a href="/articles/">All articles</a>
-    </div>
-    <ol class="entries">
-      {startHere.map((item, index) => (
-        <li class="entry">
-          <span class="entry-index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
-          <div>
-            <p class="eyebrow">{item.context}</p>
-            <h3><a href={`/${item.article!.slug}/`}>{item.article!.data.title}</a></h3>
-            <p>{item.article!.data.description}</p>
-            <p class="entry-meta">
-              <EvidenceMark grade={item.article!.data.evidence} />
-              <span>Updated {item.article!.data.updatedDate.toISOString().slice(0, 10)}</span>
-            </p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <section class="band">
-    <div class="section-head">
-      <h2>What we cover</h2>
-      <a href="/topics/">All topics</a>
-    </div>
-    <ul class="topics">
-      {liveTopics.map((topic) => (
-        <li class="topic" data-state="live">
-          <h3><a href={categoryPath(topic.key)}>{topic.name}</a></h3>
-          <p>{topic.description}</p>
-          <span class="topic-state">
-            {topic.count} {topic.count === 1 ? "article" : "articles"}
-          </span>
-        </li>
-      ))}
-    </ul>
-    {plannedTopics.length > 0 && (
-      <p class="notice">
-        Extending next into {plannedTopics.map((topic) => topic.name).join(", ")}.
-        Nothing is published in those yet, and <a href="/topics/">topics</a> says so instead of
-        filling them with thin pages.
-      </p>
-    )}
-  </section>
-
-  <section class="lab" id="lab" aria-label="Current lab">
-    <div class="lab-inner">
-      <div class="section-head section-head-dark">
-        <h2>Current lab</h2>
-        <span class="lab-note">What the studio is building with these tools</span>
-      </div>
-      <ul class="lab-list">
-        {labEntries.map((entry) => (
-          <li class="lab-entry">
-            <div class="lab-entry-head">
-              <h3>{entry.title}</h3>
-              <span class="lab-status" data-status={entry.status}>
-                {labStatusLabel[entry.status]}
-              </span>
-            </div>
-            <p class="lab-premise">{entry.premise}</p>
-            {entry.chain.length > 0 && (
-              <ol class="chain" aria-label="Workflow stages">
-                {entry.chain.map((stage) => (
-                  <li>{stage}</li>
-                ))}
-              </ol>
-            )}
-            <p class="lab-status-note">{entry.statusNote}</p>
           </li>
         ))}
       </ul>
     </div>
   </section>
 
-  <section class="band band-quiet">
-    <p class="colophon-line">
-      Published by <a href={operator.url} rel="noopener">{operator.name}</a>, an independent
-      one-person studio. Some outbound links are affiliate links, labeled where they appear and
-      listed in full on <a href="/affiliate-disclosure/">affiliate disclosure</a>. Commission never
-      decides a verdict. Questions and corrections:
-      <a href={`mailto:${operator.email}`}>{operator.email}</a>.
-    </p>
+  <section class="section" aria-labelledby="now-title">
+    <div class="section-inner">
+      <div class="section-row">
+        <div>
+          <p class="kicker">Decision guides</p>
+          <h2 id="now-title" class="section-title">Decisions creators are making now</h2>
+        </div>
+        <a class="text-link" href="/articles/">All {articles.length} guides →</a>
+      </div>
+      <div class="stories">
+        {stories.map((story) => (
+          <ArticleCard
+            card={story.card}
+            title={story.title}
+            updated={story.updated}
+            readingMinutes={story.minutes}
+          />
+        ))}
+      </div>
+    </div>
   </section>
+
+  <section class="section section-method" aria-labelledby="method-title">
+    <div class="section-inner method-grid">
+      <div class="method-lede">
+        <p class="kicker">How we review</p>
+        <h2 id="method-title" class="section-title">
+          We compare tools around decisions, not feature counts.
+        </h2>
+        <a class="text-link" href="/editorial-methodology/">See our methodology →</a>
+      </div>
+      <ol class="steps">
+        {method.map((item) => (
+          <li>
+            <span class="step-num" aria-hidden="true">{item.step}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <aside class="section disclosure-strip" aria-label="How we make money">
+    <div class="section-inner disclosure-inner">
+      <p>
+        Some links on this site are affiliate links. We may earn a commission if you purchase
+        through them, at no extra cost to you. This does not determine which tools we cover or
+        recommend.
+      </p>
+      <a class="text-link" href="/affiliate-disclosure/">How we make money →</a>
+    </div>
+  </aside>
 </BaseLayout>

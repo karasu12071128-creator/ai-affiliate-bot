@@ -5,9 +5,10 @@ import { site, operator } from "../site";
 <footer class="site-footer">
   <div class="colophon">
     <div>
-      <p class="colophon-operator">
-        {site.name} is published by <a href={operator.url} rel="noopener">{operator.name}</a>, an
-        independent one-person studio based in {operator.location}. Editorial contact:
+      <p class="colophon-brand">{site.name}</p>
+      <p class="colophon-line">Choose by fit, not hype.</p>
+      <p>
+        Published by <a href={operator.url} rel="noopener">{operator.name}</a>. Editorial contact:
         <a href={`mailto:${operator.email}`}>{operator.email}</a>.
       </p>
       <p>
@@ -17,11 +18,13 @@ import { site, operator } from "../site";
       <p>&copy; 2026 {operator.name}.</p>
     </div>
     <nav aria-label="Footer navigation">
-      <a href="/how-we-test/">How we test</a>
-      <a href="/editorial-methodology/">Editorial methodology</a>
-      <a href="/affiliate-disclosure/">Affiliate disclosure</a>
-      <a href="/privacy-policy/">Privacy policy</a>
+      <a href="/about/">About</a>
+      <a href="/how-we-test/">How We Review</a>
+      <a href="/editorial-methodology/">Editorial Methodology</a>
+      <a href="/affiliate-disclosure/">How We Make Money</a>
+      <a href="/affiliate-disclosure/">Affiliate Disclosure</a>
       <a href="/contact/">Contact</a>
+      <a href="/privacy-policy/">Privacy</a>
     </nav>
   </div>
 </footer>

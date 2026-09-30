@@ -7,6 +7,7 @@ import ArticleCard from "../components/ArticleCard.astro";
 import { categoryPath } from "../lib/categories";
 import { activeHeroMedia, activeHeroStill } from "../lib/heroMedia";
 import { editorialCards } from "../lib/editorialMedia";
+import { activeShioriMascot } from "../lib/shiori";
 import "../styles/home.css";
 
 // The hero frame plays the approved clip when one is framed for it, else shows
@@ -16,6 +17,15 @@ const heroMedia = activeHeroMedia("hero-visual");
 const heroStill = heroMedia ? null : activeHeroStill();
 const heroMediaLabel =
   "Shiori, the site's guide, among floating creator-tool cards that settle into one clear decision panel.";
+
+// SECOND_SHIORI_VIDEO_SLOT: the brand band near the foot of the page plays a
+// clip registered with placement "brand-band", else shows a static still. It
+// never shows the same still as the hero: when the hero has reverted to the
+// key visual, the band falls back to the transparent mascot instead.
+const brandMedia = activeHeroMedia("brand-band");
+const brandStill = brandMedia ? null : heroMedia ? activeHeroStill() : null;
+const brandMascot = brandMedia || brandStill ? null : activeShioriMascot();
+const brandMediaLabel = "Shiori, the site's guide, in a short looping animation.";
 
 const articles = await getCollection("articles");
 const bySlug = new Map(articles.map((article) => [article.slug, article]));
@@ -79,6 +89,7 @@ const method = [
       <div
         class="hero-visual"
         data-media={heroMedia ? "true" : "false"}
+        data-motion-frame
         style={heroMedia ? `--hero-poster: url("${heroMedia.poster}")` : undefined}
       >
         {heroStill && (
@@ -99,6 +110,7 @@ const method = [
           <div class="hero-media-frame" role="img" aria-label={heroMediaLabel}>
           <video
             class="stage-media"
+            data-motion-video
             src={heroMedia.src}
             poster={heroMedia.poster}
             width={heroMedia.width}
@@ -115,7 +127,7 @@ const method = [
           </div>
         )}
         {heroMedia && (
-          <button class="hero-motion-toggle" type="button" aria-pressed="false" hidden>
+          <button class="hero-motion-toggle motion-toggle" type="button" aria-pressed="false" hidden>
             <span class="hero-motion-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Pause background animation</span>
           </button>
@@ -218,6 +230,78 @@ const method = [
     </div>
   </section>
 
+  <section class="section brand-band" id="brand" aria-labelledby="brand-title">
+    <div class="section-inner brand-grid">
+      <div class="brand-copy">
+        <p class="kicker">Our guide</p>
+        <h2 id="brand-title" class="section-title">Shiori marks where to start.</h2>
+        <p>
+          Shiori (栞) means &ldquo;bookmark&rdquo; in Japanese. On this site she points you to the
+          question worth answering first, then gets out of the way so the tradeoffs can speak.
+        </p>
+        <a class="text-link" href="#decide">Start with a question →</a>
+      </div>
+      <div
+        class:list={["brand-visual", { "brand-visual-mascot": brandMascot }]}
+        data-media={brandMedia ? "true" : "false"}
+        data-motion-frame
+        style={brandMedia ? `--brand-poster: url("${brandMedia.poster}")` : undefined}
+      >
+        {brandMedia && (
+          <div class="brand-media-frame" role="img" aria-label={brandMediaLabel}>
+            <video
+              class="brand-media"
+              data-motion-video
+              data-src={brandMedia.src}
+              poster={brandMedia.poster}
+              width={brandMedia.width}
+              height={brandMedia.height}
+              muted
+              loop
+              playsinline
+              disablepictureinpicture
+              preload="none"
+              aria-hidden="true"
+              tabindex="-1"
+            />
+          </div>
+        )}
+        {brandMedia && (
+          <button class="motion-toggle" type="button" aria-pressed="false" hidden>
+            <span class="hero-motion-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Pause background animation</span>
+          </button>
+        )}
+        {brandStill && (
+          <Picture
+            class="brand-still"
+            src={brandStill.image}
+            formats={["avif", "webp"]}
+            fallbackFormat="jpg"
+            widths={[480, 800, 1200]}
+            sizes="(max-width: 900px) calc(100vw - 32px), 560px"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+        {brandMascot && (
+          <Picture
+            class="brand-mascot"
+            src={brandMascot.image}
+            formats={["avif", "webp"]}
+            fallbackFormat="png"
+            widths={[240, 480]}
+            sizes="240px"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+      </div>
+    </div>
+  </section>
+
   <aside class="section disclosure-strip" aria-label="How we make money">
     <div class="section-inner disclosure-inner">
       <p>
@@ -230,53 +314,59 @@ const method = [
   </aside>
 </BaseLayout>
 
-{heroMedia && (
+{(heroMedia || brandMedia) && (
   <script is:inline>
-    // Hero loop behaviour, progressively enhanced. Without JS the clip simply
-    // autoplays muted with its poster. With JS:
-    // - reduced motion: never play, drop the source so nothing more downloads,
-    //   and leave the poster (the CSS also hides the video element);
-    // - a visible pause/play button (WCAG 2.2.2: motion longer than 5s);
-    // - pause while the hero is off screen.
+    // Looping clips (hero and brand band), progressively enhanced.
+    // Without JS the hero clip autoplays muted over its poster, and the brand
+    // band keeps its poster (its source is only attached by this script).
+    // With JS, for every [data-motion-frame]:
+    // - reduced motion: never play, drop any source so nothing downloads,
+    //   keep the poster (the CSS also hides the video element);
+    // - a pause/play button (WCAG 2.2.2), shown only once the clip plays;
+    // - play only while on screen; a lazy clip gets its source on first view.
     (function () {
-      var video = document.querySelector(".hero-visual .stage-media");
-      var toggle = document.querySelector(".hero-motion-toggle");
-      if (!video) return;
       var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce) {
-        video.removeAttribute("autoplay");
-        video.pause();
-        video.removeAttribute("src");
-        video.load();
-        return;
-      }
-      var userPaused = false;
-      var label = toggle && toggle.querySelector(".visually-hidden");
-      function sync() {
-        if (!toggle) return;
-        toggle.setAttribute("aria-pressed", userPaused ? "true" : "false");
-        label.textContent = userPaused ? "Play background animation" : "Pause background animation";
-      }
-      if (toggle) {
-        // Only offer pause once the clip is really playing. A browser that
-        // cannot decode it keeps the poster and shows no dead control.
-        var reveal = function () { toggle.hidden = false; };
-        if (!video.paused && video.readyState > 2) reveal();
-        video.addEventListener("playing", reveal, { once: true });
-        video.addEventListener("error", function () { toggle.hidden = true; });
-        toggle.addEventListener("click", function () {
-          userPaused = !userPaused;
-          if (userPaused) video.pause(); else video.play().catch(function () {});
-          sync();
-        });
-      }
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (entries) {
-          if (userPaused) return;
-          if (entries[0].isIntersecting) video.play().catch(function () {});
-          else video.pause();
-        }).observe(video);
-      }
+      var frames = document.querySelectorAll("[data-motion-frame]");
+      Array.prototype.forEach.call(frames, function (frame) {
+        var video = frame.querySelector("[data-motion-video]");
+        var toggle = frame.querySelector(".motion-toggle");
+        if (!video) return;
+        if (reduce) {
+          video.removeAttribute("autoplay"); video.pause(); video.removeAttribute("src"); video.load();
+          return;
+        }
+        var userPaused = false;
+        var label = toggle && toggle.querySelector(".visually-hidden");
+        function sync() {
+          if (!toggle) return;
+          toggle.setAttribute("aria-pressed", userPaused ? "true" : "false");
+          label.textContent = userPaused ? "Play background animation" : "Pause background animation";
+        }
+        if (toggle) {
+          var reveal = function () { toggle.hidden = false; };
+          if (!video.paused && video.readyState > 2) reveal();
+          video.addEventListener("playing", reveal, { once: true });
+          video.addEventListener("error", function () { toggle.hidden = true; });
+          toggle.addEventListener("click", function () {
+            userPaused = !userPaused;
+            if (userPaused) video.pause(); else video.play().catch(function () {});
+            sync();
+          });
+        }
+        function play() {
+          var lazy = video.getAttribute("data-src");
+          if (lazy) { video.src = lazy; video.removeAttribute("data-src"); }
+          video.play().catch(function () {});
+        }
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (entries) {
+            if (userPaused) return;
+            if (entries[0].isIntersecting) play(); else video.pause();
+          }, { rootMargin: "200px 0px" }).observe(video);
+        } else {
+          play();
+        }
+      });
     })();
   </script>
 )}

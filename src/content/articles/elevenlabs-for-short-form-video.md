@@ -2,7 +2,7 @@
 title: "ElevenLabs for Short-Form Video: The License Rule That Decides Your Plan"
 description: "ElevenLabs' free plan carries no commercial license and requires attribution, which matters the moment a Short is monetized. What the paid tiers actually buy, how far 30,000 credits goes, and when narration is the wrong fix."
 pubDate: 2026-09-11
-updatedDate: 2026-09-11
+updatedDate: 2026-09-30
 lastVerifiedDate: "2026-09-11"
 commercial: true
 category: "ai-voice"
@@ -67,7 +67,7 @@ That makes the tiers easy to reason about in script length rather than in market
 | Starter | $6 | 30,000 | ~30,000 |
 | Creator | $22 | 121,000 | ~121,000 |
 
-To turn that into videos, you need a rough words-per-character figure. English averages close to five characters plus a space per word, so **30,000 characters is very roughly 5,000 words**. A tightly written 30-second Short runs about 75–90 spoken words. On that arithmetic, the $6 tier covers well over fifty Shorts a month of finished narration.
+To turn that into videos, you need a rough words-per-character figure. English averages close to five characters plus a space per word, so **30,000 characters is very roughly 5,000 words**. A tightly written 30-second Short runs about 75–90 spoken words. On that arithmetic, the $6 tier covers roughly fifty Shorts a month of finished narration.
 
 Two caveats worth holding onto, because they are the difference between the table and reality:
 
@@ -96,13 +96,11 @@ Three cases where paying for narration is the wrong move:
 
 **You publish occasionally.** The batching advantage above assumes volume. At two videos a month, recording them yourself costs less than a subscription and sounds like you.
 
-We build our own short-form with burned-in subtitles and no voice track — a deliberate choice, made because it removes a whole class of production failure at zero cost, not because we tested narration against it and measured a difference. We have not run that comparison, and we are not going to imply we did.
-
 ## The alternative route, if voice is not the constraint
 
 Before subscribing to anything, try the cheaper diagnosis: **publish the next three videos with clean burned-in subtitles and a tighter script, and look at retention.**
 
-Where the drop-off sits tells you which cheap change to try first, not what is wrong. If viewers leave in the first seconds, the hook is the thing you can rewrite for free; if they stay and then drift, pacing and over-explanation are. Those are the free experiments, not diagnoses — audio quality, subject matter and a dozen other things can produce the same shape, and we have measured none of it.
+Where the drop-off sits suggests which cheap change to try first. If viewers leave in the first seconds, the hook is the thing you can rewrite for free; if they stay and then drift, look at pacing and over-explanation. Treat these as experiments rather than diagnoses — audio quality, subject matter, and plenty else can produce the same shape.
 
 If, after that, the specific thing standing between you and publishing more is the recording session itself, then narration is solving a real bottleneck and $6 is a reasonable price for it.
 
@@ -110,7 +108,7 @@ If, after that, the specific thing standing between you and publishing more is t
 
 1. **Write for the ear before you generate.** Short sentences, one idea each, no clauses that need a comma to survive.
 2. **Generate once per line, not per script.** Line-level files make a single fix cheap; a regenerated full script costs the whole character count again.
-3. **Batch inside a paid month.** ElevenLabs states that content generated during a paid subscription can be used commercially and indefinitely, "subject to our Service-Specific Terms" — so recording a month of scripts in one subscribed period is cheaper than subscribing continuously at low volume. Read those terms before you rely on it; the permission is conditional and we are not your lawyer.
+3. **Batch inside a paid month.** ElevenLabs states that content generated during a paid subscription can be used commercially and indefinitely, "subject to our Service-Specific Terms" — so recording a month of scripts in one subscribed period is cheaper than subscribing continuously at low volume. Read those terms before you rely on it; the permission is conditional.
 4. **Keep subtitles regardless.** They serve sound-off viewing and they are what you fall back on if you stop subscribing.
 5. **Record the real cost after a month.** Count generations, not videos. Retakes are where the budget actually goes.
 
@@ -120,7 +118,7 @@ If, after that, the specific thing standing between you and publishing more is t
 
 If you get there, the $6 Starter tier is the honest starting point rather than the $22 one. On the arithmetic above, thirty thousand characters is roughly fifty-plus Shorts' worth of finished narration before retakes — do that sum against your own publishing rate rather than taking our word for the size of it. The rollover ceiling gives you room for an uneven schedule. Move up when you hit the limit, not in anticipation of it.
 
-If you are not sure the recording session is your bottleneck, the cheap move is to assume it is not and test that first. Rewriting a script costs nothing, and an unmeasured change that costs nothing is a better first experiment than an unmeasured change that costs $6 a month. We are not claiming to know which one moves your retention — only which one is cheaper to be wrong about.
+If you are not sure the recording session is your bottleneck, the cheap move is to assume it is not and test that first. Rewriting a script costs nothing; narration costs $6 a month. When you cannot yet tell which change will help, start with the one that is free to get wrong.
 
 ## What we checked, and what we did not
 

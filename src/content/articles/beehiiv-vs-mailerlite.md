@@ -2,7 +2,7 @@
 title: "beehiiv vs MailerLite: Growth Platform or Low-Cost Sender?"
 description: "A beehiiv vs MailerLite comparison on current official pricing and features — which fits a cheap, simple email sender, and which fits a newsletter you want to grow and monetize."
 pubDate: 2026-09-02
-updatedDate: 2026-09-02
+updatedDate: 2026-09-30
 lastVerifiedDate: "2026-09-02"
 commercial: true
 category: "newsletter-email"
@@ -19,14 +19,7 @@ Choose **beehiiv** if the newsletter itself is the thing you are building — so
 
 These are not two versions of the same product. MailerLite is a low-cost email marketing tool that also builds simple sites. beehiiv is a publishing platform whose paid tiers are mostly a growth-and-revenue engine. Pick the one that matches what your newsletter is *for*.
 
-## How we compared them
-
-Two products, two very different pricing pages. Every price and plan limit below comes from a vendor's own page and carries the date we read it; review figures come from Capterra and are labeled as such.
-
-- MailerLite pricing and features: read on MailerLite's official pricing and features pages on **September 2, 2026**, and re-read on **September 8, 2026** with no change.
-- beehiiv pricing and plan features: read on beehiiv's official pricing page on **August 31, 2026** at the default 1,000-subscriber slider position, and re-read on **September 8, 2026** with no change.
-- Review-marketplace consensus: MailerLite held **4.7/5 from 2,322 reviews on Capterra**, confirmed on the live page on **September 8, 2026** and unchanged from our August check. beehiiv held **4.5/5 from 40 reviews on G2** at our last verified check on **August 22, 2026**; we could not re-load that page since, so we date it rather than restate it as current. We do not have a comparable verified G2 figure for MailerLite and will not invent one.
-- We have not run a newsletter on either platform. Nothing here is presented as first-hand experience.
+Every price and plan limit below comes from the vendor's own page and carries the date we read it; review figures are dated where they appear. We have not run a newsletter on either platform, so nothing here is presented as first-hand experience. The full source list is at the end.
 
 Disclosure worth stating plainly: **of the two products compared here, beehiiv is the only one we earn a commission from.** The MailerLite links below go to [mailerlite.com](https://www.mailerlite.com/) and earn us nothing. Read the recommendation with that in mind — and notice that the verdict below sends a large group of readers to MailerLite.
 

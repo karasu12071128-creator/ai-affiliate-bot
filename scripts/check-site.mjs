@@ -346,6 +346,26 @@ if (existsSync(homepage)) {
     );
   }
   notes.push(`hero media shipped: ${stageMedia.length}`);
+
+  // SECOND_SHIORI_VIDEO_SLOT: the brand band's clip loads lazily, so its file
+  // is named in data-src rather than src. Same rules: it must exist in the
+  // build, carry a poster that exists, and the frame must flag it honestly.
+  const brandMedia = [...home.matchAll(/<video\b[^>]*class="brand-media"[^>]*>/g)];
+  for (const [tag] of brandMedia) {
+    for (const attribute of ["data-src", "poster"]) {
+      const value = tag.match(new RegExp(`${attribute}="([^"]+)"`))?.[1];
+      if (!value) failures.push(`/: brand media has no ${attribute}`);
+      else if (!assets.has(value)) failures.push(`/: brand media ${attribute} "${value}" is not in the build`);
+    }
+  }
+  const brandFlagged = /class="brand-visual[^"]*" data-media="true"/.test(home);
+  if (brandFlagged !== brandMedia.length > 0) {
+    failures.push(`/: brand data-media flag (${brandFlagged}) disagrees with the media shipped (${brandMedia.length})`);
+  }
+  if (!/class="brand-visual[^"]*" data-media="(true|false)"/.test(home)) {
+    failures.push("/: brand band frame is missing, so its media state cannot be verified");
+  }
+  notes.push(`brand media shipped: ${brandMedia.length}`);
 }
 
 // ------------------------------------------------------------------- report

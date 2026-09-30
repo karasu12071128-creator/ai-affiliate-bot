@@ -66,8 +66,11 @@ export type HeroMedia = {
  * - "hero-visual": the vNext hero's right-hand visual frame (16:10 on desktop,
  *   stacked under the copy on mobile). A clip here must be a 6–8s muted loop
  *   on a bright editorial ground, with Shiori small and supporting.
+ * - "brand-band": the homepage "Shiori marks where to start" band near the
+ *   foot of the page (16:9 frame; 4:3 on phones). Empty today: the band shows
+ *   its static still until a clip is registered here. SECOND_SHIORI_VIDEO_SLOT.
  */
-export type HeroPlacement = "full-bleed-stage" | "hero-visual";
+export type HeroPlacement = "full-bleed-stage" | "hero-visual" | "brand-band";
 
 /**
  * The 9:16 Flow clips in the Shiori library are deliberately NOT registered

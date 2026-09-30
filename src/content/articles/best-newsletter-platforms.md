@@ -2,7 +2,7 @@
 title: "Best Newsletter Platforms for Creators in 2026"
 description: "Five newsletter platforms compared on current official pricing, ownership, and how each one actually makes money — with a clear rule for picking between them."
 pubDate: 2026-08-31
-updatedDate: 2026-08-31
+updatedDate: 2026-09-30
 lastVerifiedDate: "2026-08-31"
 commercial: true
 category: "newsletter-email"
@@ -35,11 +35,7 @@ If your newsletter is a channel and not the product, that list is the more usefu
 
 ## How we chose
 
-We compared official pricing and feature documentation, verified public review data where it exists, and recent community discussion, keeping those three tiers of evidence separate.
-
-- All pricing on this page was verified on **August 31, 2026** from each vendor's official pricing page.
-- Review-marketplace figures reflect our last verified check on **August 22, 2026**, and are dated as such below. We could not re-check those sources on August 31 and will not restate old numbers as today's.
-- We have not run a publication on these platforms. Nothing here claims hands-on testing.
+We compared official pricing and feature documentation, verified public review data where it exists, and recent community discussion, keeping those three kinds of evidence separate. Pricing was verified on **August 31, 2026**; review figures are dated where they appear. We have not run a publication on these platforms, and nothing here claims hands-on testing.
 
 **Disclosure:** beehiiv is the only platform on this list we have an active affiliate relationship with. Substack, Ghost, Kit, and MailerLite pay us nothing, and the Kit link on this site is a plain link to their website. We are aware of how that could bias a ranking, so we have written the case *against* beehiiv explicitly under its own entry, and two of the five recommendations below send you somewhere we earn nothing.
 
@@ -101,7 +97,7 @@ At our last verified check on August 22, 2026, Kit held **4.4/5 from 236 reviews
 
 MailerLite's free plan covers **up to 250 subscribers and 2,500 monthly emails**. Its page lists three automations, one website and one landing page, three signup forms, and 100+ integrations on that tier. **Comfort starts at $12/month** and **Power at $25/month**, with an Enterprise tier for 200,000+ subscribers.
 
-For straightforward, well-designed email at a low price, it remains one of the easiest recommendations on the market.
+For straightforward, well-designed email at a low price, it is an easy recommendation.
 
 **The case against it:** the free tier is far smaller than Kit's or beehiiv's — 250 subscribers against 10,000 and 2,500. Its pricing page sells on subscribers, sends, and automations; nothing on it is pitched at monetizing a publication, and none of the ad-network, paid-recommendation, or take-rate features the others advertise appears there. It sends email well. That is the job it is priced for.
 
@@ -147,6 +143,6 @@ We did not verify each platform's export terms on an official page, so check you
 
 ## Sources and methodology
 
-Pricing and plan features for beehiiv, Substack, Ghost, Kit, and MailerLite were verified on each vendor's official pricing page on August 31, 2026. Subscriber-priced figures reflect each page's default slider position, noted in the text. Review-marketplace ratings reflect our last verified check on August 22, 2026 and are dated in place, not restated as current. Community discussion is treated as anecdotal and never as platform-wide fact. We have no hands-on usage of these platforms and claim none. Our only active affiliate relationship on this list is with beehiiv, disclosed above and on our [affiliate disclosure](/affiliate-disclosure/) page.
+Pricing and plan features for beehiiv, Substack, Ghost, Kit, and MailerLite were verified on each vendor's official pricing page on August 31, 2026. Subscriber-priced figures reflect each page's default slider position, noted in the text. Review-marketplace ratings reflect our last verified check on August 22, 2026 and are dated in place, not restated as current. Community discussion is treated as anecdotal and never as platform-wide fact. We have no hands-on usage of these platforms and claim none. Our only active affiliate relationship on this list is with beehiiv, disclosed above and on our [how we make money](/affiliate-disclosure/) page.
 
 Last verified: August 31, 2026.

@@ -3,94 +3,67 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { affiliateTargets, hasAffiliateProgram, type ProductKey } from "../lib/affiliateLinks";
 import { operator } from "../site";
 
-// Rendered from the affiliate registry, so this page cannot drift out of sync
-// with what the site's links actually do.
-//
-// Three states, not two. A program can be live while the site still has no link
-// for it — reporting that as "no relationship" would be false, and reporting it
-// as a live affiliate link would be false in the other direction.
-const programs = (Object.entries(affiliateTargets) as [ProductKey, (typeof affiliateTargets)[ProductKey]][]).map(
-  ([key, target]) => {
-    const linked = target.affiliateUrl !== null;
-    const inProgram = hasAffiliateProgram(key);
-    return {
-      key,
-      product: target.product,
-      linked,
-      inProgram,
-      relationship: linked ? "Active" : inProgram ? "Active, not yet linked" : "None",
-      note: linked
-        ? "Active affiliate relationship. Links are labeled “Affiliate link” and carry rel=\"sponsored\"."
-        : inProgram
-          ? "Affiliate relationship exists, but no referral link is live on this site yet. Any link here goes to the product's own website and earns us nothing."
-          : "No affiliate relationship. Links go to the product's own website."
-    };
-  }
-);
-const linkedCount = programs.filter((program) => program.linked).length;
-const programCount = programs.filter((program) => program.inProgram).length;
-const pendingCount = programCount - linkedCount;
+// Material connections, rendered from the affiliate registry so this page
+// cannot drift from what the site's links actually do. Readers see which
+// brands can pay us; application states (pending, declined) and link
+// plumbing stay in the registry and data/affiliate-programs.yaml.
+const earningBrands = (Object.keys(affiliateTargets) as ProductKey[])
+  .filter((key) => hasAffiliateProgram(key))
+  .map((key) => affiliateTargets[key].product);
+
+const brandList =
+  earningBrands.length <= 1
+    ? earningBrands.join("")
+    : `${earningBrands.slice(0, -1).join(", ")} and ${earningBrands.at(-1)}`;
 ---
 
-<BaseLayout title="Affiliate Disclosure" description="Which products Creator Growth Tools earns commission on, and which it does not.">
+<BaseLayout
+  title="How We Make Money"
+  description="How Creator Growth Tools is funded, which brands can pay us a commission, and what that commission does not buy."
+>
   <section class="page">
-    <p class="eyebrow">Disclosure</p>
-    <h1>Who pays us, and who does not.</h1>
+    <p class="eyebrow">Affiliate disclosure</p>
+    <h1>How we make money.</h1>
     <p class="dek">
-      {`We have affiliate relationships with ${programCount} ${programCount === 1 ? "product" : "products"}. ` +
-        `${linkedCount === 1 ? "One of them has" : `${linkedCount} of them have`} a referral link live on this site; ` +
-        `${pendingCount === 0 ? "there are no others waiting" : `${pendingCount} ${pendingCount === 1 ? "does" : "do"} not, and ${pendingCount === 1 ? "earns" : "earn"} us nothing here yet`}. ` +
-        "Every product we have a relationship with is listed below, live link or not."}
+      We may earn a commission if you buy through some links on this site, at no extra cost to
+      you. That is how the site is funded. It does not decide which tools we cover or recommend.
     </p>
 
     <div class="prose">
-      <h2>Current relationships</h2>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">Product</th>
-            <th scope="col">Affiliate relationship</th>
-            <th scope="col">What that means on the page</th>
-          </tr>
-        </thead>
-        <tbody>
-          {programs.map((program) => (
-            <tr>
-              <th scope="row">{program.product}</th>
-              <td>{program.relationship}</td>
-              <td>{program.note}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-
-    <div class="prose">
-      <h2>How links are labeled</h2>
+      <h2>Who can pay us</h2>
+      {earningBrands.length > 0 ? (
+        <p>
+          We currently have affiliate relationships with {brandList}. If you sign up through one of
+          our links to these products, we may be paid a commission.
+        </p>
+      ) : (
+        <p>We have no affiliate relationships at the moment.</p>
+      )}
       <p>
-        Every product button is labeled <strong>Affiliate link</strong> or
-        <strong>Official site</strong> at the point you click it, so you do not have to come back to
-        this page to know which is which. Only affiliate links carry <code>rel="sponsored"</code>.
-        A vendor mentioned in the body of an article links to that vendor's own site and is never a
-        referral link — a build check fails if a referral URL appears anywhere outside this
-        registry.
+        Every other tool we mention links straight to its own website, and those links earn us
+        nothing.
+      </p>
+
+      <h2>How to tell which links pay us</h2>
+      <p>
+        Product buttons are labeled <strong>Affiliate link</strong> or <strong>Official site</strong>
+        where you click them, and every article that contains an affiliate link says so at the top.
+        Links to a vendor inside an article's text go to the vendor's own site, not through a
+        referral link.
       </p>
 
       <h2>What commission does not buy</h2>
       <p>
-        Commission plays no part in whether a product is included, where it ranks, or what verdict
-        it gets, and placement cannot be bought. Several articles currently recommend tools we earn
-        nothing from. See <a href="/how-we-test/">how we test</a>.
+        Commission plays no part in whether a tool is included, where it ranks, or what verdict it
+        gets, and placement cannot be bought. Several of our guides recommend tools we earn nothing
+        from when they fit the reader better. See <a href="/how-we-test/">how we review</a> and our
+        <a href="/editorial-methodology/">editorial policy</a>.
       </p>
 
-      <h2>Terms change</h2>
+      <h2>Prices and terms change</h2>
       <p>
-        Pricing, commissions, cookie windows, and program terms change without notice. Always verify
-        current details on the vendor's own site before purchasing or joining a program. If you
-        spot something out of date here, tell us:
+        Pricing and plan details change without notice. Check the vendor's own site before you buy.
+        If you spot something out of date, tell us at
         <a href={`mailto:${operator.email}`}>{operator.email}</a>.
       </p>
     </div>

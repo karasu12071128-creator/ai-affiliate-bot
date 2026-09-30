@@ -21,22 +21,22 @@ const hasAffiliateLink = products ? products.some((product) => isAffiliateLink(p
   {hasAffiliateLink === true && (
     <span>
       This page contains at least one affiliate link, labeled &ldquo;Affiliate link&rdquo; where it
-      appears. If you sign up through it we may earn a commission, at no additional cost to you.
-      Commission does not decide our recommendation. <a href="/affiliate-disclosure/">Full disclosure</a>.
+      appears. If you sign up through it we may earn a commission, at no extra cost to you. That
+      does not decide our recommendation. <a href="/affiliate-disclosure/">How we make money</a>.
     </span>
   )}
   {hasAffiliateLink === false && (
     <span>
       This page contains no affiliate links. Every outbound link here goes straight to the
       product&rsquo;s own website and earns us nothing.
-      <a href="/affiliate-disclosure/">Full disclosure</a>.
+      <a href="/affiliate-disclosure/">How we make money</a>.
     </span>
   )}
   {hasAffiliateLink === null && (
     <span>
       Some links on this site are affiliate links and are labeled where they appear. We may earn a
-      commission if you sign up through one, at no additional cost to you.
-      <a href="/affiliate-disclosure/">Full disclosure</a>.
+      commission if you sign up through one, at no extra cost to you.
+      <a href="/affiliate-disclosure/">How we make money</a>.
     </span>
   )}
 </aside>

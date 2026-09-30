@@ -403,18 +403,20 @@ test("the homepage ships no fabricated media, metrics, or social proof", () => {
   assert.doesNotMatch(home, /<img|<picture/, "homepage must ship no raw image tags");
   const pictures = home.match(/<Picture[\s\S]*?\/>/g) ?? [];
   for (const tag of pictures) {
-    assert.match(tag, /src=\{heroStill\.image\}/, "a homepage <Picture> must come from the hero still registry");
+    assert.match(tag, /src=\{(heroStill|brandStill|brandMascot)\.image\}/, "a homepage <Picture> must come from an approved registry entry");
   }
   if (pictures.length > 0) {
     assert.match(home, /activeHeroStill\(\)/, "the hero still must be gated on approval");
   }
 
+  // Two motion slots: the hero and the brand band (SECOND_SHIORI_VIDEO_SLOT).
+  // Each must bind its source and poster from the approved registry.
   const videoTags = home.match(/<video[\s\S]*?\/>/g) ?? [];
-  assert.ok(videoTags.length <= 1, "homepage may carry at most one media layer");
+  assert.ok(videoTags.length <= 2, "homepage may carry at most two media layers (hero, brand band)");
   for (const tag of videoTags) {
-    assert.match(tag, /src=\{heroMedia\.src\}/, "hero video src must come from the registry");
-    assert.match(tag, /poster=\{heroMedia\.poster\}/, "hero video poster must come from the registry");
-    assert.doesNotMatch(tag, /src="/, "hero video must not hard-code a file path");
+    assert.match(tag, /src=\{(hero|brand)Media\.src\}/, "video src must come from the registry");
+    assert.match(tag, /poster=\{(hero|brand)Media\.poster\}/, "video poster must come from the registry");
+    assert.doesNotMatch(tag, /src="/, "video must not hard-code a file path");
   }
   if (videoTags.length === 1) {
     assert.match(
@@ -469,17 +471,28 @@ test("hero media can only ship as an approved, attributed asset", () => {
 
 test("the hero clip ships muted, looping, inline, pausable, and within budget", () => {
   const home = read("src/pages/index.astro");
-  const [tag] = home.match(/<video[\s\S]*?\/>/) ?? [""];
-  if (!tag) return; // no clip registered: the still renders instead
-  for (const attr of ["autoplay", "muted", "loop", "playsinline"]) {
-    assert.match(tag, new RegExp(`\\b${attr}\\b`), `hero video must be ${attr}`);
+  const tags = home.match(/<video[\s\S]*?\/>/g) ?? [];
+  if (tags.length === 0) return; // no clip registered: the stills render instead
+  for (const tag of tags) {
+    for (const attr of ["muted", "loop", "playsinline"]) {
+      assert.match(tag, new RegExp(`\\b${attr}\\b`), `every looping clip must be ${attr}`);
+    }
+    assert.doesNotMatch(tag, /\bcontrols\b/, "looping clips must not show native controls");
   }
-  assert.doesNotMatch(tag, /\bcontrols\b/, "hero video must not show native controls");
+  const hero = tags.find((tag) => /stage-media/.test(tag));
+  if (hero) assert.match(hero, /\bautoplay\b/, "the hero clip autoplays");
+  // The brand band sits below the fold: no source until the script attaches it.
+  const brand = tags.find((tag) => /brand-media/.test(tag));
+  if (brand) {
+    assert.match(brand, /data-src=\{brandMedia\.src\}/, "the brand clip must load lazily via data-src");
+    assert.match(brand, /preload="none"/, "the brand clip must not preload");
+  }
 
   // WCAG 2.2.2: an indefinitely looping clip needs a visible way to stop it,
   // and reduced motion must stop it before it plays.
-  assert.match(home, /class="hero-motion-toggle"/, "a looping hero clip needs a pause control");
-  assert.match(home, /prefers-reduced-motion: reduce\)"\)\.matches[\s\S]{0,200}removeAttribute\("src"\)/,
+  const toggles = home.match(/<button class="[^"]*\bmotion-toggle\b/g) ?? [];
+  assert.ok(toggles.length >= tags.length, "every looping clip needs its own pause control");
+  assert.match(home, /prefers-reduced-motion: reduce\)"\)\.matches[\s\S]{0,700}if \(reduce\) \{[\s\S]{0,120}removeAttribute\("src"\)/,
     "reduced motion must stop the clip and its download, not only hide it");
 
   // Every registered hero-visual clip and poster exists and stays light.
@@ -624,6 +637,34 @@ test("the homepage exposes no internal lab, pipeline, or program-status language
     /not (yet )?validated|not yet verified|pipeline|Active, not yet linked|rel="sponsored"|pending program|rejected/i,
     "the homepage must not expose internal status or implementation language"
   );
+});
+
+test("public pages expose no internal program status or operations language", () => {
+  // Reader-facing copy only: comments are stripped, since they document why
+  // something was removed. Registry and data files are internal and exempt.
+  const strip = (text) => text.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/^\s*\/\/.*$/gm, " ").replace(/\{\/\*[\s\S]*?\*\/\}/g, " ");
+  const files = [
+    ...readdirSync(join(root, "src/pages")).filter((f) => f.endsWith(".astro")).map((f) => `src/pages/${f}`),
+    "src/pages/topics/index.astro",
+    "src/pages/articles/index.astro",
+    "src/layouts/ArticleLayout.astro",
+    "src/components/AffiliateDisclosure.astro",
+    "src/components/CTA.astro",
+    "src/components/Footer.astro",
+    "src/components/Header.astro"
+  ];
+  const internal =
+    /Active, not yet linked|approved_link_pending|pending review|rejected|rel="sponsored"|Current lab|pipeline|Planned — nothing|affiliate network dashboards|Pinterest|GitHub|approved affiliate link/i;
+  for (const file of files) {
+    const hit = strip(read(file)).match(internal);
+    assert.equal(hit, null, `${file} exposes internal language to readers: "${hit?.[0]}"`);
+  }
+
+  // Simplifying the disclosure must not hide the material connection: the page
+  // still names every brand that can pay us, derived from the registry.
+  const disclosure = read("src/pages/affiliate-disclosure.astro");
+  assert.match(disclosure, /hasAffiliateProgram\(key\)/, "the disclosure must derive earning brands from the registry");
+  assert.match(disclosure, /affiliate relationships with \{brandList\}/, "the disclosure must name the brands that can pay us");
 });
 
 test("every static route in the sitemap has a page that builds it", () => {

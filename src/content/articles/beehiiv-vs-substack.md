@@ -2,7 +2,7 @@
 title: "beehiiv vs Substack: Which Is Better for Newsletter Growth in 2026?"
 description: "A beehiiv vs Substack comparison built on current official pricing, the revenue-share math, and where each platform's growth actually comes from."
 pubDate: 2026-08-31
-updatedDate: 2026-08-31
+updatedDate: 2026-09-30
 lastVerifiedDate: "2026-08-31"
 commercial: true
 category: "newsletter-email"
@@ -19,14 +19,7 @@ Choose **beehiiv** if you want the publication to be yours — your domain, your
 
 That is the real fork, and it is not primarily about features. It is about **who carries the risk**. Substack charges you nothing until readers pay you, then takes a share forever. beehiiv charges you every month whether you earn or not, then leaves your subscription revenue alone.
 
-## How we compared these two
-
-Two platforms, two very different pricing pages, so we anchored everything to official sources and dated every fact.
-
-- beehiiv pricing and plan features: verified on beehiiv's official pricing page, **August 31, 2026**.
-- Substack's cost model: verified on Substack's official page, **August 31, 2026**.
-- Review-marketplace consensus: beehiiv held **4.5/5 from 40 reviews on G2** at our last verified check on **August 22, 2026**. We do not have a comparable verified review-marketplace figure for Substack, and we are not going to invent a rating so the table looks symmetrical.
-- We have not published a newsletter on either platform. Nothing here is presented as first-hand experience.
+Every price below comes from each vendor's own page, verified **August 31, 2026**. We have not published a newsletter on either platform, so nothing here is presented as first-hand experience; the full source list is at the end.
 
 Disclosure worth stating plainly: **of the two products compared here, beehiiv is the only one we earn a commission from.** Substack pays us nothing. Read the recommendation with that in mind — and notice that the section below tells a large group of readers to pick Substack.
 
@@ -184,6 +177,6 @@ It is a reasonable third option: $0 up to 2,500 subscribers, on your own custom 
 
 ## Sources and methodology
 
-beehiiv pricing, plan features, and take-rate claims come from beehiiv's official pricing page, verified August 31, 2026 at the default 1,000-subscriber slider position. Substack's revenue-share model comes from Substack's official page, verified the same day; we quote its "keep 90% of their revenue minus credit card fees" wording, not a third-party summary, and we do not publish a specific card-processing percentage because those rates are region-specific. The break-even table is arithmetic on those two verified figures and is labeled as such. Review-marketplace data reflects our last verified check on August 22, 2026. Community discussions are treated as anecdotal. No hands-on usage of either platform is claimed.
+beehiiv pricing, plan features, and take-rate claims come from beehiiv's official pricing page, verified August 31, 2026 at the default 1,000-subscriber slider position. Substack's revenue-share model comes from Substack's official page, verified the same day; we quote its "keep 90% of their revenue minus credit card fees" wording, not a third-party summary, and we do not publish a specific card-processing percentage because those rates are region-specific. The break-even table is arithmetic on those two verified figures and is labeled as such. Review-marketplace data reflects our last verified check on August 22, 2026 (beehiiv 4.5/5 from 40 reviews on G2); we found no comparable verified figure for Substack, so we quote none. Community discussions are treated as anecdotal. No hands-on usage of either platform is claimed.
 
 Last verified: August 31, 2026.

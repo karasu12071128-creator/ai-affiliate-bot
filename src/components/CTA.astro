@@ -1,5 +1,6 @@
 ---
 import {
+  getAffiliateHeadline,
   getAffiliateHref,
   getAffiliateLabel,
   getAffiliateRel,
@@ -28,7 +29,7 @@ const eventName = affiliate ? "affiliate_click" : "outbound_click";
 <div class:list={["cta", variant]}>
   <div class="cta-copy">
     <p class="cta-kind" data-affiliate={affiliate}>{getLinkKind(product)}</p>
-    <strong>{getAffiliateLabel(product)}</strong>
+    <strong>{getAffiliateHeadline(product)}</strong>
     {note && <p class="cta-note">{note}</p>}
   </div>
   <a

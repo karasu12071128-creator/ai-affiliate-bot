@@ -133,7 +133,12 @@ export function getAffiliateHref(product: ProductKey): string {
 }
 
 export function getAffiliateLabel(product: ProductKey): string {
-  return `Go to ${affiliateTargets[product].product}`;
+  return `See ${affiliateTargets[product].product} plans`;
+}
+
+/** The CTA's lead line: framed as a fit decision, never as a purchase push. */
+export function getAffiliateHeadline(product: ProductKey): string {
+  return `If ${affiliateTargets[product].product} fits how you work`;
 }
 
 export function isAffiliateLink(product: ProductKey): boolean {
@@ -163,10 +168,10 @@ export function getAffiliateRel(product: ProductKey): string {
 export function getAffiliateStatusNote(product: ProductKey): string {
   const target = affiliateTargets[product];
   if (target.affiliateUrl) {
-    return "This is an approved affiliate link. We may earn a commission at no additional cost to you.";
+    return "We may earn a commission if you sign up through this link, at no extra cost to you.";
   }
   if (target.status === "approved_link_pending") {
-    return `We have an affiliate relationship with ${target.product}, but no referral link is live on this site yet, so this link earns us nothing.`;
+    return `This link goes straight to ${target.product}'s own site and earns us nothing.`;
   }
-  return `This is the plain ${target.product} website. We have no active affiliate link for it, so this link earns us nothing.`;
+  return `This link goes straight to ${target.product}'s own site and earns us nothing.`;
 }

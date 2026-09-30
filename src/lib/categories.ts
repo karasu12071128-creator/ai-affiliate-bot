@@ -31,7 +31,7 @@ export const categories = [
     key: "newsletter-email",
     name: "Newsletter & email",
     description:
-      "Publishing and email marketing platforms for creators who send to a list — the category we currently publish in.",
+      "Publishing and email marketing platforms for creators who send to a list.",
     state: "live"
   },
   {

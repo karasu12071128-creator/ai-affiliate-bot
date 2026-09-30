@@ -9,10 +9,13 @@ import { activeHeroMedia, activeHeroStill } from "../lib/heroMedia";
 import { editorialCards } from "../lib/editorialMedia";
 import "../styles/home.css";
 
-// The hero frame shows the approved key visual. A motion clip framed for it
-// would layer over the still (HERO_VIDEO_ASSET_REQUIRED; see src/lib/heroMedia.ts).
-const heroStill = activeHeroStill();
+// The hero frame plays the approved clip when one is framed for it, else shows
+// the approved still. Only one of the two is rendered, so the hero never loads
+// both. Rollback: set the clip's `approved` to false in src/lib/heroMedia.ts.
 const heroMedia = activeHeroMedia("hero-visual");
+const heroStill = heroMedia ? null : activeHeroStill();
+const heroMediaLabel =
+  "Shiori, the site's guide, among floating creator-tool cards that settle into one clear decision panel.";
 
 const articles = await getCollection("articles");
 const bySlug = new Map(articles.map((article) => [article.slug, article]));
@@ -93,6 +96,7 @@ const method = [
           />
         )}
         {heroMedia && (
+          <div class="hero-media-frame" role="img" aria-label={heroMediaLabel}>
           <video
             class="stage-media"
             src={heroMedia.src}
@@ -103,10 +107,18 @@ const method = [
             muted
             loop
             playsinline
+            disablepictureinpicture
             preload="metadata"
             aria-hidden="true"
             tabindex="-1"
           />
+          </div>
+        )}
+        {heroMedia && (
+          <button class="hero-motion-toggle" type="button" aria-pressed="false" hidden>
+            <span class="hero-motion-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Pause background animation</span>
+          </button>
         )}
       </div>
 
@@ -217,3 +229,54 @@ const method = [
     </div>
   </aside>
 </BaseLayout>
+
+{heroMedia && (
+  <script is:inline>
+    // Hero loop behaviour, progressively enhanced. Without JS the clip simply
+    // autoplays muted with its poster. With JS:
+    // - reduced motion: never play, drop the source so nothing more downloads,
+    //   and leave the poster (the CSS also hides the video element);
+    // - a visible pause/play button (WCAG 2.2.2: motion longer than 5s);
+    // - pause while the hero is off screen.
+    (function () {
+      var video = document.querySelector(".hero-visual .stage-media");
+      var toggle = document.querySelector(".hero-motion-toggle");
+      if (!video) return;
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (reduce) {
+        video.removeAttribute("autoplay");
+        video.pause();
+        video.removeAttribute("src");
+        video.load();
+        return;
+      }
+      var userPaused = false;
+      var label = toggle && toggle.querySelector(".visually-hidden");
+      function sync() {
+        if (!toggle) return;
+        toggle.setAttribute("aria-pressed", userPaused ? "true" : "false");
+        label.textContent = userPaused ? "Play background animation" : "Pause background animation";
+      }
+      if (toggle) {
+        // Only offer pause once the clip is really playing. A browser that
+        // cannot decode it keeps the poster and shows no dead control.
+        var reveal = function () { toggle.hidden = false; };
+        if (!video.paused && video.readyState > 2) reveal();
+        video.addEventListener("playing", reveal, { once: true });
+        video.addEventListener("error", function () { toggle.hidden = true; });
+        toggle.addEventListener("click", function () {
+          userPaused = !userPaused;
+          if (userPaused) video.pause(); else video.play().catch(function () {});
+          sync();
+        });
+      }
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (entries) {
+          if (userPaused) return;
+          if (entries[0].isIntersecting) video.play().catch(function () {});
+          else video.pause();
+        }).observe(video);
+      }
+    })();
+  </script>
+)}

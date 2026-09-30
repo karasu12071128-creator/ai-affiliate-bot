@@ -3,11 +3,10 @@ import heroKeyVisual from "../../public/media/vnext/hero-key-visual.png";
 /**
  * Hero media layer.
  *
- * The homepage hero is a finished design without any media: its visual frame
- * draws the "too many tools -> clearer decisions" story in HTML and CSS,
- * costing zero media requests. This module lets an approved motion asset sit
- * *behind* that frame, so the static visual becomes a layer over footage
- * rather than the whole picture.
+ * The homepage hero frame shows, in order of preference: an approved motion
+ * clip framed for it (placement "hero-visual"), else the approved key-visual
+ * still (`heroStill`). Rolling back from the clip to the still is one line:
+ * set the clip's `approved` to false.
  *
  * WHY THIS IS NOT THE v0.1 PRESENTER SLOT
  * ---------------------------------------
@@ -17,7 +16,7 @@ import heroKeyVisual from "../../public/media/vnext/hero-key-visual.png";
  *
  * This is a different shape of thing. The stage is fully designed and fully
  * rendered whether or not an asset exists here. An empty registry is not a
- * hole in the layout; it is the CSS field alone, which is the design that
+ * hole in the layout; it is the approved still alone, which is the design that
  * ships today. A registered asset does not add a new region, it repaints an
  * existing one. Nothing here can render an empty container.
  *
@@ -56,7 +55,7 @@ export type HeroMedia = {
   /**
    * Which hero layout the asset was framed for. Approval is per asset, fit is
    * per layout: an approved clip is not rendered in a layout it was not framed
-   * for. See HERO_VIDEO_ASSET_REQUIRED below.
+   * for.
    */
   placement: HeroPlacement;
 };
@@ -92,6 +91,18 @@ export const heroMediaLibrary: HeroMedia[] = [
     // desaturated set. The vNext hero is a bright editorial canvas where
     // Shiori is a small navigator, so this clip would invert the hierarchy.
     placement: "full-bleed-stage"
+  },
+  {
+    id: "vnext-hero-loop-v1",
+    src: "/media/vnext/hero-loop.mp4",
+    poster: "/media/vnext/hero-loop-poster.jpg",
+    width: 1280,
+    height: 720,
+    subjectSide: "right",
+    provenance:
+      "OWNER-selected Google Flow clip, Drive SHIORI_MASTER_ASSETSwebsite/931371290_1790745061840991.mp4 (uploaded 2026-09-30; 1280x720, 24fps, 8.00s, H.264 High + AAC, 1.89 MB; sha256 135aa3e9...10bb42). Master copied byte-identical to media-src/vnext/hero-loop-original.mp4, outside public/ so it is never deployed. Web copy: audio removed, libx264 CRF 26 veryslow, 2s GOP, faststart, 590 KB, SSIM 0.993 / PSNR 48 dB against the master; not upscaled. Poster: the final frame (the decision state), 32 KB JPEG. No WebM: VP9 was not a meaningful saving at matching quality.",
+    approved: true,
+    placement: "hero-visual"
   }
 ];
 
@@ -125,13 +136,9 @@ export function activeHeroStill(): HeroStill | null {
 }
 
 /*
- * HERO_VIDEO_ASSET_REQUIRED
- * -------------------------
- * No approved asset is framed for "hero-visual" yet, so the vNext hero ships
- * its static CSS visual (question cards -> decision panel). When OWNER approves
- * a clip, register it here with placement "hero-visual", a poster at the same
- * framing, and its provenance. The frame's aspect ratio is fixed in CSS, so
- * adding the clip causes no layout shift.
+ * The frame's aspect ratio is set in CSS from the build-time media state
+ * (16:9 with the clip, 16:10 with the still; 4:3 on phones), so the choice
+ * never causes a layout shift.
  */
 
 /** The asset a hero layout should render, or `null` to render its static visual alone. */

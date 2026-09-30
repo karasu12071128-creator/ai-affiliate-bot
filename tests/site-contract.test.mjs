@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -465,6 +465,37 @@ test("hero media can only ship as an approved, attributed asset", () => {
   const css = read("src/styles/home.css");
   assert.match(css, /prefers-reduced-motion: reduce\)[\s\S]{0,200}\.stage-media\s*\{\s*display:\s*none/,
     "reduced motion must drop the hero video and leave the poster");
+});
+
+test("the hero clip ships muted, looping, inline, pausable, and within budget", () => {
+  const home = read("src/pages/index.astro");
+  const [tag] = home.match(/<video[\s\S]*?\/>/) ?? [""];
+  if (!tag) return; // no clip registered: the still renders instead
+  for (const attr of ["autoplay", "muted", "loop", "playsinline"]) {
+    assert.match(tag, new RegExp(`\\b${attr}\\b`), `hero video must be ${attr}`);
+  }
+  assert.doesNotMatch(tag, /\bcontrols\b/, "hero video must not show native controls");
+
+  // WCAG 2.2.2: an indefinitely looping clip needs a visible way to stop it,
+  // and reduced motion must stop it before it plays.
+  assert.match(home, /class="hero-motion-toggle"/, "a looping hero clip needs a pause control");
+  assert.match(home, /prefers-reduced-motion: reduce\)"\)\.matches[\s\S]{0,200}removeAttribute\("src"\)/,
+    "reduced motion must stop the clip and its download, not only hide it");
+
+  // Every registered hero-visual clip and poster exists and stays light.
+  const media = read("src/lib/heroMedia.ts");
+  const clips = [...media.matchAll(/src: "(\/media\/vnext\/[^"]+)",\s*poster: "([^"]+)"/g)];
+  assert.ok(clips.length > 0, "the vNext clip must be registered");
+  for (const [, src, poster] of clips) {
+    const video = statSync(join(root, "public", src));
+    const still = statSync(join(root, "public", poster));
+    assert.ok(video.size < 1_000_000, `${src} is ${video.size} bytes; the hero clip budget is 1 MB`);
+    assert.ok(still.size < 150_000, `${poster} is ${still.size} bytes; the poster budget is 150 KB`);
+  }
+
+  // The OWNER master is kept on record but never deployed.
+  assert.throws(() => statSync(join(root, "public/media/vnext/hero-loop-original.mp4")),
+    "the master clip must stay outside public/");
 });
 
 test("the homepage claims no readership it does not measure", () => {

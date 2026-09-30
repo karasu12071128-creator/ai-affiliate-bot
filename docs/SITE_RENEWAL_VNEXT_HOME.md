@@ -1,6 +1,6 @@
 # Creator Growth Tools — Homepage vNext prototype
 
-Status: `VISUAL_INTEGRATION_READY_FOR_OWNER_REVIEW / NOT_MERGED / NOT_DEPLOYED`
+Status: `HERO_VIDEO_READY_FOR_CODEX_REVIEW / NOT_MERGED / NOT_DEPLOYED`
 Branch: `claude/creator-growth-home-vnext-m1y5m8`
 Base: `main` @ `2441d06` (Search Console verification tag); approved assets @ `156f278`
 Date: 2026-09-26
@@ -82,15 +82,41 @@ Placement decisions:
 
 No new route was created. The sitemap is unchanged.
 
+## Hero video (2026-09-30)
+
+Source: Google Drive `SHIORI_MASTER_ASSETSwebsite/931371290_1790745061840991.mp4`
+(file id `1oBO88brGh-2JPBoekHnfbwJmaqqkcTVf`, uploaded 2026-09-30 05:11 UTC).
+The only clip in that folder newer than the vNext concept; V1/V2 there date
+from 2026-09-09 and predate it. 1280x720, 24 fps, 8.00 s (192 frames), H.264
+High + AAC stereo, 1.89 MB, sha256 `135aa3e9…10bb42`.
+
+| File | What | Size |
+| --- | --- | --- |
+| `media-src/vnext/hero-loop-original.mp4` | Master, byte-identical, outside `public/` (never deployed) | 1,892,812 B |
+| `public/media/vnext/hero-loop.mp4` | Web copy: no audio, H.264 CRF 26 veryslow, 2 s GOP, faststart; SSIM 0.993 / PSNR 48 dB vs master; not upscaled | 589,833 B |
+| `public/media/vnext/hero-loop-poster.jpg` | Final frame (the decision state), 1280x720 | 32,037 B |
+
+No WebM: VP9 stayed near 40 dB PSNR even at 756 KB, and at comparable size
+H.264 CRF 28 still measured higher, so a second format would not have paid
+for itself.
+
+Behaviour: `autoplay muted loop playsinline`, poster, no native controls,
+`preload="metadata"`. The frame paints the poster as its background, so it is
+never empty (before play, if the clip cannot decode, under reduced motion).
+Reduced motion: the clip never plays and its `src` is dropped, so nothing
+more downloads; the poster stays. A small pause/play button (WCAG 2.2.2)
+appears only once the clip is actually playing. The clip pauses off screen.
+Frame: 16:9 on desktop; 4:3 on phones at `object-position: 70%`, which keeps
+Shiori and the decision panel in frame through the loop.
+
+Rollback: set the clip's `approved: false` in `src/lib/heroMedia.ts`; the
+approved key-visual still renders instead (only one of the two is rendered).
+
 ## Asset gaps
 
 | Marker | Where | What is needed |
 | --- | --- | --- |
-| `HERO_VIDEO_ASSET_REQUIRED` | `src/lib/heroMedia.ts` | A 6–8s muted loop framed for the hero frame, after the static visual is approved. The slot layers over the approved still; reduced motion drops it. |
 | `TERMS_PAGE_REQUIRED` | footer | No terms page exists, so no link was invented. |
-
-`SHIORI_MASCOT_ASSET_REQUIRED` and `ARTICLE_CARD_IMAGE_REQUIRED` are resolved
-by the approved assets; the CSS placeholder art and the bookmark fallback are removed.
 
 ## Disclosure changes
 

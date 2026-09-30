@@ -1,6 +1,9 @@
 # Creator Growth Tools — Homepage vNext prototype
 
-Status: `HERO_VIDEO_READY_FOR_CODEX_REVIEW / NOT_MERGED / NOT_DEPLOYED`
+Status: `READY_FOR_CODEX_FINALIZATION / NOT_MERGED / NOT_DEPLOYED`
+
+Next owner: Codex, per `docs/review/homepage-vnext/CODEX_FINALIZATION_CONTRACT.md`
+(integration points, SEO contract, do-not-expose list, protected files).
 Branch: `claude/creator-growth-home-vnext-m1y5m8`
 Base: `main` @ `2441d06` (Search Console verification tag); approved assets @ `156f278`
 Date: 2026-09-26
@@ -111,6 +114,18 @@ Shiori and the decision panel in frame through the loop.
 
 Rollback: set the clip's `approved: false` in `src/lib/heroMedia.ts`; the
 approved key-visual still renders instead (only one of the two is rendered).
+
+## Content and disclosure pass (2026-09-30)
+
+- Reader-facing trust pages: How We Make Money (`/affiliate-disclosure/`),
+  Editorial Policy (`/editorial-methodology/`), How We Review
+  (`/how-we-test/`). The URLs are unchanged. Program status, link plumbing,
+  and ops notes were removed from public copy; the material-connection
+  disclosure still names every brand that can pay us.
+- Priority articles polished (see commit `2c3ac0e`). `lastVerifiedDate` is
+  unchanged because no facts were re-verified.
+- `SECOND_SHIORI_VIDEO_SLOT`: the brand band (`#brand`) with a static fallback,
+  ready for a `"brand-band"` registry entry.
 
 ## Asset gaps
 

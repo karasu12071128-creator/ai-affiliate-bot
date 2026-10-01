@@ -1,0 +1,81 @@
+{
+  "desktop": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "hero": {
+      "readyState": 4,
+      "paused": false,
+      "videoWidth": 1280,
+      "videoHeight": 720
+    },
+    "brandBeforeScroll": {
+      "src": null,
+      "dataSrc": "/media/shiori-hero-16x9.mp4",
+      "currentSrc": "",
+      "readyState": 0
+    }
+  },
+  "brandRequestedBeforeScroll": false,
+  "brandAfterScroll": {
+    "src": "/media/shiori-hero-16x9.mp4",
+    "dataSrc": null,
+    "currentSrc": "http://127.0.0.1:4321/media/shiori-hero-16x9.mp4",
+    "readyState": 4,
+    "paused": false,
+    "videoWidth": 1920,
+    "videoHeight": 1080
+  },
+  "mobile390": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "heroRect": {
+      "x": 16,
+      "y": 515.8125,
+      "width": 358,
+      "height": 268.5
+    },
+    "video": {
+      "readyState": 4,
+      "paused": false,
+      "videoWidth": 1280,
+      "videoHeight": 720,
+      "poster": "http://127.0.0.1:4321/media/vnext/hero-loop-poster.jpg"
+    }
+  },
+  "mobile430": {
+    "scrollWidth": 430,
+    "clientWidth": 430,
+    "heroRect": {
+      "x": 16,
+      "y": 524.0625,
+      "width": 398,
+      "height": 298.5
+    },
+    "video": {
+      "readyState": 4,
+      "paused": false,
+      "videoWidth": 1280,
+      "videoHeight": 720,
+      "poster": "http://127.0.0.1:4321/media/vnext/hero-loop-poster.jpg"
+    }
+  },
+  "reducedMotion": {
+    "matches": true,
+    "hero": {
+      "src": null,
+      "currentSrc": "",
+      "paused": true,
+      "display": "none"
+    },
+    "brand": {
+      "src": null,
+      "dataSrc": "/media/shiori-hero-16x9.mp4",
+      "currentSrc": "",
+      "paused": true,
+      "display": "none"
+    },
+    "heroPoster": "url(\"http://127.0.0.1:4321/media/vnext/hero-loop-poster.jpg\")",
+    "brandPoster": "url(\"http://127.0.0.1:4321/media/shiori-hero-16x9.jpg\")"
+  },
+  "reducedMotionRequests": []
+}

@@ -486,6 +486,7 @@ test("the hero clip ships muted, looping, inline, pausable, and within budget", 
   if (brand) {
     assert.match(brand, /data-src=\{brandMedia\.src\}/, "the brand clip must load lazily via data-src");
     assert.match(brand, /preload="none"/, "the brand clip must not preload");
+    assert.doesNotMatch(brand, /\bautoplay\b/, "the below-fold brand clip must not autoplay at page load");
   }
 
   // WCAG 2.2.2: an indefinitely looping clip needs a visible way to stop it,
@@ -495,9 +496,9 @@ test("the hero clip ships muted, looping, inline, pausable, and within budget", 
   assert.match(home, /prefers-reduced-motion: reduce\)"\)\.matches[\s\S]{0,700}if \(reduce\) \{[\s\S]{0,120}removeAttribute\("src"\)/,
     "reduced motion must stop the clip and its download, not only hide it");
 
-  // Every registered hero-visual clip and poster exists and stays light.
+  // Every registered public clip and poster exists and stays light.
   const media = read("src/lib/heroMedia.ts");
-  const clips = [...media.matchAll(/src: "(\/media\/vnext\/[^"]+)",\s*poster: "([^"]+)"/g)];
+  const clips = [...media.matchAll(/src: "(\/media\/(?:vnext\/)?[^"]+)",\s*poster: "([^"]+)"/g)];
   assert.ok(clips.length > 0, "the vNext clip must be registered");
   for (const [, src, poster] of clips) {
     const video = statSync(join(root, "public", src));
@@ -509,6 +510,8 @@ test("the hero clip ships muted, looping, inline, pausable, and within budget", 
   // The OWNER master is kept on record but never deployed.
   assert.throws(() => statSync(join(root, "public/media/vnext/hero-loop-original.mp4")),
     "the master clip must stay outside public/");
+  assert.throws(() => statSync(join(root, "public/media/vnext/brand-guide-original.mp4")),
+    "the brand master must stay outside public/");
 });
 
 test("the homepage claims no readership it does not measure", () => {

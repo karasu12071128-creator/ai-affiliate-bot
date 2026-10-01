@@ -818,17 +818,6 @@
 /* ---------------------------------------------------------------- motion */
 
 @media (prefers-reduced-motion: no-preference) {
-  .hero-copy,
-  .hero-visual {
-    animation: home-rise 600ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
-  }
-
-  .hero-visual {
-    animation-delay: 90ms;
-  }
-
-
-
   .decision,
   .story,
   .decision-arrow,
@@ -840,13 +829,6 @@
   .decision:hover,
   .story:hover {
     transform: translateY(-2px);
-  }
-}
-
-@keyframes home-rise {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
   }
 }
 

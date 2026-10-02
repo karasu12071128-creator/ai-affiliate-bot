@@ -68,8 +68,8 @@ Placement decisions:
 | Start a newsletter | `/best-newsletter-platforms/` | |
 | Leave beehiiv | `/beehiiv-alternatives/` | |
 | Compare two platforms | `/kit-vs-beehiiv/` | |
-| Add AI voice | `/topics/ai-voice/` | from the category registry |
-| Grow on YouTube | `/elevenlabs-for-short-form-video/` | nearest real guide (monetized YouTube Shorts); no YouTube-growth guide exists |
+| Explore AI voice | `/topics/ai-voice/` | from the category registry |
+| Add voice to Shorts | `/elevenlabs-for-short-form-video/` | specific narration and licensing guide |
 | Article: beehiiv alternatives | `/beehiiv-alternatives/` | |
 | Article: beehiiv vs Substack | `/beehiiv-vs-substack/` | |
 | Article: beehiiv vs MailerLite | `/beehiiv-vs-mailerlite/` | |

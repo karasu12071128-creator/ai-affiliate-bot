@@ -66,7 +66,7 @@ export type HeroMedia = {
  * - "hero-visual": the vNext hero's right-hand visual frame (16:10 on desktop,
  *   stacked under the copy on mobile). A clip here must be a 6–8s muted loop
  *   on a bright editorial ground, with Shiori small and supporting.
- * - "brand-band": the homepage "Shiori marks where to start" band near the
+ * - "brand-band": the homepage "Shiori shows you where to start" band near the
  *   foot of the page (16:9 frame; 4:3 on phones). It uses the OWNER-selected
  *   regular-Shiori clip and loads only when the band approaches the viewport.
  */
